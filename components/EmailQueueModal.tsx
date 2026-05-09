@@ -16,12 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import { Mail, Loader2 } from "lucide-react";
 import { logActivity } from "@/lib/activity-log";
-
-function extractFirstEmail(md: string): { subject: string; body: string } {
-  const subjMatch = md.match(/(?:^|\n)\s*(?:\*\*)?Subject(?:\*\*)?\s*:\s*(.+)/i);
-  const subject = subjMatch ? subjMatch[1].trim().replace(/^["*]+|["*]+$/g, "") : "";
-  return { subject, body: md };
-}
+import { parseEmailFromMarkdown } from "@/lib/email-parser";
 
 export function EmailQueueModal({
   agentId,
@@ -30,11 +25,11 @@ export function EmailQueueModal({
   agentId: string;
   output: string;
 }) {
-  const initial = extractFirstEmail(output);
+  const initial = parseEmailFromMarkdown(output);
   const [open, setOpen] = useState(false);
   const [subject, setSubject] = useState(initial.subject);
   const [body, setBody] = useState(initial.body);
-  const [recipient, setRecipient] = useState("");
+  const [recipient, setRecipient] = useState(initial.to === "client@example.com" ? "" : initial.to);
   const [submitting, setSubmitting] = useState(false);
 
   async function queue() {

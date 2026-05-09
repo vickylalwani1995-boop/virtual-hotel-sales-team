@@ -5,6 +5,8 @@ import remarkGfm from "remark-gfm";
 import Link from "next/link";
 import { ConciergeBell, ArrowUpRight } from "lucide-react";
 import { motion } from "framer-motion";
+import { EmailQueueModal } from "@/components/EmailQueueModal";
+import { hasEmailContent } from "@/lib/email-parser";
 
 export function UserMessage({ content }: { content: string }) {
   return (
@@ -133,6 +135,11 @@ export function AssistantMessage({
         </div>
         {streaming && (
           <span className="inline-block w-1 h-3.5 align-middle bg-mhsp-gold animate-pulse rounded-sm ml-0.5" />
+        )}
+        {!streaming && hasEmailContent(content) && (
+          <div className="mt-3 pt-3 border-t border-mhsp-line/60">
+            <EmailQueueModal agentId="concierge" output={content} />
+          </div>
         )}
       </div>
     </motion.div>

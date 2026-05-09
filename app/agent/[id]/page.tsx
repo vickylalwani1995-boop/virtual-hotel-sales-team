@@ -8,6 +8,7 @@ import { getAgent } from "@/lib/agents";
 import { AgentOutput } from "@/components/AgentOutput";
 import { DownloadButtons } from "@/components/DownloadButtons";
 import { EmailQueueModal } from "@/components/EmailQueueModal";
+import { hasEmailContent } from "@/lib/email-parser";
 import { WorkflowRunner } from "@/components/WorkflowRunner";
 import { ArrowLeft, Loader2, Play, FileText, Sparkles, RotateCw } from "lucide-react";
 import { logActivity } from "@/lib/activity-log";
@@ -305,7 +306,7 @@ function AgentDetail({ id }: { id: string }) {
                   basename={agent.id}
                   showExcel={isLeadGen}
                 />
-                {isOutbound && (
+                {(isOutbound || hasEmailContent(output)) && (
                   <EmailQueueModal agentId={agent.id} output={output} />
                 )}
                 {outputIsSample && (
