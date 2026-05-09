@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { ConciergeBell, X, Trash2, Sparkles } from "lucide-react";
+import { ConciergeBell, X, Trash2, Sparkles, AlertTriangle } from "lucide-react";
 import { useConcierge } from "@/lib/use-concierge";
 import { useDemoMode } from "@/lib/demo-mode";
 import { getAgent } from "@/lib/agents";
@@ -51,6 +51,7 @@ export function Concierge() {
     hydrated,
   } = useConcierge();
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [confirmClearOpen, setConfirmClearOpen] = useState(false);
 
   // Build page context dynamically
   const pageContext = useMemo<PageContext>(() => {
@@ -94,11 +95,16 @@ export function Concierge() {
   }
 
   function handleClear() {
-    if (typeof window !== "undefined" && history.length > 0) {
-      const ok = window.confirm("Clear this conversation?");
-      if (!ok) return;
+    if (history.length === 0) {
+      clear();
+      return;
     }
+    setConfirmClearOpen(true);
+  }
+
+  function confirmClear() {
     clear();
+    setConfirmClearOpen(false);
   }
 
   const empty = history.length === 0 && !streaming;
@@ -225,7 +231,109 @@ export function Concierge() {
           </>
         )}
       </AnimatePresence>
+
+      {/* Clear-conversation confirmation modal */}
+      <ClearConfirmDialog
+        open={confirmClearOpen}
+        messageCount={history.length}
+        onCancel={() => setConfirmClearOpen(false)}
+        onConfirm={confirmClear}
+      />
     </>
+  );
+}
+
+function ClearConfirmDialog({
+  open,
+  messageCount,
+  onCancel,
+  onConfirm,
+}: {
+  open: boolean;
+  messageCount: number;
+  onCancel: () => void;
+  onConfirm: () => void;
+}) {
+  return (
+    <AnimatePresence>
+      {open && (
+        <>
+          {/* Backdrop */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.18 }}
+            className="fixed inset-0 z-[60] bg-[#0F1B2D]/55 backdrop-blur-sm"
+            onClick={onCancel}
+            aria-hidden="true"
+          />
+          {/* Dialog */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96, y: 8 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.96, y: 8 }}
+            transition={{ duration: 0.22, ease: [0.22, 0.61, 0.36, 1] }}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="clear-confirm-title"
+            aria-describedby="clear-confirm-desc"
+            className="fixed left-1/2 top-1/2 z-[70] w-[calc(100%-32px)] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-white border border-[#E5ECF4] shadow-[0_30px_80px_-20px_rgba(15,76,129,0.30),0_8px_24px_-8px_rgba(15,76,129,0.12)] overflow-hidden"
+          >
+            {/* Top accent strip */}
+            <div className="h-1 w-full bg-gradient-to-r from-[#DC2626] via-[#EF4444] to-[#B91C1C]" />
+
+            <div className="p-6 sm:p-7">
+              {/* Icon + title */}
+              <div className="flex items-start gap-4">
+                <div className="shrink-0 h-11 w-11 rounded-xl bg-[#FEE2E2] flex items-center justify-center text-[#B91C1C]">
+                  <AlertTriangle className="h-5 w-5" strokeWidth={2.25} />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <h2
+                    id="clear-confirm-title"
+                    className="font-heading text-xl font-bold text-mhsp-navy leading-tight"
+                  >
+                    Clear conversation?
+                  </h2>
+                  <p
+                    id="clear-confirm-desc"
+                    className="mt-1.5 text-sm text-mhsp-muted leading-relaxed"
+                  >
+                    This permanently removes{" "}
+                    <span className="font-semibold text-mhsp-navy">
+                      {messageCount}{" "}
+                      {messageCount === 1 ? "message" : "messages"}
+                    </span>{" "}
+                    from this chat. This action can&apos;t be undone.
+                  </p>
+                </div>
+              </div>
+
+              {/* Buttons */}
+              <div className="mt-7 flex flex-col-reverse sm:flex-row sm:justify-end gap-2.5">
+                <button
+                  type="button"
+                  onClick={onCancel}
+                  autoFocus
+                  className="inline-flex items-center justify-center rounded-lg border border-[#DCE5EF] bg-white hover:bg-[#F4F8FC] text-mhsp-navy px-5 py-2.5 text-sm font-semibold transition-colors"
+                >
+                  No, keep it
+                </button>
+                <button
+                  type="button"
+                  onClick={onConfirm}
+                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#B91C1C] hover:bg-[#991B1B] text-white px-5 py-2.5 text-sm font-bold uppercase tracking-[0.1em] shadow-[0_8px_18px_-8px_rgba(185,28,28,0.55)] hover:shadow-[0_12px_24px_-8px_rgba(153,27,27,0.65)] transition-all"
+                >
+                  <Trash2 className="h-4 w-4" />
+                  Yes, clear
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
   );
 }
 

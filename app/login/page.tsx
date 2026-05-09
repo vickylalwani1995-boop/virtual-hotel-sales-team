@@ -37,6 +37,7 @@ export default function LoginPage() {
     // Brief delay for the "real auth" feel
     setTimeout(() => {
       signIn(username);
+      if (typeof window !== "undefined") window.scrollTo(0, 0);
       router.push("/welcome");
     }, 600);
   }

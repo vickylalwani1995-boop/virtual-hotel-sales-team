@@ -78,6 +78,7 @@ export default function WelcomePage() {
   }, [router]);
 
   function enterWorkspace() {
+    if (typeof window !== "undefined") window.scrollTo(0, 0);
     router.push("/");
   }
 

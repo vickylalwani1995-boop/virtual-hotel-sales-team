@@ -191,6 +191,9 @@ select:disabled {
     font-weight: 600;
     letter-spacing: -0.01em;
   }
+  .font-heading {
+    font-family: var(--font-heading);
+  }
   .font-numeric {
     font-family: var(--font-mono);
     font-feature-settings: "tnum";
