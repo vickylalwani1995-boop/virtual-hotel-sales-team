@@ -20,15 +20,15 @@ const GRADIENT: Record<string, string> = {
 
 const SPECIALTIES: Record<string, string[]> = {
   "00_director_of_sales": ["Strategy", "Reporting", "Coordination"],
-  "01_lead_generation": ["Prospecting", "Research", "Lists"],
+  "01_lead_generation": ["Backyard", "Prospecting", "Lists"],
   "02_outbound_sales": ["Cold Email", "Scripts", "LinkedIn"],
-  "03_account_manager": ["Retention", "Expansion", "QBRs"],
-  "04_rfp_closing": ["Proposals", "Pricing", "Closing"],
-  "05_lnr_closing": ["LNR", "Tiered Rates", "BT"],
+  "03_account_manager": ["Top Accounts", "Retention", "QBRs"],
+  "04_rfp_closing": ["RFPs", "Pricing", "Big Revenue"],
+  "05_lnr_closing": ["LNR", "Tiered Rates", "Corporate"],
   "06_group_sales": ["Group Blocks", "Inquiries", "Contracts"],
   "07_meeting_catering": ["Meetings", "Catering", "Quotes"],
-  "08_after_sales": ["Follow-up", "Reviews", "Loyalty"],
-  "09_retention": ["Win-back", "Repeat", "Loyalty"],
+  "08_after_sales": ["Follow-up", "Reviews", "Repeat"],
+  "09_retention": ["Win-back", "Loyalty", "Backyard"],
   "10_revenue_leadership": ["Dashboards", "KPIs", "Reports"],
 };
 
@@ -45,6 +45,7 @@ export function AgentCard({
   const gradient = GRADIENT[agent.color] ?? GRADIENT.teal;
   const tags = SPECIALTIES[agent.id] ?? [];
   const isLive = agent.tier === 1;
+  const isCalculated = agent.funnel === "calculated";
 
   return (
     <motion.div
@@ -61,6 +62,19 @@ export function AgentCard({
               {agent.icon}
             </span>
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.20),transparent_60%)]" />
+
+            {/* Funnel badge — top left */}
+            <span
+              className={`absolute top-3 left-3 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-bold tracking-[0.14em] uppercase ${
+                isCalculated
+                  ? "bg-mhsp-navy text-white"
+                  : "bg-mhsp-teal text-white"
+              }`}
+            >
+              {isCalculated ? "🎯 Calculated" : "⚡ Hustle"}
+            </span>
+
+            {/* Live/Ready — top right */}
             <span
               className={`absolute top-3 right-3 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-bold tracking-wider uppercase ${
                 isLive
@@ -74,7 +88,7 @@ export function AgentCard({
           </div>
           <div className="p-5">
             <p className="text-[10px] font-semibold tracking-[0.18em] text-mhsp-gold uppercase">
-              {labelFromName(agent.name)}
+              {agent.roleTitle}
             </p>
             <h3 className="font-display text-xl text-mhsp-navy mt-1.5 leading-tight">
               {agent.name}
@@ -99,8 +113,4 @@ export function AgentCard({
       </Link>
     </motion.div>
   );
-}
-
-function labelFromName(name: string) {
-  return name.replace(/\s+Agent$/, "").toUpperCase();
 }

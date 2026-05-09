@@ -8,10 +8,9 @@ const PARTNERS = [
 
 export function TrustBar() {
   return (
-    <div className="w-full max-w-5xl mx-auto mt-12 px-6">
-      <p className="text-center text-xs text-mhsp-muted/80 mb-6 font-medium">
-        Built on the methodology that has helped hotels nationwide achieve their
-        revenue goals
+    <div className="w-full max-w-5xl mx-auto mt-10 px-6">
+      <p className="text-center text-xs text-mhsp-muted/80 mb-6 font-medium tracking-wide">
+        Trusted by independent and boutique hotels across America
       </p>
       <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-4 opacity-50">
         {PARTNERS.map((p) => (

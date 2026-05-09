@@ -1,56 +1,115 @@
-import { AGENTS, type Agent } from "@/lib/agents";
+import { AGENTS, FUNNELS, type Agent, type Funnel } from "@/lib/agents";
 import { AgentCard } from "@/components/AgentCard";
 
-export function AgentGrid({ profile }: { profile: string }) {
-  const tier1 = AGENTS.filter((a) => a.tier === 1);
-  const tier2 = AGENTS.filter((a) => a.tier === 2);
+const FUNNEL_ORDER: { key: Funnel; ids: string[] }[] = [
+  {
+    key: "calculated",
+    ids: [
+      "00_director_of_sales",
+      "02_outbound_sales",
+      "04_rfp_closing",
+      "05_lnr_closing",
+      "03_account_manager",
+      "10_revenue_leadership",
+    ],
+  },
+  {
+    key: "hustle",
+    ids: [
+      "01_lead_generation",
+      "06_group_sales",
+      "07_meeting_catering",
+      "08_after_sales",
+      "09_retention",
+    ],
+  },
+];
 
+export function AgentGrid({ profile }: { profile: string }) {
+  let cardIndex = 0;
   return (
     <div className="space-y-12">
-      <Section
-        eyebrow="Active Now"
-        title="Live agents"
-        description="These agents call the Claude API and produce real outputs against your hotel profile."
-        items={tier1}
-        profile={profile}
-        offset={0}
-      />
-      <Section
-        eyebrow="On Standby"
-        title="Sample-ready specialists"
-        description="Pre-rendered demo outputs ready to load instantly — perfect for client walkthroughs."
-        items={tier2}
-        profile={profile}
-        offset={tier1.length}
-      />
+      {FUNNEL_ORDER.map(({ key, ids }) => {
+        const meta = FUNNELS[key];
+        const items = ids
+          .map((id) => AGENTS.find((a) => a.id === id))
+          .filter((a): a is Agent => Boolean(a));
+        const offset = cardIndex;
+        cardIndex += items.length;
+        return (
+          <FunnelSection
+            key={key}
+            funnel={key}
+            label={meta.label}
+            tagline={meta.tagline}
+            description={meta.description}
+            emoji={meta.emoji}
+            items={items}
+            profile={profile}
+            offset={offset}
+          />
+        );
+      })}
     </div>
   );
 }
 
-function Section({
-  eyebrow,
-  title,
+function FunnelSection({
+  funnel,
+  label,
+  tagline,
   description,
+  emoji,
   items,
   profile,
   offset,
 }: {
-  eyebrow: string;
-  title: string;
+  funnel: Funnel;
+  label: string;
+  tagline: string;
   description: string;
+  emoji: string;
   items: readonly Agent[];
   profile: string;
   offset: number;
 }) {
+  const isCalculated = funnel === "calculated";
+  const accentText = isCalculated ? "text-mhsp-navy" : "text-mhsp-teal";
+  const accentBg = isCalculated
+    ? "from-mhsp-navy/10 to-mhsp-gold/5"
+    : "from-mhsp-teal/12 to-mhsp-gold/5";
+  const stripe = isCalculated ? "bg-mhsp-navy" : "bg-mhsp-teal";
+
   return (
     <section>
-      <div className="flex items-end justify-between gap-4 mb-5 flex-wrap">
-        <div>
-          <p className="eyebrow">{eyebrow}</p>
-          <h2 className="font-display text-2xl text-mhsp-navy mt-1">{title}</h2>
+      {/* Funnel banner */}
+      <div
+        className={`relative overflow-hidden rounded-2xl bg-gradient-to-r ${accentBg} border border-mhsp-line p-6 mb-5`}
+      >
+        <span
+          className={`absolute left-0 top-0 bottom-0 w-1 ${stripe}`}
+        />
+        <div className="flex items-end justify-between gap-4 flex-wrap">
+          <div className="pl-3">
+            <p className="text-[11px] font-bold tracking-[0.2em] uppercase text-mhsp-gold">
+              {emoji} {tagline}
+            </p>
+            <h2 className={`font-display text-2xl mt-1 ${accentText}`}>
+              {label}
+            </h2>
+            <p className="text-sm text-mhsp-muted mt-1.5 max-w-xl leading-relaxed">
+              {description}
+            </p>
+          </div>
+          <div
+            className={`inline-flex items-baseline gap-1.5 px-3 py-1.5 rounded-full bg-white border border-mhsp-line text-xs ${accentText}`}
+          >
+            <span className="font-numeric text-base font-bold">{items.length}</span>
+            <span className="text-mhsp-muted font-medium">agents</span>
+          </div>
         </div>
-        <p className="text-sm text-mhsp-muted max-w-md">{description}</p>
       </div>
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {items.map((a, i) => (
           <AgentCard key={a.id} agent={a} profile={profile} index={offset + i} />

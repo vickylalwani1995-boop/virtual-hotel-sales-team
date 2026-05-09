@@ -11,7 +11,11 @@ import {
 import { Mail, Sparkles, Trash2 } from "lucide-react";
 import { AGENTS, getAgent } from "@/lib/agents";
 
-type FilterKey = "all" | "live" | "demo" | "emails";
+type FilterKey = "all" | "calculated" | "hustle" | "live" | "demo" | "emails";
+
+// Theatrical revenue model — illustrative pipeline value per action
+const REV_PER_RUN = 12500;
+const REV_PER_EMAIL = 3000;
 
 function timeAgo(iso: string): string {
   const ts = new Date(iso).getTime();
@@ -20,6 +24,19 @@ function timeAgo(iso: string): string {
   if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
   if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
   return new Date(iso).toLocaleDateString();
+}
+
+function fmtUSD(n: number): string {
+  return n.toLocaleString("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: 0,
+  });
+}
+
+function funnelOf(agentId: string): "calculated" | "hustle" | null {
+  const a = AGENTS.find((x) => x.id === agentId);
+  return a ? a.funnel : null;
 }
 
 export default function ActivityPage() {
@@ -32,22 +49,17 @@ export default function ActivityPage() {
   }, []);
 
   const stats = useMemo(() => {
-    if (!entries) return { runs: 0, emails: 0, leads: 0, active: 0 };
+    if (!entries) return { calc: 0, hustle: 0, emails: 0, projected: 0 };
     const today = new Date().toDateString();
     const todayEntries = entries.filter(
       (e) => new Date(e.timestamp).toDateString() === today
     );
-    const runs = todayEntries.filter((e) => e.type === "agent_run").length;
+    const runs = todayEntries.filter((e) => e.type === "agent_run");
+    const calc = runs.filter((e) => funnelOf(e.agentId) === "calculated").length;
+    const hustle = runs.filter((e) => funnelOf(e.agentId) === "hustle").length;
     const emails = todayEntries.filter((e) => e.type === "email_queued").length;
-    const leads = todayEntries.filter(
-      (e) => e.type === "agent_run" && e.agentId === "01_lead_generation"
-    ).length;
-    const activeAgents = new Set(
-      todayEntries
-        .filter((e) => e.type === "agent_run")
-        .map((e) => e.agentId)
-    );
-    return { runs, emails, leads, active: activeAgents.size };
+    const projected = runs.length * REV_PER_RUN + emails * REV_PER_EMAIL;
+    return { calc, hustle, emails, projected };
   }, [entries]);
 
   const filtered = useMemo(() => {
@@ -60,6 +72,10 @@ export default function ActivityPage() {
         return e.type === "agent_run" && !e.isSample;
       if (filter === "demo")
         return e.type === "agent_run" && e.isSample;
+      if (filter === "calculated")
+        return e.type === "agent_run" && funnelOf(e.agentId) === "calculated";
+      if (filter === "hustle")
+        return e.type === "agent_run" && funnelOf(e.agentId) === "hustle";
       return true;
     });
   }, [entries, filter, agentFilter]);
@@ -78,7 +94,7 @@ export default function ActivityPage() {
             Sales Team Activity
           </h1>
           <p className="text-mhsp-muted mt-2">
-            Every agent run, logged in real time.
+            Synergistic Selling, logged in real time. Calculated + Hustle, side by side.
           </p>
         </div>
         {entries && entries.length > 0 && (
@@ -91,36 +107,66 @@ export default function ActivityPage() {
         )}
       </div>
 
-      {/* Stats bar */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-        <Stat label="Runs today" value={stats.runs} accent="navy" />
-        <Stat label="Emails queued" value={stats.emails} accent="gold" />
-        <Stat label="Lead lists" value={stats.leads} accent="teal" />
-        <Stat label="Active agents" value={stats.active} accent="success" />
+      {/* Stats bar — funnel-aware */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+        <FunnelStat
+          icon="🎯"
+          label="Calculated runs today"
+          value={stats.calc.toString()}
+          accent="navy"
+        />
+        <FunnelStat
+          icon="⚡"
+          label="Hustle runs today"
+          value={stats.hustle.toString()}
+          accent="teal"
+        />
+        <FunnelStat
+          icon="✉️"
+          label="Emails queued"
+          value={stats.emails.toString()}
+          accent="gold"
+        />
+        <FunnelStat
+          icon="💥"
+          label="Explosive Revenue (projected)"
+          value={fmtUSD(stats.projected)}
+          accent="success"
+          highlight
+        />
       </div>
 
       {/* Filters */}
       <div className="flex flex-wrap items-center gap-2 mb-5">
         {(
           [
-            ["all", "All"],
-            ["live", "Live runs"],
-            ["demo", "Demo Mode runs"],
-            ["emails", "Emails"],
+            ["all", "All", "navy"],
+            ["calculated", "🎯 Calculated", "navy"],
+            ["hustle", "⚡ Hustle", "teal"],
+            ["live", "Live runs", "navy"],
+            ["demo", "Demo Mode", "navy"],
+            ["emails", "Emails", "navy"],
           ] as const
-        ).map(([key, label]) => (
-          <button
-            key={key}
-            onClick={() => setFilter(key)}
-            className={`text-xs font-semibold uppercase tracking-wider rounded-full px-3 py-1.5 border transition-all ${
-              filter === key
-                ? "bg-mhsp-navy text-white border-mhsp-navy"
-                : "bg-white text-mhsp-muted border-mhsp-line hover:border-mhsp-navy/30 hover:text-mhsp-navy"
-            }`}
-          >
-            {label}
-          </button>
-        ))}
+        ).map(([key, label, color]) => {
+          const isActive = filter === key;
+          const activeBg =
+            color === "teal"
+              ? "bg-mhsp-teal text-white border-mhsp-teal"
+              : "bg-mhsp-navy text-white border-mhsp-navy";
+          return (
+            <button
+              key={key}
+              onClick={() => setFilter(key)}
+              className={`text-xs font-semibold uppercase tracking-wider rounded-full px-3 py-1.5 border transition-all ${
+                isActive
+                  ? activeBg
+                  : "bg-white text-mhsp-muted border-mhsp-line hover:border-mhsp-navy/30 hover:text-mhsp-navy"
+              }`}
+            >
+              {label}
+            </button>
+          );
+        })}
         <div className="ml-auto">
           <select
             value={agentFilter}
@@ -169,14 +215,18 @@ export default function ActivityPage() {
   );
 }
 
-function Stat({
+function FunnelStat({
+  icon,
   label,
   value,
   accent,
+  highlight = false,
 }: {
+  icon: string;
   label: string;
-  value: number;
+  value: string;
   accent: "navy" | "gold" | "teal" | "success";
+  highlight?: boolean;
 }) {
   const accentClass = {
     navy: "text-mhsp-navy",
@@ -185,11 +235,20 @@ function Stat({
     success: "text-mhsp-success",
   }[accent];
   return (
-    <div className="bg-white rounded-2xl border border-mhsp-line p-4 shadow-[0_2px_10px_-4px_rgba(11,36,71,0.06)]">
-      <p className="text-[10px] font-semibold tracking-[0.18em] uppercase text-mhsp-muted">
-        {label}
-      </p>
-      <p className={`font-numeric text-3xl font-bold mt-1 ${accentClass}`}>
+    <div
+      className={`rounded-2xl border p-4 shadow-[0_2px_10px_-4px_rgba(11,36,71,0.06)] ${
+        highlight
+          ? "border-mhsp-gold/40 bg-gradient-to-br from-mhsp-gold/10 to-white"
+          : "border-mhsp-line bg-white"
+      }`}
+    >
+      <div className="flex items-center gap-1.5">
+        <span className="text-base">{icon}</span>
+        <p className="text-[10px] font-semibold tracking-[0.16em] uppercase text-mhsp-muted">
+          {label}
+        </p>
+      </div>
+      <p className={`font-numeric text-3xl font-bold mt-1.5 ${accentClass}`}>
         {value}
       </p>
     </div>
@@ -199,6 +258,13 @@ function Stat({
 function Entry({ entry, index }: { entry: ActivityEntry; index: number }) {
   const isRun = entry.type === "agent_run";
   const agent = isRun ? getAgent(entry.agentId) : undefined;
+  const funnel = agent?.funnel;
+  const funnelDot =
+    funnel === "calculated"
+      ? "bg-mhsp-navy"
+      : funnel === "hustle"
+        ? "bg-mhsp-teal"
+        : "bg-mhsp-line";
 
   return (
     <motion.li
@@ -218,11 +284,25 @@ function Entry({ entry, index }: { entry: ActivityEntry; index: number }) {
       </div>
       <div className="bg-white rounded-2xl border border-mhsp-line p-4 shadow-[0_2px_10px_-4px_rgba(11,36,71,0.06)]">
         <div className="flex items-center gap-2 flex-wrap">
+          {isRun && funnel && (
+            <span className={`h-2 w-2 rounded-full ${funnelDot}`} title={funnel} />
+          )}
           <span className="font-display text-sm font-semibold text-mhsp-navy">
             {entry.type === "agent_run"
               ? entry.agentName
               : `Email queued — ${entry.subject}`}
           </span>
+          {isRun && funnel && (
+            <span
+              className={`text-[9px] font-bold uppercase tracking-[0.14em] rounded-full px-2 py-0.5 ${
+                funnel === "calculated"
+                  ? "bg-mhsp-navy/8 text-mhsp-navy"
+                  : "bg-mhsp-teal/12 text-mhsp-teal"
+              }`}
+            >
+              {funnel === "calculated" ? "Calculated" : "Hustle"}
+            </span>
+          )}
           {entry.type === "agent_run" && entry.isSample && (
             <span className="text-[10px] font-semibold uppercase tracking-wider rounded-full bg-mhsp-cream-warm border border-mhsp-line/60 px-2 py-0.5 text-mhsp-muted">
               Sample
