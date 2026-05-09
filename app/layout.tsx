@@ -13,11 +13,11 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL("https://virtual-hotel-sales-team.vercel.app"),
   title: {
-    default: "my Sales TEAM AI · Powered by My Hospitality Sales Pro",
+    default: "my Sales TEAM AI · Synergistic Selling on Autopilot · MHSP",
     template: "%s · my Sales TEAM AI",
   },
   description:
-    "AI-powered virtual sales department for hotels. 11 specialist agents trained on the MHSP method. Built by My Hospitality Sales Pro & Inntelligent CRM.",
+    "The MHSP dual sales funnel — calculated + hustle — built into 11 AI sales agents. Explosive revenues for hotels, without fear. Powered by My Hospitality Sales Pro & Inntelligent CRM.",
   keywords: [
     "hotel sales",
     "AI sales",
@@ -32,17 +32,17 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: "my Sales TEAM AI",
-    title: "my Sales TEAM AI · Your virtual hotel sales department",
+    title: "my Sales TEAM AI · Synergistic Selling on Autopilot",
     description:
-      "11 specialist AI agents. One Director of Sales. Built on the MHSP method. Trusted by hotels across America.",
+      "The MHSP dual sales funnel — calculated + hustle — built into 11 AI sales agents. Explosive revenues for hotels, without fear.",
     url: "https://virtual-hotel-sales-team.vercel.app",
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: "my Sales TEAM AI · Powered by My Hospitality Sales Pro",
+    title: "my Sales TEAM AI · Synergistic Selling on Autopilot",
     description:
-      "11 specialist AI agents. One Director of Sales. Built on the MHSP method.",
+      "The MHSP dual funnel — calculated + hustle — built into 11 AI sales agents. Explosive revenues. No fear.",
   },
 };
 
