@@ -155,6 +155,27 @@ input[type="checkbox"],
 input[type="radio"] {
   cursor: pointer;
 }
+.trust-logo-row {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.trust-logo-row::-webkit-scrollbar {
+  display: none;
+}
+
+/* Gradient italic text — fixes BOTH descender clipping (g, p, y, j, q)
+   AND right-edge clipping caused by italic skew + bg-clip-text.
+   Generous right + bottom padding so the gradient extends past the
+   rightmost lean and the descenders, plus a hair of letter-spacing
+   so italic skew between glyphs has breathing room. */
+.gradient-italic {
+  display: inline-block;
+  padding: 0.08em 0.45em 0.32em 0.05em;
+  line-height: 1.12;
+  letter-spacing: 0.005em;
+  overflow: visible;
+}
+
 button:disabled,
 button[aria-disabled="true"],
 [role="button"][aria-disabled="true"],
@@ -194,7 +215,7 @@ select:disabled {
 }
 
 /* ============================================================
-   Responsive scaling — 16 breakpoints
+   Responsive scaling - 16 breakpoints
    Container rule (per latest spec):
      ≥1600px viewport → .max-w-7xl = 1520px
      ≤1599px viewport → .max-w-7xl = 90% of viewport width
@@ -202,39 +223,39 @@ select:disabled {
    keeping body/UI text at ≥14px (enforced by base layer above).
    ============================================================ */
 
-/* Default (≥1600) — fixed 1520px container */
+/* Default (≥1600) - fixed 1520px container */
 .max-w-7xl { max-width: 1520px; }
 
-/* 1536 — max 1599 — switch to fluid 90% */
+/* 1536 - max 1599 - switch to fluid 90% */
 @media (max-width: 1599px) {
   .max-w-7xl { max-width: 90%; }
   .lg\:text-\[64px\] { font-size: 56px; }
 }
 
-/* 1440 — max 1499 */
+/* 1440 - max 1499 */
 @media (max-width: 1499px) {
   .lg\:text-\[64px\] { font-size: 52px; }
 }
 
-/* 1366 — max 1399 */
+/* 1366 - max 1399 */
 @media (max-width: 1399px) {
   .lg\:text-\[64px\] { font-size: 48px; }
   .lg\:pt-24 { padding-top: 4rem; }
   .lg\:pb-28 { padding-bottom: 4.5rem; }
 }
 
-/* 1326 — max 1365 — (no container change; spacing only) */
+/* 1326 - max 1365 - (no container change; spacing only) */
 @media (max-width: 1365px) {
   .px-6 { padding-inline: 1.25rem; }
 }
 
-/* 1280 — max 1325 */
+/* 1280 - max 1325 */
 @media (max-width: 1325px) {
   .px-7 { padding-inline: 1.25rem; }
   .px-8 { padding-inline: 1.5rem; }
 }
 
-/* 1024 — max 1279 */
+/* 1024 - max 1279 */
 @media (max-width: 1279px) {
   .lg\:text-\[64px\] { font-size: 44px; }
   .lg\:pt-24 { padding-top: 3rem; }
@@ -243,7 +264,7 @@ select:disabled {
   .pb-20 { padding-bottom: 3rem; }
 }
 
-/* 992 — max 1023 */
+/* 992 - max 1023 */
 @media (max-width: 1023px) {
   .text-6xl { font-size: 3rem; line-height: 1.05; }
   .sm\:text-6xl { font-size: 3rem; line-height: 1.05; }
@@ -251,7 +272,7 @@ select:disabled {
   .py-12 { padding-block: 2.5rem; }
 }
 
-/* 801 — max 991 */
+/* 801 - max 991 */
 @media (max-width: 991px) {
   .px-6 { padding-inline: 1rem; }
   .px-7 { padding-inline: 1rem; }
@@ -263,7 +284,7 @@ select:disabled {
   .py-12 { padding-block: 2rem; }
 }
 
-/* 768 — max 800 */
+/* 768 - max 800 */
 @media (max-width: 800px) {
   .text-5xl { font-size: 2rem; }
   .text-6xl, .sm\:text-6xl { font-size: 2.25rem; }
@@ -273,7 +294,7 @@ select:disabled {
   .text-xl { font-size: 1.125rem; }
 }
 
-/* 576 — max 767 */
+/* 576 - max 767 */
 @media (max-width: 767px) {
   .px-6 { padding-inline: 1rem; }
   .px-7 { padding-inline: 1rem; }
@@ -287,7 +308,7 @@ select:disabled {
   .text-lg, .sm\:text-lg { font-size: 1rem; }
 }
 
-/* 481 — max 575 */
+/* 481 - max 575 */
 @media (max-width: 575px) {
   .text-5xl { font-size: 1.75rem; }
   .text-4xl { font-size: 1.5rem; }
@@ -297,7 +318,7 @@ select:disabled {
   .pb-20 { padding-bottom: 2rem; }
 }
 
-/* 390 — max 480 */
+/* 390 - max 480 */
 @media (max-width: 480px) {
   .px-6, .px-7, .px-8 { padding-inline: 0.875rem; }
   .text-5xl { font-size: 1.625rem; }
@@ -306,12 +327,12 @@ select:disabled {
   .text-2xl { font-size: 1.125rem; }
 }
 
-/* 375 — max 389 */
+/* 375 - max 389 */
 @media (max-width: 389px) {
   .text-5xl { font-size: 1.5rem; }
 }
 
-/* 320 — max 374 */
+/* 320 - max 374 */
 @media (max-width: 374px) {
   .px-6, .px-7, .px-8 { padding-inline: 0.75rem; }
   .text-5xl { font-size: 1.375rem; }

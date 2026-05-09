@@ -32,7 +32,7 @@ function saveHistory(history: ChatMessage[]) {
     const trimmed = history.slice(-MAX_HISTORY);
     window.localStorage.setItem(HISTORY_KEY, JSON.stringify(trimmed));
   } catch {
-    // localStorage full or blocked — non-fatal
+    // localStorage full or blocked - non-fatal
   }
 }
 
@@ -110,7 +110,7 @@ export function useConcierge() {
       } catch (e: unknown) {
         if ((e as { name?: string })?.name !== "AbortError") {
           const msg = e instanceof Error ? e.message : "Something went wrong";
-          acc = acc || `Sorry — I hit an error: ${msg}`;
+          acc = acc || `Sorry - I hit an error: ${msg}`;
         }
       } finally {
         const assistantMsg: ChatMessage = {

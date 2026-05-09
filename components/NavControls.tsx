@@ -16,13 +16,13 @@ export function NavControls() {
   function toggle() {
     const next = !demo;
     setDemo(next);
-    toast.success(next ? "Demo Mode on — instant cached outputs" : "Demo Mode off");
+    toast.success(next ? "Demo Mode on - instant cached outputs" : "Demo Mode off");
   }
 
   function handleReset() {
     setResetting(true);
     resetDemo();
-    toast.success("Demo reset — local data cleared");
+    toast.success("Demo reset - local data cleared");
     setTimeout(() => {
       setResetting(false);
       router.push("/");

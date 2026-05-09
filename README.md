@@ -9,8 +9,8 @@ Built solo by **Vicky Lalwani** (Digital Marketing Director,
 Softqube Technologies) for Softqube Heckathon 2026.
 
 The play: when a hotel manager describes their property, an
-AI sales team of 11 specialists generates real outputs —
-leads, emails, follow-ups, proposals, retention plans — in
+AI sales team of 11 specialists generates real outputs -
+leads, emails, follow-ups, proposals, retention plans - in
 real time.
 
 ## Live demo
@@ -32,19 +32,19 @@ username/password works).
 
 ## The 11 agents
 
-1. **Director of Sales** — strategy + weekly plan
-2. **Lead Generation Agent** — finds prospects
-3. **Outbound Sales Agent** — cold emails + scripts
-4. **Account Relationship Manager** — warm accounts
-5. **RFP Closing Agent** — proposals
-6. **LNR Closing Agent** — negotiated rates
-7. **Group Sales Agent** — room blocks
-8. **Meeting & Catering Agent** — events
-9. **After-Sales Service Agent** — post-stay
-10. **Customer Revenue & Retention Agent** — repeat business
-11. **Revenue & Leadership Agent** — reports
+1. **Director of Sales** - strategy + weekly plan
+2. **Lead Generation Agent** - finds prospects
+3. **Outbound Sales Agent** - cold emails + scripts
+4. **Account Relationship Manager** - warm accounts
+5. **RFP Closing Agent** - proposals
+6. **LNR Closing Agent** - negotiated rates
+7. **Group Sales Agent** - room blocks
+8. **Meeting & Catering Agent** - events
+9. **After-Sales Service Agent** - post-stay
+10. **Customer Revenue & Retention Agent** - repeat business
+11. **Revenue & Leadership Agent** - reports
 
-Plus a sticky **myConcierge** AI assistant on every page —
+Plus a sticky **myConcierge** AI assistant on every page -
 a hotel-sales co-pilot that answers questions, explains the
 app, and routes you to the right agent.
 
@@ -71,10 +71,10 @@ ANTHROPIC_API_KEY=sk-ant-...
 ```
 /app
   /api
-    /run-agent          POST — runs a single agent
-    /concierge          POST — myConcierge streaming chat
-    /sample-output      GET — Demo Mode cached outputs
-    /queue-email        POST — fake email queue
+    /run-agent          POST - runs a single agent
+    /concierge          POST - myConcierge streaming chat
+    /sample-output      GET - Demo Mode cached outputs
+    /queue-email        POST - fake email queue
   /agent/[id]           Agent detail page
   /agents               Agent grid
   /activity             Activity timeline + KPIs
@@ -89,7 +89,7 @@ ANTHROPIC_API_KEY=sk-ant-...
 ## Demo Mode
 
 Toggle in nav. When ON, agent runs hit `/api/sample-output`
-instead of Claude — instant cached responses ideal for stage
+instead of Claude - instant cached responses ideal for stage
 demos and offline backups.
 
 ## Collaboration
@@ -99,7 +99,7 @@ and team workflow.
 
 ## Built by
 
-**Vicky Lalwani** — Digital Marketing Director, Softqube
+**Vicky Lalwani** - Digital Marketing Director, Softqube
 Technologies.
 
 For My Hospitality Sales Pro & Inntelligent CRM × Softqube

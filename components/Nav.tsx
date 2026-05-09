@@ -14,14 +14,14 @@ export function Nav() {
     const next = !demo;
     setDemo(next);
     toast.success(
-      next ? "Demo Mode on — instant cached outputs" : "Demo Mode off",
+      next ? "Demo Mode on - instant cached outputs" : "Demo Mode off",
     );
   }
 
   return (
     <header className="sticky top-0 z-40 backdrop-blur-md bg-mhsp-cream/85 border-b border-mhsp-line">
       <div className="max-w-7xl mx-auto px-3 sm:px-5 lg:px-6 h-16 sm:h-20 flex items-center gap-2 sm:gap-4 lg:gap-6">
-        {/* Logo block — scales with breakpoint */}
+        {/* Logo block - scales with breakpoint */}
         <Link
           href="/"
           className="flex items-center gap-3 sm:gap-4 shrink-0 min-w-0"
@@ -42,7 +42,7 @@ export function Nav() {
 
         <div className="flex-1" />
 
-        {/* Phone — hidden on mobile, icon-only on tablet, full on desktop */}
+        {/* Phone - hidden on mobile, icon-only on tablet, full on desktop */}
         <a
           href="tel:8889091678"
           className="hidden sm:inline-flex items-center gap-1.5 text-sm font-medium text-mhsp-navy hover:text-mhsp-gold transition-colors shrink-0"
@@ -52,7 +52,7 @@ export function Nav() {
           <span className="hidden lg:inline">888-909-1678</span>
         </a>
 
-        {/* Demo Mode toggle — compact on mobile, expanded on desktop */}
+        {/* Demo Mode toggle - compact on mobile, expanded on desktop */}
         <button
           type="button"
           onClick={toggle}

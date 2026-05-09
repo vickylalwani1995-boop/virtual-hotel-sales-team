@@ -219,7 +219,7 @@ export function AgentChat({
         if ((e as { name?: string })?.name !== "AbortError") {
           const msg = e instanceof Error ? e.message : "Something went wrong";
           toast.error(msg);
-          finalizeAssistant(`Sorry — I hit an error: ${msg}`);
+          finalizeAssistant(`Sorry - I hit an error: ${msg}`);
         } else {
           finalizeAssistant("(stopped)");
         }
@@ -605,7 +605,7 @@ function Welcome({
         Start the conversation
       </h3>
       <p className="text-sm text-mhsp-muted mt-1.5 max-w-md mx-auto">
-        Ask {agent.name} anything — or use one of the quick starts below the
+        Ask {agent.name} anything - or use one of the quick starts below the
         message box.
       </p>
       {chips.length > 0 && (
@@ -724,7 +724,7 @@ async function consumeSse(
           }
         } catch (err) {
           if (err instanceof Error && err.message !== "stream error") {
-            // probably a malformed/partial chunk — ignore
+            // probably a malformed/partial chunk - ignore
             continue;
           }
           throw err;

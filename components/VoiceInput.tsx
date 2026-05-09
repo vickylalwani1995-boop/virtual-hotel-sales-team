@@ -111,7 +111,7 @@ export function VoiceInput({
       if (code === "not-allowed" || code === "service-not-allowed") {
         toast.error("Microphone permission denied");
       } else if (code === "no-speech") {
-        // silent — natural end
+        // silent - natural end
       } else if (code !== "aborted") {
         toast.error(`Voice error: ${code}`);
       }

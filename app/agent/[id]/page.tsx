@@ -136,7 +136,7 @@ function AgentDetail({ id }: { id: string }) {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-[35%_65%] gap-6">
-        {/* Left — agent identity */}
+        {/* Left - agent identity */}
         <aside>
           <div className="bg-white rounded-2xl border border-mhsp-line p-6 shadow-[0_2px_10px_-4px_rgba(15,76,129,0.08)]">
             <p className="eyebrow">{labelFromName(agent.name)}</p>
@@ -172,7 +172,7 @@ function AgentDetail({ id }: { id: string }) {
           </div>
         </aside>
 
-        {/* Right — chat */}
+        {/* Right - chat */}
         <div>
           {!profile ? (
             <div className="bg-white rounded-2xl border border-mhsp-line border-dashed p-10 text-center">

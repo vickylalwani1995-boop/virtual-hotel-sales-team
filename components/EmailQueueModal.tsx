@@ -53,7 +53,7 @@ export function EmailQueueModal({
         subject: subject || "(no subject)",
         preview: body.slice(0, 100),
       });
-      toast.success("Email queued — will sync with MyHospitalitySalesPro");
+      toast.success("Email queued - will sync with MyHospitalitySalesPro");
       setOpen(false);
     } catch (e: unknown) {
       toast.error(e instanceof Error ? e.message : "Failed to queue");

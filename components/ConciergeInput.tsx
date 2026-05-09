@@ -44,7 +44,7 @@ export function ConciergeInput({
 
   return (
     <div className="border-t border-mhsp-line bg-white px-4 py-3">
-      <div className="flex items-end gap-2 rounded-xl border border-mhsp-line bg-white focus-within:border-mhsp-gold focus-within:ring-2 focus-within:ring-mhsp-gold/20 transition-all px-3 py-2">
+      <div className="flex items-center gap-2 rounded-xl border border-mhsp-line bg-white focus-within:border-mhsp-gold focus-within:ring-2 focus-within:ring-mhsp-gold/20 transition-all px-3 py-2 min-h-[44px]">
         <textarea
           ref={ref}
           value={value}
@@ -52,7 +52,7 @@ export function ConciergeInput({
           onKeyDown={handleKey}
           rows={1}
           placeholder="Ask anything about hotel sales..."
-          className="flex-1 resize-none bg-transparent text-[14px] leading-relaxed text-mhsp-text placeholder:text-mhsp-muted/70 focus:outline-none max-h-[120px]"
+          className="flex-1 resize-none bg-transparent text-[14px] leading-[1.5] py-1 text-mhsp-text placeholder:text-mhsp-muted/70 focus:outline-none max-h-[120px] block self-center"
         />
         {streaming ? (
           <button

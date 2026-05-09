@@ -12,7 +12,7 @@ export const QUICK_ACTIONS: Record<string, string[]> = {
     "Local universities",
   ],
   "02_outbound_sales": [
-    "Cold email — corporate tone",
+    "Cold email - corporate tone",
     "Follow-up sequence",
     "LinkedIn message",
     "Re-engage cold lead",

@@ -17,7 +17,7 @@ export const AGENTS = [
     color: "green",
     tier: 1,
     funnel: "hustle",
-    description: "Hunts local, corporate, group, medical, and event leads — the backyard kind that other hotels miss",
+    description: "Hunts local, corporate, group, medical, and event leads - the backyard kind that other hotels miss",
   },
   {
     id: "02_outbound_sales",
@@ -27,7 +27,7 @@ export const AGENTS = [
     color: "blue",
     tier: 1,
     funnel: "calculated",
-    description: "Writes cold emails, call scripts, LinkedIn messages — no-fear outreach to the top of the funnel",
+    description: "Writes cold emails, call scripts, LinkedIn messages - no-fear outreach to the top of the funnel",
   },
   {
     id: "03_account_manager",
@@ -37,7 +37,7 @@ export const AGENTS = [
     color: "purple",
     tier: 2,
     funnel: "calculated",
-    description: "Manages warm and existing top accounts — protects the big revenue you already have",
+    description: "Manages warm and existing top accounts - protects the big revenue you already have",
   },
   {
     id: "04_rfp_closing",
@@ -57,7 +57,7 @@ export const AGENTS = [
     color: "amber",
     tier: 2,
     funnel: "calculated",
-    description: "Handles Local Negotiated Rate opportunities — anchors the calendar with predictable corporate volume",
+    description: "Handles Local Negotiated Rate opportunities - anchors the calendar with predictable corporate volume",
   },
   {
     id: "06_group_sales",
@@ -77,7 +77,7 @@ export const AGENTS = [
     color: "pink",
     tier: 2,
     funnel: "hustle",
-    description: "Qualifies meeting and catering inquiries — pitches the F&B opportunity local hotels usually miss",
+    description: "Qualifies meeting and catering inquiries - pitches the F&B opportunity local hotels usually miss",
   },
   {
     id: "08_after_sales",
@@ -87,7 +87,7 @@ export const AGENTS = [
     color: "red",
     tier: 1,
     funnel: "hustle",
-    description: "Sends post-stay follow-up and review requests — turns one-time guests into repeat backyard revenue",
+    description: "Sends post-stay follow-up and review requests - turns one-time guests into repeat backyard revenue",
   },
   {
     id: "09_retention",
@@ -107,7 +107,7 @@ export const AGENTS = [
     color: "violet",
     tier: 1,
     funnel: "calculated",
-    description: "Creates dashboards and weekly leadership reports — proves the explosive revenue to ownership",
+    description: "Creates dashboards and weekly leadership reports - proves the explosive revenue to ownership",
   },
 ] as const;
 
@@ -133,7 +133,7 @@ export const FUNNELS: Record<
     label: "Hustle Funnel",
     tagline: "Backyard Grassroots",
     description:
-      "First one to convert the local opportunity wins. Medical, sports, construction, weddings, repeat stays — all the backyard revenue most hotels miss.",
+      "First one to convert the local opportunity wins. Medical, sports, construction, weddings, repeat stays - all the backyard revenue most hotels miss.",
     emoji: "⚡",
     accentClass: "text-mhsp-teal",
   },

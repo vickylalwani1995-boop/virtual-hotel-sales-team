@@ -63,7 +63,7 @@ export function AgentCard({
             </span>
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.20),transparent_60%)]" />
 
-            {/* Funnel badge — top left */}
+            {/* Funnel badge - top left */}
             <span
               className={`absolute top-3 left-3 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-bold tracking-[0.14em] uppercase ${
                 isCalculated
@@ -74,7 +74,7 @@ export function AgentCard({
               {isCalculated ? "🎯 Calculated" : "⚡ Hustle"}
             </span>
 
-            {/* Live/Ready — top right */}
+            {/* Live/Ready - top right */}
             <span
               className={`absolute top-3 right-3 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[14px] font-bold tracking-wider uppercase ${
                 isLive

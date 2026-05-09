@@ -160,7 +160,7 @@ export default function WelcomePage() {
               agents, ready to take their first brief.
             </motion.p>
 
-            {/* Agent grid — full name + description */}
+            {/* Agent grid - full name + description */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}

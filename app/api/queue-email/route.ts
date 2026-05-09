@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
     });
     return NextResponse.json({
       success: true,
-      message: "Email queued — will sync with MyHospitalitySalesPro",
+      message: "Email queued - will sync with MyHospitalitySalesPro",
       queueId: `q_${Date.now()}`,
     });
   } catch (err: unknown) {

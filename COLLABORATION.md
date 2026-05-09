@@ -2,16 +2,16 @@
 
 ## Team
 
-- **Vicky Lalwani** ([@vickylalwani](https://github.com/vickylalwani)) —
+- **Vicky Lalwani** ([@vickylalwani](https://github.com/vickylalwani)) -
   Captain, founder, pitch lead. Working in Claude Code.
-- **Nirav Bhadani** (nirav.bhadani@softqubes.com) — Polish
+- **Nirav Bhadani** (nirav.bhadani@softqubes.com) - Polish
   + remaining features. Working in Antigravity.
 
 ## Branches
 
-- `main` — production (auto-deploys to Vercel)
-- `dev` — active development
-- `feature/*` — individual feature branches
+- `main` - production (auto-deploys to Vercel)
+- `dev` - active development
+- `feature/*` - individual feature branches
 
 Never push directly to `main`. Always go through a feature
 branch and a PR.
@@ -45,14 +45,14 @@ git branch -d feature/your-feature-name
 
 ## Communication rules
 
-- **Pull before starting work** — `git pull origin main`
-- **Push at end of session** — even if work isn't done, push
+- **Pull before starting work** - `git pull origin main`
+- **Push at end of session** - even if work isn't done, push
   a WIP commit on your branch so the other person can see it
 - **Ping in Slack/Teams before editing the same file** to
   avoid merge conflicts
-- **Commit messages** — short, prefix with `feat:`, `fix:`,
+- **Commit messages** - short, prefix with `feat:`, `fix:`,
   `docs:`, `style:`, `refactor:`, `chore:`
-- **Never commit secrets** — `.env.local` is gitignored.
+- **Never commit secrets** - `.env.local` is gitignored.
   Verify before pushing: `git check-ignore -v .env.local`
 
 ## API Keys
@@ -71,7 +71,7 @@ chat, GitHub issues, commit messages, or screenshots.**
 Production: <https://virtual-hotel-sales-team.vercel.app>
 
 Auto-deploys on every push to `main`. Preview deployments
-auto-generate for every PR — Vercel posts the preview URL
+auto-generate for every PR - Vercel posts the preview URL
 in the PR comments within ~30 seconds of opening it.
 
 ## Local dev

@@ -71,7 +71,7 @@ export async function POST(req: NextRequest) {
         : JSON.stringify(hotelProfile);
 
     const conversationGuidance = isInit
-      ? `First message — introduce yourself briefly (2 sentences) and ask one specific question about what the user wants help with. Reference the hotel profile.`
+      ? `First message - introduce yourself briefly (2 sentences) and ask one specific question about what the user wants help with. Reference the hotel profile.`
       : `Engage in natural back-and-forth. Be concise by default, expand when asked. Use markdown for structure (bold, tables, lists). End with a follow-up question OR a suggested next action. Stay in character as the ${agent.name}.`;
 
     const system = `${skill}

@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const alt =
-  "my Sales TEAM AI — AI-powered virtual hotel sales department by My Hospitality Sales Pro";
+  "my Sales TEAM AI - AI-powered virtual hotel sales department by My Hospitality Sales Pro";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 

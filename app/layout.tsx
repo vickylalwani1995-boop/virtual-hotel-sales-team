@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     template: "%s · my Sales TEAM AI",
   },
   description:
-    "The MHSP dual sales funnel — calculated + hustle — built into 11 AI sales agents. Explosive revenues for hotels, without fear. Powered by My Hospitality Sales Pro & Inntelligent CRM.",
+    "The MHSP dual sales funnel - calculated + hustle - built into 11 AI sales agents. Explosive revenues for hotels, without fear. Powered by My Hospitality Sales Pro & Inntelligent CRM.",
   keywords: [
     "hotel sales",
     "AI sales",
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     siteName: "my Sales TEAM AI",
     title: "my Sales TEAM AI · Synergistic Selling on Autopilot",
     description:
-      "The MHSP dual sales funnel — calculated + hustle — built into 11 AI sales agents. Explosive revenues for hotels, without fear.",
+      "The MHSP dual sales funnel - calculated + hustle - built into 11 AI sales agents. Explosive revenues for hotels, without fear.",
     url: "https://virtual-hotel-sales-team.vercel.app",
     locale: "en_US",
   },
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "my Sales TEAM AI · Synergistic Selling on Autopilot",
     description:
-      "The MHSP dual funnel — calculated + hustle — built into 11 AI sales agents. Explosive revenues. No fear.",
+      "The MHSP dual funnel - calculated + hustle - built into 11 AI sales agents. Explosive revenues. No fear.",
   },
 };
 

@@ -46,7 +46,7 @@ function AgentsContent() {
           Your sales team for {hotelName}
         </h1>
         <p className="text-mhsp-muted mt-2">
-          11 specialist AI agents — meet the team.
+          11 specialist AI agents - meet the team.
         </p>
       </div>
 
@@ -71,7 +71,7 @@ function AgentsContent() {
       ) : (
         <div className="bg-white rounded-2xl border border-mhsp-line border-dashed p-10 text-center">
           <p className="text-mhsp-muted mb-4">
-            No hotel profile yet — add one to enable the agents.
+            No hotel profile yet - add one to enable the agents.
           </p>
           <Link
             href="/"

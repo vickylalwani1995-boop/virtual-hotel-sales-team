@@ -13,7 +13,7 @@ import { AGENTS, getAgent } from "@/lib/agents";
 
 type FilterKey = "all" | "calculated" | "hustle" | "live" | "demo" | "emails";
 
-// Theatrical revenue model — illustrative pipeline value per action
+// Theatrical revenue model - illustrative pipeline value per action
 const REV_PER_RUN = 12500;
 const REV_PER_EMAIL = 3000;
 
@@ -107,7 +107,7 @@ export default function ActivityPage() {
         )}
       </div>
 
-      {/* Stats bar — funnel-aware */}
+      {/* Stats bar - funnel-aware */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
         <FunnelStat
           icon="🎯"
@@ -291,7 +291,7 @@ function Entry({ entry, index }: { entry: ActivityEntry; index: number }) {
           <span className="font-display text-sm font-semibold text-mhsp-navy">
             {entry.type === "agent_run"
               ? entry.agentName
-              : `Email queued — ${entry.subject}`}
+              : `Email queued - ${entry.subject}`}
           </span>
           {isRun && funnel && (
             <span
