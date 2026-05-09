@@ -1,0 +1,31 @@
+[
+  {
+    "id": "rfp-acme-corp-2026",
+    "company": "Acme Logistics Corp",
+    "type": "Corporate Negotiated Rate (BT)",
+    "annualRoomNights": 240,
+    "rateStructure": "LRA + Dynamic discount option",
+    "deadline": "2026-06-15",
+    "notes": "Travel manager prioritizes Wi-Fi, breakfast, and free parking. Wants sustainability data."
+  },
+  {
+    "id": "rfp-medassoc-annual-conf",
+    "company": "Mid-Atlantic Medical Association",
+    "type": "Annual Conference Group Block",
+    "peakRoomNights": 180,
+    "totalRoomNights": 520,
+    "datePattern": "Mid-week, fall",
+    "meetingSpaceNeeded": "5,000 sq ft general session + 4 breakouts",
+    "fbMinimum": "$45k",
+    "notes": "Decision driven by AV quality and walking-distance F&B options."
+  },
+  {
+    "id": "rfp-wedding-johnson-april",
+    "company": "Johnson-Patel Wedding",
+    "type": "Wedding Room Block + Reception",
+    "roomBlock": 60,
+    "guestCount": 180,
+    "weekendDates": "April 18-19",
+    "notes": "Bride's family hosting. Wants ceremony on-site, plated dinner, brunch next day."
+  }
+]

@@ -1,0 +1,41 @@
+[
+  {
+    "id": "grand-marina-charleston",
+    "name": "The Grand Marina Hotel",
+    "location": "Charleston, SC",
+    "rooms": 220,
+    "stars": 4,
+    "adr": 245,
+    "occupancy": 0.68,
+    "meetingSpaceSqft": 8000,
+    "marketMix": { "leisure": 0.6, "corporate": 0.4 },
+    "growthGoals": ["mid-week occupancy", "corporate negotiated accounts", "group business"],
+    "profile": "The Grand Marina Hotel is a 220-room, 4-star independent property on the waterfront in Charleston, SC. ADR $245. 8,000 sq ft of meeting space, a rooftop restaurant, 60% leisure / 40% corporate mix. We struggle with mid-week occupancy and want to grow group business and corporate negotiated accounts within a 200-mile radius."
+  },
+  {
+    "id": "summit-lodge-aspen",
+    "name": "Summit Lodge Aspen",
+    "location": "Aspen, CO",
+    "rooms": 95,
+    "stars": 5,
+    "adr": 685,
+    "occupancy": 0.74,
+    "meetingSpaceSqft": 3200,
+    "marketMix": { "leisure": 0.85, "corporate": 0.15 },
+    "growthGoals": ["shoulder season demand", "luxury travel trade", "small executive retreats"],
+    "profile": "Summit Lodge Aspen is a 95-room luxury boutique mountain hotel. ADR $685, 74% occupancy, heavily ski-season weighted. 3,200 sq ft of meeting space. We want to grow shoulder season (April-May, Oct-Nov), build luxury consortia partnerships, and attract small executive retreats."
+  },
+  {
+    "id": "harbor-suites-boston",
+    "name": "Harbor Suites Boston",
+    "location": "Boston, MA",
+    "rooms": 310,
+    "stars": 3,
+    "adr": 219,
+    "occupancy": 0.81,
+    "meetingSpaceSqft": 12000,
+    "marketMix": { "leisure": 0.3, "corporate": 0.55, "group": 0.15 },
+    "growthGoals": ["weekend leisure", "association meetings", "OTA performance"],
+    "profile": "Harbor Suites Boston is a 310-room select-service hotel near the seaport. ADR $219, 81% occupancy. 12,000 sq ft of meeting space. Strong weekday corporate base; we want to grow weekend leisure, win mid-size association meetings, and improve our Booking.com and Expedia performance."
+  }
+]

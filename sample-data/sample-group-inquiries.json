@@ -1,0 +1,30 @@
+[
+  {
+    "id": "inq-techsummit-2026",
+    "from": "Rebecca Liu, Events Lead",
+    "company": "Northwind Technology Summit",
+    "rooms": 80,
+    "nights": 3,
+    "month": "September",
+    "meetingSpace": "Single 3,000 sq ft general session",
+    "fbNeeds": "Daily breakfast, 2 lunches, 1 reception"
+  },
+  {
+    "id": "inq-sports-tournament",
+    "from": "Coach Devin Reyes",
+    "company": "Coastal Youth Soccer Cup",
+    "rooms": 45,
+    "nights": 2,
+    "month": "March",
+    "notes": "Need late checkout Sunday, breakfast included, parking for team vans."
+  },
+  {
+    "id": "inq-incentive-trip",
+    "from": "Janet Okafor, HR Director",
+    "company": "Brightline Insurance",
+    "rooms": 30,
+    "nights": 4,
+    "month": "May",
+    "notes": "Top performer incentive trip. Wants spa add-ons and a private dinner with view."
+  }
+]
