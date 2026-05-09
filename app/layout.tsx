@@ -59,8 +59,12 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${inter.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col bg-mhsp-cream text-mhsp-text">
+      <body
+        className="min-h-full flex flex-col bg-mhsp-cream text-mhsp-text"
+        suppressHydrationWarning
+      >
         <AppChrome>{children}</AppChrome>
         <Toaster
           position="bottom-left"

@@ -139,6 +139,31 @@
   }
 }
 
+/* ---- Cursor restoration (Tailwind v4 dropped cursor:pointer defaults).
+   Placed OUTSIDE @layer base so it wins against any utility/component
+   layer rule at the same specificity. */
+a,
+button,
+[role="button"],
+summary,
+label[for],
+select,
+input[type="submit"],
+input[type="button"],
+input[type="reset"],
+input[type="checkbox"],
+input[type="radio"] {
+  cursor: pointer;
+}
+button:disabled,
+button[aria-disabled="true"],
+[role="button"][aria-disabled="true"],
+[role="button"]:disabled,
+input:disabled,
+select:disabled {
+  cursor: not-allowed;
+}
+
 @layer utilities {
   .font-display {
     font-family: var(--font-serif);

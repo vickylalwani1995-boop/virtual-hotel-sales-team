@@ -41,7 +41,7 @@ export function MhspLogo({
       style={{ height, width: "auto", objectFit: "contain" }}
       onError={() => setErrored(true)}
       priority
-      quality={95}
+      unoptimized
     />
   );
 }
@@ -76,7 +76,7 @@ export function InntelligentBadge({
         height={height}
         style={{ height, width: "auto", objectFit: "contain" }}
         onError={() => setErrored(true)}
-        quality={95}
+        unoptimized
       />
     </span>
   );

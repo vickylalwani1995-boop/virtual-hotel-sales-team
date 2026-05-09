@@ -7,6 +7,9 @@ import { Lock, User, Phone, ArrowRight, Loader2 } from "lucide-react";
 import { isLoggedIn, signIn } from "@/lib/auth";
 import { MhspLogo } from "@/components/MhspLogo";
 
+const VALID_USERNAME = "mhsp_sales";
+const VALID_PASSWORD = "mhsp@123";
+
 export default function LoginPage() {
   const router = useRouter();
   const [username, setUsername] = useState("");
@@ -25,12 +28,16 @@ export default function LoginPage() {
       setError("Please enter a username and password.");
       return;
     }
+    if (username.trim() !== VALID_USERNAME || password !== VALID_PASSWORD) {
+      setError("Invalid username or password.");
+      return;
+    }
     setError("");
     setSubmitting(true);
     // Brief delay for the "real auth" feel
     setTimeout(() => {
       signIn(username);
-      router.push("/");
+      router.push("/welcome");
     }, 600);
   }
 
@@ -53,7 +60,7 @@ export default function LoginPage() {
               Welcome back
             </h1>
             <p className="text-[15px] text-mhsp-muted mt-1.5">
-              Sign in to access your AI sales team
+              Login in to access your AI sales team
             </p>
           </div>
 
@@ -100,12 +107,8 @@ export default function LoginPage() {
 
             <p className="text-sm text-mhsp-muted bg-mhsp-cream-warm/60 border border-mhsp-line/60 rounded-lg px-3 py-2 leading-relaxed">
               <span className="font-semibold text-mhsp-navy">Demo credentials:</span>{" "}
-              <span className="font-mono">test</span> /{" "}
-              <span className="font-mono">test</span>
-              <br />
-              <span className="text-mhsp-muted/80">
-                Any username and password works.
-              </span>
+              <span className="font-mono">mhsp_sales</span> /{" "}
+              <span className="font-mono">mhsp@123</span>
             </p>
 
             <button

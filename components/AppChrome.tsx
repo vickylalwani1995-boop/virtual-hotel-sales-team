@@ -6,13 +6,14 @@ import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { Concierge } from "@/components/Concierge";
 import { AuthGuard } from "@/components/AuthGuard";
-import { WelcomeOverlay } from "@/components/WelcomeOverlay";
+
+const CHROMELESS_ROUTES = ["/login"];
 
 export function AppChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname() ?? "/";
-  const isLogin = pathname === "/login";
+  const isChromeless = CHROMELESS_ROUTES.includes(pathname);
 
-  if (isLogin) {
+  if (isChromeless) {
     return (
       <AuthGuard>
         <div className="flex-1 flex flex-col">{children}</div>
@@ -28,7 +29,6 @@ export function AppChrome({ children }: { children: React.ReactNode }) {
       <Suspense fallback={null}>
         <Concierge />
       </Suspense>
-      <WelcomeOverlay />
     </AuthGuard>
   );
 }
