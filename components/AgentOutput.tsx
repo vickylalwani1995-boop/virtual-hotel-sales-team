@@ -15,7 +15,7 @@ export function AgentOutput({
     return <StreamingOutput output={output} animate={animate} />;
   }
   return (
-    <div className="bg-white rounded-2xl border border-mhsp-line p-7 sm:p-9 shadow-[0_2px_10px_-4px_rgba(11,36,71,0.06)]">
+    <div className="bg-white rounded-2xl border border-mhsp-line p-7 sm:p-9 shadow-[0_2px_10px_-4px_rgba(15,76,129,0.08)]">
       <StreamingOutput output={output} animate={animate} />
     </div>
   );

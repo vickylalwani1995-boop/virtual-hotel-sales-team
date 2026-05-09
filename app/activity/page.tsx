@@ -84,7 +84,7 @@ export default function ActivityPage() {
         {entries && entries.length > 0 && (
           <button
             onClick={handleClear}
-            className="inline-flex items-center gap-1.5 text-xs font-medium text-mhsp-muted hover:text-destructive transition-colors"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-mhsp-muted hover:text-destructive transition-colors"
           >
             <Trash2 className="h-3.5 w-3.5" /> Clear log
           </button>
@@ -112,7 +112,7 @@ export default function ActivityPage() {
           <button
             key={key}
             onClick={() => setFilter(key)}
-            className={`text-xs font-semibold uppercase tracking-wider rounded-full px-3 py-1.5 border transition-all ${
+            className={`text-sm font-semibold uppercase tracking-wider rounded-full px-3 py-1.5 border transition-all ${
               filter === key
                 ? "bg-mhsp-navy text-white border-mhsp-navy"
                 : "bg-white text-mhsp-muted border-mhsp-line hover:border-mhsp-navy/30 hover:text-mhsp-navy"
@@ -125,7 +125,7 @@ export default function ActivityPage() {
           <select
             value={agentFilter}
             onChange={(e) => setAgentFilter(e.target.value)}
-            className="text-xs font-medium rounded-full px-3 py-1.5 border border-mhsp-line bg-white text-mhsp-navy hover:border-mhsp-gold/50 focus:outline-none focus:ring-2 focus:ring-mhsp-gold/30 transition-all cursor-pointer"
+            className="text-sm font-medium rounded-full px-3 py-1.5 border border-mhsp-line bg-white text-mhsp-navy hover:border-mhsp-gold/50 focus:outline-none focus:ring-2 focus:ring-mhsp-gold/30 transition-all cursor-pointer"
           >
             <option value="all">By agent: All</option>
             {AGENTS.map((a) => (
@@ -185,8 +185,8 @@ function Stat({
     success: "text-mhsp-success",
   }[accent];
   return (
-    <div className="bg-white rounded-2xl border border-mhsp-line p-4 shadow-[0_2px_10px_-4px_rgba(11,36,71,0.06)]">
-      <p className="text-[10px] font-semibold tracking-[0.18em] uppercase text-mhsp-muted">
+    <div className="bg-white rounded-2xl border border-mhsp-line p-4 shadow-[0_2px_10px_-4px_rgba(15,76,129,0.08)]">
+      <p className="text-[14px] font-semibold tracking-[0.18em] uppercase text-mhsp-muted">
         {label}
       </p>
       <p className={`font-numeric text-3xl font-bold mt-1 ${accentClass}`}>
@@ -216,7 +216,7 @@ function Entry({ entry, index }: { entry: ActivityEntry; index: number }) {
           <Mail className="h-4 w-4 text-mhsp-teal" />
         )}
       </div>
-      <div className="bg-white rounded-2xl border border-mhsp-line p-4 shadow-[0_2px_10px_-4px_rgba(11,36,71,0.06)]">
+      <div className="bg-white rounded-2xl border border-mhsp-line p-4 shadow-[0_2px_10px_-4px_rgba(15,76,129,0.08)]">
         <div className="flex items-center gap-2 flex-wrap">
           <span className="font-display text-sm font-semibold text-mhsp-navy">
             {entry.type === "agent_run"
@@ -224,11 +224,11 @@ function Entry({ entry, index }: { entry: ActivityEntry; index: number }) {
               : `Email queued — ${entry.subject}`}
           </span>
           {entry.type === "agent_run" && entry.isSample && (
-            <span className="text-[10px] font-semibold uppercase tracking-wider rounded-full bg-mhsp-cream-warm border border-mhsp-line/60 px-2 py-0.5 text-mhsp-muted">
+            <span className="text-[14px] font-semibold uppercase tracking-wider rounded-full bg-mhsp-cream-warm border border-mhsp-line/60 px-2 py-0.5 text-mhsp-muted">
               Sample
             </span>
           )}
-          <span className="ml-auto text-xs text-mhsp-muted font-numeric">
+          <span className="ml-auto text-sm text-mhsp-muted font-numeric">
             {timeAgo(entry.timestamp)}
           </span>
         </div>

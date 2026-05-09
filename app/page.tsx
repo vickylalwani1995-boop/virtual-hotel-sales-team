@@ -18,8 +18,8 @@ export default function Home() {
               11 specialist agents. One Director of Sales. Built on the MHSP
               method. Trusted by independent and boutique hotels across America.
             </p>
-            <p className="text-xs font-semibold tracking-[0.16em] uppercase text-mhsp-navy/60 mt-6">
-              Powered by My Hospitality Sales Pro × Inntelligent CRM
+            <p className="text-sm font-semibold tracking-[0.16em] uppercase text-mhsp-navy/60 mt-6">
+              Powered by My Hospitality Sales Pro &amp; Inntelligent CRM
             </p>
           </div>
 

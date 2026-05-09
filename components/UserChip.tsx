@@ -36,7 +36,7 @@ export function UserChip() {
         onClick={() => setOpen((v) => !v)}
         className="inline-flex items-center gap-2 rounded-full border border-mhsp-line bg-white hover:border-mhsp-gold/40 hover:bg-mhsp-cream-warm/50 pl-1 pr-2.5 py-1 text-sm font-medium text-mhsp-navy transition-colors"
       >
-        <span className="inline-flex w-7 h-7 rounded-full bg-mhsp-navy text-white items-center justify-center text-xs font-bold">
+        <span className="inline-flex w-7 h-7 rounded-full bg-mhsp-navy text-white items-center justify-center text-sm font-bold">
           {initial}
         </span>
         <span className="hidden sm:inline max-w-[100px] truncate">
@@ -49,15 +49,15 @@ export function UserChip() {
         />
       </button>
       {open && (
-        <div className="absolute right-0 top-full mt-2 w-56 rounded-xl border border-mhsp-line bg-white shadow-[0_12px_30px_-12px_rgba(11,36,71,0.25)] overflow-hidden z-50">
+        <div className="absolute right-0 top-full mt-2 w-56 rounded-xl border border-mhsp-line bg-white shadow-[0_12px_30px_-12px_rgba(15,76,129,0.25)] overflow-hidden z-50">
           <div className="px-4 py-3 border-b border-mhsp-line bg-mhsp-cream-warm/30">
             <div className="flex items-center gap-2">
               <UserIcon className="h-3.5 w-3.5 text-mhsp-muted" />
-              <p className="text-xs font-semibold text-mhsp-navy truncate">
+              <p className="text-sm font-semibold text-mhsp-navy truncate">
                 {user.username}
               </p>
             </div>
-            <p className="text-[10px] text-mhsp-muted mt-0.5">
+            <p className="text-[14px] text-mhsp-muted mt-0.5">
               Signed in {new Date(user.loggedInAt).toLocaleTimeString()}
             </p>
           </div>

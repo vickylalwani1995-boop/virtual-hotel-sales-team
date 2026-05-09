@@ -4,7 +4,7 @@ import { Download } from "lucide-react";
 import { downloadCsv, downloadExcel, downloadMarkdown } from "@/lib/download";
 
 const BTN =
-  "inline-flex items-center gap-1.5 rounded-lg border border-mhsp-line bg-white hover:border-mhsp-gold/60 hover:bg-mhsp-cream-warm/40 px-3 py-1.5 text-xs font-semibold text-mhsp-navy transition-all";
+  "inline-flex items-center gap-1.5 rounded-lg border border-mhsp-line bg-white hover:border-mhsp-gold/60 hover:bg-mhsp-cream-warm/40 px-3 py-1.5 text-sm font-semibold text-mhsp-navy transition-all";
 
 export function DownloadButtons({
   output,

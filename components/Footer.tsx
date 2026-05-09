@@ -79,7 +79,7 @@ export function Footer() {
         </div>
       </div>
       <div className="border-t border-mhsp-line">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex flex-wrap items-center justify-between gap-2 text-xs text-mhsp-muted">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex flex-wrap items-center justify-between gap-2 text-sm text-mhsp-muted">
           <span>
             © 2026 My Hospitality Sales Pro × Softqube Heckathon — Built by{" "}
             <span className="font-semibold text-mhsp-navy">Vicky Lalwani</span>

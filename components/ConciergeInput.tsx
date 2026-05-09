@@ -69,7 +69,7 @@ export function ConciergeInput({
             type="button"
             onClick={submit}
             disabled={!value.trim() || disabled}
-            className="shrink-0 w-9 h-9 rounded-lg bg-mhsp-gold hover:bg-mhsp-gold-soft disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center text-mhsp-navy transition-colors"
+            className="shrink-0 w-9 h-9 rounded-lg bg-mhsp-gold hover:bg-mhsp-gold-soft disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center text-white transition-colors"
             aria-label="Send message"
           >
             {disabled ? (
@@ -81,13 +81,13 @@ export function ConciergeInput({
         )}
       </div>
       <div className="flex items-center justify-between mt-1.5 px-1">
-        <p className="text-[10px] text-mhsp-muted/70">
+        <p className="text-[14px] text-mhsp-muted/70">
           <kbd className="font-mono">Enter</kbd> to send ·{" "}
           <kbd className="font-mono">Shift+Enter</kbd> newline ·{" "}
           <kbd className="font-mono">Esc</kbd> close
         </p>
         {showCount && (
-          <p className="text-[10px] font-numeric text-mhsp-muted/70">
+          <p className="text-[14px] font-numeric text-mhsp-muted/70">
             {charCount} chars
           </p>
         )}

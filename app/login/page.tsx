@@ -42,7 +42,7 @@ export default function LoginPage() {
         transition={{ duration: 0.5 }}
         className="w-full max-w-md"
       >
-        <div className="bg-white rounded-2xl shadow-[0_20px_60px_-20px_rgba(11,36,71,0.25)] border border-mhsp-line/60 overflow-hidden">
+        <div className="bg-white rounded-2xl shadow-[0_20px_60px_-20px_rgba(15,76,129,0.25)] border border-mhsp-line/60 overflow-hidden">
           {/* Logo */}
           <div className="px-8 pt-9 pb-6 text-center border-b border-mhsp-line/60">
             <div className="inline-flex">
@@ -60,7 +60,7 @@ export default function LoginPage() {
           {/* Form */}
           <form onSubmit={handleSubmit} className="px-8 py-7 space-y-4">
             <div>
-              <label className="text-[11px] font-semibold uppercase tracking-wider text-mhsp-muted">
+              <label className="text-[14px] font-semibold uppercase tracking-wider text-mhsp-muted">
                 Username
               </label>
               <div className="mt-1.5 relative">
@@ -78,7 +78,7 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <label className="text-[11px] font-semibold uppercase tracking-wider text-mhsp-muted">
+              <label className="text-[14px] font-semibold uppercase tracking-wider text-mhsp-muted">
                 Password
               </label>
               <div className="mt-1.5 relative">
@@ -95,10 +95,10 @@ export default function LoginPage() {
             </div>
 
             {error && (
-              <p className="text-xs text-destructive font-medium">{error}</p>
+              <p className="text-sm text-destructive font-medium">{error}</p>
             )}
 
-            <p className="text-xs text-mhsp-muted bg-mhsp-cream-warm/60 border border-mhsp-line/60 rounded-lg px-3 py-2 leading-relaxed">
+            <p className="text-sm text-mhsp-muted bg-mhsp-cream-warm/60 border border-mhsp-line/60 rounded-lg px-3 py-2 leading-relaxed">
               <span className="font-semibold text-mhsp-navy">Demo credentials:</span>{" "}
               <span className="font-mono">test</span> /{" "}
               <span className="font-mono">test</span>
@@ -111,7 +111,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={submitting}
-              className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-mhsp-gold hover:bg-mhsp-gold-soft disabled:opacity-50 px-5 py-3 text-sm font-bold uppercase tracking-[0.12em] text-mhsp-navy shadow-[0_4px_14px_-4px_rgba(212,165,55,0.6)] transition-all"
+              className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-mhsp-gold hover:bg-mhsp-gold-soft disabled:opacity-50 px-5 py-3 text-sm font-bold uppercase tracking-[0.12em] text-white shadow-[0_4px_14px_-4px_rgba(27,110,183,0.6)] transition-all"
             >
               {submitting ? (
                 <>
@@ -124,12 +124,12 @@ export default function LoginPage() {
               )}
             </button>
 
-            <p className="text-center text-[11px] text-mhsp-muted pt-1">
+            <p className="text-center text-[14px] text-mhsp-muted pt-1">
               Powered by{" "}
               <span className="font-semibold text-mhsp-navy">
                 My Hospitality Sales Pro
               </span>{" "}
-              ×{" "}
+              &amp;{" "}
               <span className="font-display italic text-mhsp-navy">
                 Inntelligent CRM
               </span>
@@ -137,7 +137,7 @@ export default function LoginPage() {
           </form>
 
           {/* Footer */}
-          <div className="px-8 py-4 bg-mhsp-cream-warm/40 border-t border-mhsp-line/60 text-[11px] text-mhsp-muted flex items-center justify-between">
+          <div className="px-8 py-4 bg-mhsp-cream-warm/40 border-t border-mhsp-line/60 text-[14px] text-mhsp-muted flex items-center justify-between">
             <span>© 2026 MHSP</span>
             <a
               href="tel:8889091678"

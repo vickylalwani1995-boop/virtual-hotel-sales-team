@@ -14,7 +14,7 @@ export default function OpenGraphImage() {
           height: "100%",
           display: "flex",
           flexDirection: "column",
-          background: "#0B2447",
+          background: "#0F4C81",
           position: "relative",
           fontFamily: "Georgia, serif",
         }}
@@ -29,7 +29,7 @@ export default function OpenGraphImage() {
             height: 900,
             borderRadius: "50%",
             background:
-              "radial-gradient(circle, rgba(212,165,55,0.35), rgba(212,165,55,0) 60%)",
+              "radial-gradient(circle, rgba(27,110,183,0.35), rgba(27,110,183,0) 60%)",
             display: "flex",
           }}
         />
@@ -43,7 +43,7 @@ export default function OpenGraphImage() {
             height: 600,
             borderRadius: "50%",
             background:
-              "radial-gradient(circle, rgba(25,167,206,0.20), rgba(25,167,206,0) 60%)",
+              "radial-gradient(circle, rgba(127,179,220,0.22), rgba(127,179,220,0) 60%)",
             display: "flex",
           }}
         />
@@ -62,7 +62,7 @@ export default function OpenGraphImage() {
               display: "flex",
               alignItems: "center",
               padding: "10px 18px",
-              background: "#D4A537",
+              background: "#1B6EB7",
               borderRadius: 8,
             }}
           >
@@ -71,7 +71,7 @@ export default function OpenGraphImage() {
                 fontFamily: "Georgia, serif",
                 fontSize: 28,
                 fontWeight: 700,
-                color: "#0B2447",
+                color: "#FFFFFF",
                 letterSpacing: "-1px",
               }}
             >
@@ -89,7 +89,7 @@ export default function OpenGraphImage() {
               style={{
                 fontSize: 16,
                 fontWeight: 600,
-                color: "#D4A537",
+                color: "#1B6EB7",
                 letterSpacing: "3px",
                 textTransform: "uppercase",
               }}
@@ -98,12 +98,12 @@ export default function OpenGraphImage() {
             </div>
             <div
               style={{
-                fontSize: 13,
+                fontSize: 14,
                 color: "rgba(255,255,255,0.6)",
                 marginTop: 2,
               }}
             >
-              × Inntelligent CRM
+              & Inntelligent CRM
             </div>
           </div>
         </div>
@@ -122,7 +122,7 @@ export default function OpenGraphImage() {
             style={{
               fontSize: 18,
               fontWeight: 700,
-              color: "#D4A537",
+              color: "#1B6EB7",
               letterSpacing: "6px",
               textTransform: "uppercase",
               marginBottom: 24,
@@ -154,7 +154,7 @@ export default function OpenGraphImage() {
             }}
           >
             <span style={{ color: "#FFFFFF" }}>department,</span>
-            <span style={{ color: "#D4A537", fontStyle: "italic" }}>
+            <span style={{ color: "#1B6EB7", fontStyle: "italic" }}>
               powered by AI.
             </span>
           </div>
@@ -202,7 +202,7 @@ export default function OpenGraphImage() {
             style={{
               display: "flex",
               fontSize: 18,
-              color: "#D4A537",
+              color: "#1B6EB7",
               fontWeight: 600,
             }}
           >

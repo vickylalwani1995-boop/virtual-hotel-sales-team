@@ -51,12 +51,12 @@ function AgentsContent() {
       </div>
 
       {profile && chips.length > 0 && (
-        <div className="bg-white rounded-2xl border border-mhsp-line p-5 mb-10 shadow-[0_2px_10px_-4px_rgba(11,36,71,0.06)]">
+        <div className="bg-white rounded-2xl border border-mhsp-line p-5 mb-10 shadow-[0_2px_10px_-4px_rgba(15,76,129,0.08)]">
           <div className="flex flex-wrap gap-2">
             {chips.map((c) => (
               <span
                 key={c.label}
-                className="inline-flex items-center gap-1.5 rounded-full bg-mhsp-cream-warm border border-mhsp-line/60 px-3 py-1 text-xs"
+                className="inline-flex items-center gap-1.5 rounded-full bg-mhsp-cream-warm border border-mhsp-line/60 px-3 py-1 text-sm"
               >
                 <span className="text-mhsp-muted">{c.label}:</span>
                 <span className="font-semibold text-mhsp-navy">{c.value}</span>
@@ -75,7 +75,7 @@ function AgentsContent() {
           </p>
           <Link
             href="/"
-            className="inline-flex items-center gap-2 rounded-lg bg-mhsp-gold hover:bg-mhsp-gold-soft px-5 py-2.5 text-sm font-semibold text-mhsp-navy"
+            className="inline-flex items-center gap-2 rounded-lg bg-mhsp-gold hover:bg-mhsp-gold-soft px-5 py-2.5 text-sm font-semibold text-white"
           >
             Add hotel profile
           </Link>

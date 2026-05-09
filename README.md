@@ -102,5 +102,5 @@ and team workflow.
 **Vicky Lalwani** — Digital Marketing Director, Softqube
 Technologies.
 
-For My Hospitality Sales Pro × Inntelligent CRM × Softqube
+For My Hospitality Sales Pro & Inntelligent CRM × Softqube
 Heckathon 2026.

@@ -24,8 +24,8 @@ const PROSE_CLASSES = [
   // Links
   "prose-a:text-mhsp-teal prose-a:underline-offset-2 hover:prose-a:text-mhsp-navy",
   // Code
-  "prose-code:text-mhsp-navy prose-code:bg-mhsp-cream-warm prose-code:rounded-md prose-code:px-1.5 prose-code:py-0.5 prose-code:text-[13px] prose-code:font-mono prose-code:before:content-[''] prose-code:after:content-['']",
-  "prose-pre:bg-mhsp-cream-warm prose-pre:text-mhsp-text prose-pre:rounded-xl prose-pre:p-4 prose-pre:text-[13px]",
+  "prose-code:text-mhsp-navy prose-code:bg-mhsp-cream-warm prose-code:rounded-md prose-code:px-1.5 prose-code:py-0.5 prose-code:text-[14px] prose-code:font-mono prose-code:before:content-[''] prose-code:after:content-['']",
+  "prose-pre:bg-mhsp-cream-warm prose-pre:text-mhsp-text prose-pre:rounded-xl prose-pre:p-4 prose-pre:text-[14px]",
   // Blockquote
   "prose-blockquote:border-l-4 prose-blockquote:border-mhsp-gold prose-blockquote:bg-mhsp-cream-warm/40 prose-blockquote:rounded-r-lg prose-blockquote:py-1 prose-blockquote:px-4 prose-blockquote:not-italic prose-blockquote:text-mhsp-navy",
   // HR
@@ -62,7 +62,7 @@ export function StreamingOutput({
         remarkPlugins={[remarkGfm]}
         components={{
           table: ({ children }) => (
-            <div className="my-6 -mx-1 overflow-x-auto rounded-xl border border-mhsp-line shadow-[0_2px_10px_-4px_rgba(11,36,71,0.06)]">
+            <div className="my-6 -mx-1 overflow-x-auto rounded-xl border border-mhsp-line shadow-[0_2px_10px_-4px_rgba(15,76,129,0.08)]">
               <table className="w-full border-collapse text-sm">{children}</table>
             </div>
           ),
@@ -70,7 +70,7 @@ export function StreamingOutput({
             <thead className="bg-mhsp-navy text-white">{children}</thead>
           ),
           th: ({ children }) => (
-            <th className="text-left font-semibold text-[11px] tracking-[0.12em] uppercase px-4 py-3 border-b border-mhsp-navy/20">
+            <th className="text-left font-semibold text-[14px] tracking-[0.12em] uppercase px-4 py-3 border-b border-mhsp-navy/20">
               {children}
             </th>
           ),

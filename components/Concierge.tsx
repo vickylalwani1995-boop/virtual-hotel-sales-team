@@ -117,10 +117,10 @@ export function Concierge() {
           className="fixed bottom-6 right-6 z-50 group"
         >
           <span className="absolute inset-0 rounded-full bg-mhsp-gold/40 animate-ping" style={{ animationDuration: "5s" }} />
-          <span className="relative flex items-center justify-center w-[60px] h-[60px] rounded-full bg-mhsp-gold text-mhsp-navy shadow-[0_8px_24px_-6px_rgba(212,165,55,0.6)] hover:shadow-[0_12px_32px_-6px_rgba(212,165,55,0.7)] hover:scale-105 transition-all">
+          <span className="relative flex items-center justify-center w-[60px] h-[60px] rounded-full bg-mhsp-gold text-white shadow-[0_8px_24px_-6px_rgba(27,110,183,0.6)] hover:shadow-[0_12px_32px_-6px_rgba(27,110,183,0.7)] hover:scale-105 transition-all">
             <ConciergeBell className="h-6 w-6" />
           </span>
-          <span className="absolute right-[72px] top-1/2 -translate-y-1/2 whitespace-nowrap rounded-lg bg-mhsp-navy text-white text-xs font-medium px-3 py-1.5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-lg">
+          <span className="absolute right-[72px] top-1/2 -translate-y-1/2 whitespace-nowrap rounded-lg bg-mhsp-navy text-white text-sm font-medium px-3 py-1.5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-lg">
             myConcierge · Ctrl+K
           </span>
         </motion.button>
@@ -147,12 +147,12 @@ export function Concierge() {
               transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
               role="dialog"
               aria-label="myConcierge chat"
-              className="fixed inset-y-0 right-0 z-50 w-full md:w-[420px] bg-mhsp-cream border-l border-mhsp-line shadow-[0_0_60px_-10px_rgba(11,36,71,0.35)] flex flex-col"
+              className="fixed inset-y-0 right-0 z-50 w-full md:w-[420px] bg-mhsp-cream border-l border-mhsp-line shadow-[0_0_60px_-10px_rgba(15,76,129,0.35)] flex flex-col"
             >
               {/* Header */}
               <header className="bg-mhsp-navy text-white px-5 py-4 flex items-center gap-3 shrink-0">
                 <div className="shrink-0 w-10 h-10 rounded-full bg-mhsp-gold flex items-center justify-center shadow-md">
-                  <ConciergeBell className="h-5 w-5 text-mhsp-navy" />
+                  <ConciergeBell className="h-5 w-5 text-white" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
@@ -160,13 +160,13 @@ export function Concierge() {
                       myConcierge
                     </h2>
                     {demoMode && (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-mhsp-success/20 border border-mhsp-success/40 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-mhsp-success">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-mhsp-success/20 border border-mhsp-success/40 px-1.5 py-0.5 text-[14px] font-bold uppercase tracking-wider text-mhsp-success">
                         <span className="h-1 w-1 rounded-full bg-mhsp-success" />
                         Demo
                       </span>
                     )}
                   </div>
-                  <p className="text-[11px] text-white/70">
+                  <p className="text-[14px] text-white/70">
                     Your hotel sales co-pilot
                   </p>
                 </div>
@@ -238,10 +238,10 @@ function Welcome({
 }) {
   return (
     <div className="space-y-4">
-      <div className="bg-white rounded-2xl rounded-tl-sm border border-mhsp-line p-5 shadow-[0_2px_10px_-4px_rgba(11,36,71,0.06)]">
+      <div className="bg-white rounded-2xl rounded-tl-sm border border-mhsp-line p-5 shadow-[0_2px_10px_-4px_rgba(15,76,129,0.08)]">
         <div className="flex items-center gap-2 mb-3">
           <div className="w-7 h-7 rounded-full bg-mhsp-gold flex items-center justify-center shrink-0">
-            <ConciergeBell className="h-3.5 w-3.5 text-mhsp-navy" />
+            <ConciergeBell className="h-3.5 w-3.5 text-white" />
           </div>
           <span className="font-display text-sm font-semibold text-mhsp-navy">
             myConcierge
@@ -251,7 +251,7 @@ function Welcome({
           Hi! I&apos;m <strong className="text-mhsp-navy">myConcierge</strong>,
           your AI hotel sales assistant. I can help you with:
         </p>
-        <ul className="mt-2.5 space-y-1.5 text-[13px] text-mhsp-text">
+        <ul className="mt-2.5 space-y-1.5 text-[14px] text-mhsp-text">
           <li className="flex gap-2">
             <span className="text-mhsp-gold">•</span>
             Explaining how this app works
@@ -285,7 +285,7 @@ function Welcome({
       {hint && (
         <div className="rounded-2xl border border-mhsp-gold/40 bg-mhsp-gold/10 px-4 py-3 flex items-start gap-2">
           <Sparkles className="h-4 w-4 text-mhsp-gold shrink-0 mt-0.5" />
-          <p className="text-[13px] text-mhsp-navy leading-relaxed">{hint}</p>
+          <p className="text-[14px] text-mhsp-navy leading-relaxed">{hint}</p>
         </div>
       )}
 
@@ -296,7 +296,7 @@ function Welcome({
             <button
               key={chip}
               onClick={() => onChip(chip)}
-              className="text-left text-[12.5px] rounded-full border border-mhsp-line bg-white hover:border-mhsp-gold/60 hover:bg-mhsp-gold/5 px-3 py-1.5 text-mhsp-navy font-medium transition-all"
+              className="text-left text-[14px] rounded-full border border-mhsp-line bg-white hover:border-mhsp-gold/60 hover:bg-mhsp-gold/5 px-3 py-1.5 text-mhsp-navy font-medium transition-all"
             >
               {chip}
             </button>

@@ -32,8 +32,8 @@ export function WelcomeOverlay() {
         >
           {/* Subtle gold pattern */}
           <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[140%] h-[140%] bg-[radial-gradient(circle_at_50%_30%,rgba(212,165,55,0.18),transparent_55%)]" />
-            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[140%] h-[80%] bg-[radial-gradient(circle_at_50%_80%,rgba(25,167,206,0.12),transparent_55%)]" />
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[140%] h-[140%] bg-[radial-gradient(circle_at_50%_30%,rgba(127,179,220,0.22),transparent_55%)]" />
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[140%] h-[80%] bg-[radial-gradient(circle_at_50%_80%,rgba(47,143,204,0.14),transparent_55%)]" />
           </div>
 
           <motion.div
@@ -55,7 +55,7 @@ export function WelcomeOverlay() {
             {username ? (
               <>
                 ,{" "}
-                <span className="italic text-mhsp-gold">
+                <span className="italic text-white/95">
                   {username}
                 </span>
               </>
@@ -67,7 +67,7 @@ export function WelcomeOverlay() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.9 }}
-            className="mt-4 text-mhsp-gold text-lg font-medium"
+            className="mt-4 text-white/90 text-lg font-medium"
           >
             Your AI sales team is ready
           </motion.p>
@@ -93,7 +93,7 @@ export function WelcomeOverlay() {
                 <span className="text-2xl sm:text-3xl drop-shadow-[0_2px_6px_rgba(0,0,0,0.3)]">
                   {a.icon}
                 </span>
-                <span className="text-[9px] uppercase tracking-wider text-white/60 font-semibold hidden sm:block">
+                <span className="text-[14px] uppercase tracking-wider text-white/60 font-semibold hidden sm:block">
                   {a.name.replace(/\s+Agent$/i, "").split(" ").slice(0, 2).join(" ")}
                 </span>
               </motion.div>
@@ -104,9 +104,9 @@ export function WelcomeOverlay() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.4, delay: 2.4 }}
-            className="absolute bottom-8 left-1/2 -translate-x-1/2 text-xs text-white/40 tracking-widest uppercase"
+            className="absolute bottom-8 left-1/2 -translate-x-1/2 text-sm text-white/40 tracking-widest uppercase"
           >
-            Powered by My Hospitality Sales Pro × Inntelligent CRM
+            Powered by My Hospitality Sales Pro &amp; Inntelligent CRM
           </motion.p>
         </motion.div>
       )}

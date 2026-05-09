@@ -126,14 +126,14 @@ export function WorkflowRunner({ profile }: { profile: string }) {
   return (
     <div className="space-y-5">
       {/* Trigger card */}
-      <div className="relative rounded-2xl border-2 border-mhsp-gold/40 bg-gradient-to-br from-mhsp-gold/15 via-mhsp-cream-warm to-white p-6 shadow-[0_8px_30px_-12px_rgba(212,165,55,0.4)] overflow-hidden">
+      <div className="relative rounded-2xl border-2 border-mhsp-gold/40 bg-gradient-to-br from-mhsp-gold/15 via-mhsp-cream-warm to-white p-6 shadow-[0_8px_30px_-12px_rgba(27,110,183,0.35)] overflow-hidden">
         <div className="absolute -right-12 -top-12 w-48 h-48 rounded-full bg-mhsp-gold/15 blur-3xl pointer-events-none" />
         <div className="relative flex flex-col sm:flex-row sm:items-center gap-4">
           <div className="flex-1">
             <div className="flex items-center gap-2">
               <p className="eyebrow">The Showstopper</p>
               {demoMode && (
-                <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-[0.18em] text-mhsp-success">
+                <span className="inline-flex items-center gap-1 text-[14px] font-bold uppercase tracking-[0.18em] text-mhsp-success">
                   <span className="h-1 w-1 rounded-full bg-mhsp-success animate-pulse" />
                   Instant
                 </span>
@@ -150,7 +150,7 @@ export function WorkflowRunner({ profile }: { profile: string }) {
           <button
             onClick={run}
             disabled={running || !profile}
-            className="inline-flex items-center gap-2 rounded-xl bg-mhsp-navy hover:bg-mhsp-navy-soft disabled:opacity-40 px-6 py-3.5 text-sm font-semibold text-white shadow-[0_6px_20px_-6px_rgba(11,36,71,0.5)] transition-all"
+            className="inline-flex items-center gap-2 rounded-xl bg-mhsp-navy hover:bg-mhsp-navy-soft disabled:opacity-40 px-6 py-3.5 text-sm font-semibold text-white shadow-[0_6px_20px_-6px_rgba(15,76,129,0.5)] transition-all"
           >
             {running ? (
               <>
@@ -167,10 +167,10 @@ export function WorkflowRunner({ profile }: { profile: string }) {
 
       {/* Progress tracker */}
       {hasResults && (
-        <div className="rounded-2xl bg-white border border-mhsp-line p-5 shadow-[0_2px_10px_-4px_rgba(11,36,71,0.06)]">
+        <div className="rounded-2xl bg-white border border-mhsp-line p-5 shadow-[0_2px_10px_-4px_rgba(15,76,129,0.08)]">
           <div className="flex items-center justify-between mb-4">
             <p className="eyebrow">Workflow Progress</p>
-            <span className="font-numeric text-xs text-mhsp-muted">
+            <span className="font-numeric text-sm text-mhsp-muted">
               {completedCount} / {totalCount}
             </span>
           </div>
@@ -194,10 +194,10 @@ export function WorkflowRunner({ profile }: { profile: string }) {
                     <span className="text-2xl">{a?.icon}</span>
                     <StatusIcon status={s.status} />
                   </div>
-                  <p className="mt-2 text-xs font-semibold text-mhsp-navy leading-snug">
+                  <p className="mt-2 text-sm font-semibold text-mhsp-navy leading-snug">
                     {a?.name}
                   </p>
-                  <p className="mt-0.5 text-[10px] uppercase tracking-wider font-medium text-mhsp-muted">
+                  <p className="mt-0.5 text-[14px] uppercase tracking-wider font-medium text-mhsp-muted">
                     {labelFor(s.status)}
                   </p>
                 </div>
@@ -209,7 +209,7 @@ export function WorkflowRunner({ profile }: { profile: string }) {
 
       {/* Tabbed output viewer */}
       {hasResults && steps.some((s) => s.output) && (
-        <div className="rounded-2xl bg-white border border-mhsp-line shadow-[0_2px_10px_-4px_rgba(11,36,71,0.06)] overflow-hidden">
+        <div className="rounded-2xl bg-white border border-mhsp-line shadow-[0_2px_10px_-4px_rgba(15,76,129,0.08)] overflow-hidden">
           <div className="flex items-center gap-1 border-b border-mhsp-line bg-mhsp-cream-warm/30 px-2 overflow-x-auto">
             {steps.map((s) => {
               const a = getAgent(s.agentId);
@@ -260,7 +260,7 @@ export function WorkflowRunner({ profile }: { profile: string }) {
                       <div className="flex items-center gap-3 mb-5 pb-5 border-b border-mhsp-line">
                         <span className="text-3xl">{a?.icon}</span>
                         <div>
-                          <p className="text-[10px] font-semibold tracking-[0.18em] uppercase text-mhsp-gold">
+                          <p className="text-[14px] font-semibold tracking-[0.18em] uppercase text-mhsp-gold">
                             {a?.name.replace(/\s+Agent$/i, "").toUpperCase()}
                           </p>
                           <h3 className="font-display text-xl text-mhsp-navy leading-tight">

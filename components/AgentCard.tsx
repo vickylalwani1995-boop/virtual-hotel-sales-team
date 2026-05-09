@@ -53,7 +53,7 @@ export function AgentCard({
       transition={{ duration: 0.4, delay: index * 0.04, ease: "easeOut" }}
     >
       <Link href={href} className="group block h-full">
-        <article className="h-full bg-white rounded-2xl border border-mhsp-line overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_50px_-15px_rgba(11,36,71,0.22)] hover:border-mhsp-gold/60">
+        <article className="h-full bg-white rounded-2xl border border-mhsp-line overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_50px_-15px_rgba(15,76,129,0.22)] hover:border-mhsp-gold/60">
           <div
             className={`relative bg-gradient-to-br ${gradient} aspect-[16/9] flex items-center justify-center`}
           >
@@ -62,10 +62,10 @@ export function AgentCard({
             </span>
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.20),transparent_60%)]" />
             <span
-              className={`absolute top-3 right-3 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-bold tracking-wider uppercase ${
+              className={`absolute top-3 right-3 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[14px] font-bold tracking-wider uppercase ${
                 isLive
                   ? "bg-mhsp-success text-white"
-                  : "bg-mhsp-gold text-mhsp-navy"
+                  : "bg-mhsp-gold text-white"
               }`}
             >
               <span className="h-1 w-1 rounded-full bg-current" />
@@ -73,7 +73,7 @@ export function AgentCard({
             </span>
           </div>
           <div className="p-5">
-            <p className="text-[10px] font-semibold tracking-[0.18em] text-mhsp-gold uppercase">
+            <p className="text-[14px] font-semibold tracking-[0.18em] text-mhsp-gold uppercase">
               {labelFromName(agent.name)}
             </p>
             <h3 className="font-display text-xl text-mhsp-navy mt-1.5 leading-tight">
@@ -87,7 +87,7 @@ export function AgentCard({
                 {tags.map((t) => (
                   <span
                     key={t}
-                    className="text-[10px] font-medium uppercase tracking-wider text-mhsp-navy/70 bg-mhsp-cream-warm rounded-full px-2 py-0.5"
+                    className="text-[14px] font-medium uppercase tracking-wider text-mhsp-navy/70 bg-mhsp-cream-warm rounded-full px-2 py-0.5"
                   >
                     {t}
                   </span>

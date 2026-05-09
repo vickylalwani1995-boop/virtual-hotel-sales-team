@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Playfair_Display, JetBrains_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import { Toaster } from "sonner";
 import { AppChrome } from "@/components/AppChrome";
 import "./globals.css";
@@ -10,19 +10,6 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
-const playfair = Playfair_Display({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-playfair",
-  weight: ["400", "500", "600", "700"],
-});
-
-const jetbrains = JetBrains_Mono({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-jetbrains",
-});
-
 export const metadata: Metadata = {
   metadataBase: new URL("https://virtual-hotel-sales-team.vercel.app"),
   title: {
@@ -30,7 +17,7 @@ export const metadata: Metadata = {
     template: "%s · my Sales TEAM AI",
   },
   description:
-    "AI-powered virtual sales department for hotels. 11 specialist agents trained on the MHSP method. Built by My Hospitality Sales Pro × Inntelligent CRM.",
+    "AI-powered virtual sales department for hotels. 11 specialist agents trained on the MHSP method. Built by My Hospitality Sales Pro & Inntelligent CRM.",
   keywords: [
     "hotel sales",
     "AI sales",
@@ -60,7 +47,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0B2447",
+  themeColor: "#0F4C81",
 };
 
 export default function RootLayout({
@@ -71,7 +58,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${playfair.variable} ${jetbrains.variable} h-full antialiased`}
+      className={`${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-mhsp-cream text-mhsp-text">
         <AppChrome>{children}</AppChrome>

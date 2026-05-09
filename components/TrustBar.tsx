@@ -9,7 +9,7 @@ const PARTNERS = [
 export function TrustBar() {
   return (
     <div className="w-full max-w-5xl mx-auto mt-12 px-6">
-      <p className="text-center text-xs text-mhsp-muted/80 mb-6 font-medium">
+      <p className="text-center text-sm text-mhsp-muted/80 mb-6 font-medium">
         Built on the methodology that has helped hotels nationwide achieve their
         revenue goals
       </p>

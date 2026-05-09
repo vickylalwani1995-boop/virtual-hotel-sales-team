@@ -46,7 +46,7 @@ export function TeamPreview() {
         {FEATURED.map((member) => (
           <div
             key={member.name}
-            className="group relative bg-white rounded-2xl border border-mhsp-line overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_50px_-15px_rgba(11,36,71,0.25)] hover:border-mhsp-gold/50"
+            className="group relative bg-white rounded-2xl border border-mhsp-line overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_50px_-15px_rgba(15,76,129,0.25)] hover:border-mhsp-gold/50"
           >
             <div
               className={`bg-gradient-to-br ${member.gradient} aspect-[5/3] flex items-center justify-center relative`}
@@ -57,7 +57,7 @@ export function TeamPreview() {
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.18),transparent_60%)]" />
             </div>
             <div className="p-6">
-              <p className="text-[10px] font-semibold tracking-[0.18em] text-mhsp-gold uppercase">
+              <p className="text-[14px] font-semibold tracking-[0.18em] text-mhsp-gold uppercase">
                 {member.role}
               </p>
               <h3 className="font-display text-xl text-mhsp-navy mt-2">
@@ -67,7 +67,7 @@ export function TeamPreview() {
                 {member.description}
               </p>
               <div className="mt-4 pt-4 border-t border-mhsp-line/60 flex items-center justify-between">
-                <span className="font-numeric text-xs text-mhsp-navy">
+                <span className="font-numeric text-sm text-mhsp-navy">
                   {member.stat}
                 </span>
                 <span className="h-1.5 w-1.5 rounded-full bg-mhsp-success animate-pulse" />

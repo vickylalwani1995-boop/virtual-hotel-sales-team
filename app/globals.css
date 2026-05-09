@@ -2,24 +2,40 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+@font-face {
+  font-family: "Helvetica";
+  src: url("/fonts/Helvetica.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Helvetica";
+  src: url("/fonts/HelveticaRounded-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --color-mhsp-navy: #0B2447;
-  --color-mhsp-navy-soft: #1E3A66;
-  --color-mhsp-gold: #D4A537;
-  --color-mhsp-gold-soft: #E6BD5C;
-  --color-mhsp-teal: #19A7CE;
-  --color-mhsp-cream: #FAF6EE;
-  --color-mhsp-cream-warm: #F4ECDA;
-  --color-mhsp-text: #1A1A1A;
-  --color-mhsp-muted: #6B7280;
+  --color-mhsp-navy: #0F4C81;
+  --color-mhsp-navy-soft: #1E5896;
+  --color-mhsp-gold: #1B6EB7;
+  --color-mhsp-gold-soft: #2F8FCC;
+  --color-mhsp-teal: #2F8FCC;
+  --color-mhsp-cream: #FFFFFF;
+  --color-mhsp-cream-warm: #EAF2FA;
+  --color-mhsp-text: #0F1B2D;
+  --color-mhsp-muted: #5A6B82;
   --color-mhsp-success: #15803D;
-  --color-mhsp-line: #E5E7EB;
+  --color-mhsp-line: #DCE5EF;
 
-  --font-serif: var(--font-playfair), Georgia, "Times New Roman", serif;
-  --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
-  --font-mono: var(--font-jetbrains), ui-monospace, "SFMono-Regular", monospace;
+  --font-sans: "Helvetica", var(--font-inter), "Helvetica Neue", Arial, sans-serif;
+  --font-serif: "Helvetica", var(--font-inter), "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "Helvetica", var(--font-inter), "Helvetica Neue", Arial, sans-serif;
 }
 
 @theme inline {
@@ -62,44 +78,54 @@
 }
 
 :root {
-  --background: #FAF6EE;
-  --foreground: #1A1A1A;
+  --background: #FFFFFF;
+  --foreground: #0F1B2D;
   --card: #FFFFFF;
-  --card-foreground: #1A1A1A;
+  --card-foreground: #0F1B2D;
   --popover: #FFFFFF;
-  --popover-foreground: #1A1A1A;
-  --primary: #D4A537;
-  --primary-foreground: #0B2447;
-  --secondary: #F4ECDA;
-  --secondary-foreground: #0B2447;
-  --muted: #F4ECDA;
-  --muted-foreground: #6B7280;
-  --accent: #0B2447;
-  --accent-foreground: #FAF6EE;
+  --popover-foreground: #0F1B2D;
+  --primary: #1B6EB7;
+  --primary-foreground: #FFFFFF;
+  --secondary: #EAF2FA;
+  --secondary-foreground: #0F4C81;
+  --muted: #EAF2FA;
+  --muted-foreground: #5A6B82;
+  --accent: #0F4C81;
+  --accent-foreground: #FFFFFF;
   --destructive: #B91C1C;
-  --border: #E5E7EB;
-  --input: #E5E7EB;
-  --ring: #D4A537;
+  --border: #DCE5EF;
+  --input: #DCE5EF;
+  --ring: #1B6EB7;
   --radius: 0.75rem;
   --sidebar: #FFFFFF;
-  --sidebar-foreground: #1A1A1A;
-  --sidebar-primary: #0B2447;
-  --sidebar-primary-foreground: #FAF6EE;
-  --sidebar-accent: #F4ECDA;
-  --sidebar-accent-foreground: #0B2447;
-  --sidebar-border: #E5E7EB;
-  --sidebar-ring: #D4A537;
+  --sidebar-foreground: #0F1B2D;
+  --sidebar-primary: #0F4C81;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #EAF2FA;
+  --sidebar-accent-foreground: #0F4C81;
+  --sidebar-border: #DCE5EF;
+  --sidebar-ring: #1B6EB7;
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+  /* keep html at 16px so Tailwind's text-sm (0.875rem) === 14px min */
+  html {
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+    @apply font-sans;
+  }
   body {
+    font-size: 16px;
+    line-height: 1.55;
     @apply bg-background text-foreground font-sans antialiased;
   }
-  html {
-    @apply font-sans;
+  /* hard floor: any element that would otherwise render below 14px */
+  body, body p, body li, body span, body a, body button, body input,
+  body textarea, body label, body kbd, body code, body td, body th, body dt, body dd {
+    font-size: max(14px, 1em);
   }
 }
 
@@ -115,7 +141,7 @@
   }
   .eyebrow {
     font-family: var(--font-sans);
-    font-size: 0.7rem;
+    font-size: 14px;
     font-weight: 600;
     letter-spacing: 0.18em;
     text-transform: uppercase;
@@ -126,8 +152,139 @@
   }
   .bg-hero {
     background:
-      radial-gradient(1200px 600px at 50% -10%, rgba(212, 165, 55, 0.18), transparent 70%),
-      radial-gradient(900px 500px at 110% 110%, rgba(11, 36, 71, 0.07), transparent 70%),
+      radial-gradient(1200px 600px at 50% -10%, rgba(27, 110, 183, 0.16), transparent 70%),
+      radial-gradient(900px 500px at 110% 110%, rgba(15, 76, 129, 0.08), transparent 70%),
       var(--color-mhsp-cream);
   }
+}
+
+/* ============================================================
+   Responsive scaling — 16 breakpoints
+   Container rule (per latest spec):
+     ≥1600px viewport → .max-w-7xl = 1520px
+     ≤1599px viewport → .max-w-7xl = 90% of viewport width
+   Each step also tightens hero typography / section padding while
+   keeping body/UI text at ≥14px (enforced by base layer above).
+   ============================================================ */
+
+/* Default (≥1600) — fixed 1520px container */
+.max-w-7xl { max-width: 1520px; }
+
+/* 1536 — max 1599 — switch to fluid 90% */
+@media (max-width: 1599px) {
+  .max-w-7xl { max-width: 90%; }
+  .lg\:text-\[64px\] { font-size: 56px; }
+}
+
+/* 1440 — max 1499 */
+@media (max-width: 1499px) {
+  .lg\:text-\[64px\] { font-size: 52px; }
+}
+
+/* 1366 — max 1399 */
+@media (max-width: 1399px) {
+  .lg\:text-\[64px\] { font-size: 48px; }
+  .lg\:pt-24 { padding-top: 4rem; }
+  .lg\:pb-28 { padding-bottom: 4.5rem; }
+}
+
+/* 1326 — max 1365 — (no container change; spacing only) */
+@media (max-width: 1365px) {
+  .px-6 { padding-inline: 1.25rem; }
+}
+
+/* 1280 — max 1325 */
+@media (max-width: 1325px) {
+  .px-7 { padding-inline: 1.25rem; }
+  .px-8 { padding-inline: 1.5rem; }
+}
+
+/* 1024 — max 1279 */
+@media (max-width: 1279px) {
+  .lg\:text-\[64px\] { font-size: 44px; }
+  .lg\:pt-24 { padding-top: 3rem; }
+  .lg\:pb-28 { padding-bottom: 3.5rem; }
+  .pt-16 { padding-top: 3rem; }
+  .pb-20 { padding-bottom: 3rem; }
+}
+
+/* 992 — max 1023 */
+@media (max-width: 1023px) {
+  .text-6xl { font-size: 3rem; line-height: 1.05; }
+  .sm\:text-6xl { font-size: 3rem; line-height: 1.05; }
+  .text-5xl { font-size: 2.5rem; line-height: 1.05; }
+  .py-12 { padding-block: 2.5rem; }
+}
+
+/* 801 — max 991 */
+@media (max-width: 991px) {
+  .px-6 { padding-inline: 1rem; }
+  .px-7 { padding-inline: 1rem; }
+  .px-8 { padding-inline: 1.25rem; }
+  .text-5xl { font-size: 2.25rem; line-height: 1.1; }
+  .sm\:text-6xl { font-size: 2.5rem; line-height: 1.1; }
+  .pt-16 { padding-top: 2.5rem; }
+  .pb-20 { padding-bottom: 2.5rem; }
+  .py-12 { padding-block: 2rem; }
+}
+
+/* 768 — max 800 */
+@media (max-width: 800px) {
+  .text-5xl { font-size: 2rem; }
+  .text-6xl, .sm\:text-6xl { font-size: 2.25rem; }
+  .text-3xl { font-size: 1.625rem; }
+  .text-4xl { font-size: 1.875rem; }
+  .text-2xl { font-size: 1.375rem; }
+  .text-xl { font-size: 1.125rem; }
+}
+
+/* 576 — max 767 */
+@media (max-width: 767px) {
+  .px-6 { padding-inline: 1rem; }
+  .px-7 { padding-inline: 1rem; }
+  .px-8 { padding-inline: 1rem; }
+  .py-12 { padding-block: 1.75rem; }
+  .text-5xl { font-size: 1.875rem; line-height: 1.15; }
+  .text-4xl { font-size: 1.75rem; }
+  .text-3xl { font-size: 1.5rem; }
+  .text-2xl { font-size: 1.25rem; }
+  .text-xl, .sm\:text-xl { font-size: 1.0625rem; }
+  .text-lg, .sm\:text-lg { font-size: 1rem; }
+}
+
+/* 481 — max 575 */
+@media (max-width: 575px) {
+  .text-5xl { font-size: 1.75rem; }
+  .text-4xl { font-size: 1.5rem; }
+  .text-3xl { font-size: 1.375rem; }
+  .py-12 { padding-block: 1.5rem; }
+  .pt-16 { padding-top: 2rem; }
+  .pb-20 { padding-bottom: 2rem; }
+}
+
+/* 390 — max 480 */
+@media (max-width: 480px) {
+  .px-6, .px-7, .px-8 { padding-inline: 0.875rem; }
+  .text-5xl { font-size: 1.625rem; }
+  .text-4xl { font-size: 1.375rem; }
+  .text-3xl { font-size: 1.25rem; }
+  .text-2xl { font-size: 1.125rem; }
+}
+
+/* 375 — max 389 */
+@media (max-width: 389px) {
+  .text-5xl { font-size: 1.5rem; }
+}
+
+/* 320 — max 374 */
+@media (max-width: 374px) {
+  .px-6, .px-7, .px-8 { padding-inline: 0.75rem; }
+  .text-5xl { font-size: 1.375rem; }
+  .text-4xl { font-size: 1.25rem; }
+  .py-12 { padding-block: 1.25rem; }
+}
+
+/* Prevent horizontal overflow on tiny screens */
+@media (max-width: 575px) {
+  html, body { overflow-x: hidden; }
 }

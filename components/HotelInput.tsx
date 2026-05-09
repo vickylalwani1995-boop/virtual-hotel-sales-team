@@ -29,7 +29,7 @@ export function HotelInput() {
   }
 
   return (
-    <div className="w-full max-w-3xl mx-auto bg-white rounded-2xl shadow-[0_8px_40px_-12px_rgba(11,36,71,0.18)] border border-mhsp-line/60 overflow-hidden">
+    <div className="w-full max-w-3xl mx-auto bg-white rounded-2xl shadow-[0_8px_40px_-12px_rgba(15,76,129,0.18)] border border-mhsp-line/60 overflow-hidden">
       <div className="px-7 pt-6 pb-4 border-b border-mhsp-line/60">
         <div className="flex items-center justify-between">
           <div>
@@ -41,7 +41,7 @@ export function HotelInput() {
             </p>
           </div>
           {demo && (
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-mhsp-success/40 bg-mhsp-success/10 px-2.5 py-1 text-[11px] font-semibold text-mhsp-success">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-mhsp-success/40 bg-mhsp-success/10 px-2.5 py-1 text-[14px] font-semibold text-mhsp-success">
               <span className="h-1.5 w-1.5 rounded-full bg-mhsp-success animate-pulse" />
               Demo Mode
             </span>
@@ -72,7 +72,7 @@ export function HotelInput() {
           type="button"
           onClick={handleSubmit}
           disabled={!profile.trim()}
-          className="inline-flex items-center gap-2 rounded-lg bg-mhsp-gold hover:bg-mhsp-gold-soft disabled:opacity-40 disabled:cursor-not-allowed px-6 py-3 text-sm font-semibold text-mhsp-navy shadow-[0_4px_14px_-4px_rgba(212,165,55,0.6)] hover:shadow-[0_6px_20px_-4px_rgba(212,165,55,0.7)] transition-all"
+          className="inline-flex items-center gap-2 rounded-lg bg-mhsp-gold hover:bg-mhsp-gold-soft disabled:opacity-40 disabled:cursor-not-allowed px-6 py-3 text-sm font-semibold text-white shadow-[0_4px_14px_-4px_rgba(27,110,183,0.6)] hover:shadow-[0_6px_20px_-4px_rgba(27,110,183,0.7)] transition-all"
         >
           <Sparkles className="h-4 w-4" />
           Generate Sales Team

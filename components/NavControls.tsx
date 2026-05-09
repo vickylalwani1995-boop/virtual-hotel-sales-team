@@ -41,7 +41,7 @@ export function NavControls() {
       <button
         type="button"
         onClick={toggle}
-        className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium transition-colors ${
+        className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-sm font-medium transition-colors ${
           demo
             ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
             : "text-muted-foreground hover:text-foreground"

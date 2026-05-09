@@ -14,7 +14,7 @@ export function UserMessage({ content }: { content: string }) {
       transition={{ duration: 0.18 }}
       className="flex justify-end"
     >
-      <div className="max-w-[82%] rounded-2xl rounded-br-sm bg-mhsp-navy text-white px-4 py-2.5 text-[14px] leading-relaxed shadow-[0_2px_8px_-2px_rgba(11,36,71,0.25)]">
+      <div className="max-w-[82%] rounded-2xl rounded-br-sm bg-mhsp-navy text-white px-4 py-2.5 text-[14px] leading-relaxed shadow-[0_2px_8px_-2px_rgba(15,76,129,0.25)]">
         {content}
       </div>
     </motion.div>
@@ -36,9 +36,9 @@ export function AssistantMessage({
       className="flex items-start gap-2.5"
     >
       <div className="shrink-0 w-7 h-7 rounded-full bg-mhsp-gold flex items-center justify-center shadow-sm">
-        <ConciergeBell className="h-3.5 w-3.5 text-mhsp-navy" />
+        <ConciergeBell className="h-3.5 w-3.5 text-white" />
       </div>
-      <div className="max-w-[82%] rounded-2xl rounded-tl-sm bg-white border border-mhsp-line text-mhsp-text px-4 py-3 text-[14px] leading-relaxed shadow-[0_2px_8px_-2px_rgba(11,36,71,0.08)]">
+      <div className="max-w-[82%] rounded-2xl rounded-tl-sm bg-white border border-mhsp-line text-mhsp-text px-4 py-3 text-[14px] leading-relaxed shadow-[0_2px_8px_-2px_rgba(15,76,129,0.08)]">
         <div className="concierge-prose">
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
@@ -49,7 +49,7 @@ export function AssistantMessage({
                   return (
                     <Link
                       href={url}
-                      className="inline-flex items-center gap-1 mt-2 mr-1 rounded-lg bg-mhsp-gold hover:bg-mhsp-gold-soft px-3 py-1.5 text-[12px] font-semibold text-mhsp-navy no-underline transition-colors"
+                      className="inline-flex items-center gap-1 mt-2 mr-1 rounded-lg bg-mhsp-gold hover:bg-mhsp-gold-soft px-3 py-1.5 text-[14px] font-semibold text-white no-underline transition-colors"
                     >
                       {children}
                       <ArrowUpRight className="h-3 w-3" />
@@ -86,7 +86,7 @@ export function AssistantMessage({
                 <strong className="font-semibold text-mhsp-navy">{children}</strong>
               ),
               code: ({ children }) => (
-                <code className="bg-mhsp-cream-warm rounded px-1 py-0.5 text-[12px] font-mono text-mhsp-navy">
+                <code className="bg-mhsp-cream-warm rounded px-1 py-0.5 text-[14px] font-mono text-mhsp-navy">
                   {children}
                 </code>
               ),
@@ -107,7 +107,7 @@ export function AssistantMessage({
               ),
               table: ({ children }) => (
                 <div className="my-2 overflow-x-auto rounded-lg border border-mhsp-line">
-                  <table className="w-full border-collapse text-[13px]">
+                  <table className="w-full border-collapse text-[14px]">
                     {children}
                   </table>
                 </div>
@@ -116,7 +116,7 @@ export function AssistantMessage({
                 <thead className="bg-mhsp-navy text-white">{children}</thead>
               ),
               th: ({ children }) => (
-                <th className="text-left font-semibold text-[10px] uppercase tracking-wider px-2 py-1.5">
+                <th className="text-left font-semibold text-[14px] uppercase tracking-wider px-2 py-1.5">
                   {children}
                 </th>
               ),
@@ -143,7 +143,7 @@ export function TypingIndicator() {
   return (
     <div className="flex items-start gap-2.5">
       <div className="shrink-0 w-7 h-7 rounded-full bg-mhsp-gold flex items-center justify-center shadow-sm">
-        <ConciergeBell className="h-3.5 w-3.5 text-mhsp-navy" />
+        <ConciergeBell className="h-3.5 w-3.5 text-white" />
       </div>
       <div className="rounded-2xl rounded-tl-sm bg-white border border-mhsp-line px-4 py-3 shadow-sm">
         <div className="flex items-center gap-1">

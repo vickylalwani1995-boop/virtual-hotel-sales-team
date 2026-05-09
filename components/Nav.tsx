@@ -33,10 +33,10 @@ export function Nav() {
 
   return (
     <header className="sticky top-0 z-40 backdrop-blur-md bg-mhsp-cream/85 border-b border-mhsp-line">
-      <div className="max-w-7xl mx-auto px-6 h-16 flex items-center gap-6">
-        <Link href="/" className="flex items-center gap-3 shrink-0">
-          <MhspLogo height={32} />
-          <InntelligentBadge className="hidden md:inline-flex" />
+      <div className="max-w-7xl mx-auto px-6 h-20 flex items-center gap-6">
+        <Link href="/" className="flex items-center gap-4 shrink-0">
+          <MhspLogo height={44} />
+          <InntelligentBadge className="hidden md:inline-flex" height={26} />
         </Link>
 
         <Link href="/" className="hidden lg:block ml-2 pl-6 border-l border-mhsp-line">
@@ -72,7 +72,7 @@ export function Nav() {
         <button
           type="button"
           onClick={toggle}
-          className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold transition-all ${
+          className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm font-semibold transition-all ${
             demo
               ? "border-mhsp-success/40 bg-mhsp-success/10 text-mhsp-success"
               : "border-mhsp-line text-mhsp-muted hover:text-mhsp-navy hover:border-mhsp-navy/30"
@@ -92,7 +92,7 @@ export function Nav() {
           type="button"
           onClick={handleReset}
           disabled={resetting}
-          className="inline-flex items-center gap-1 text-xs font-medium text-mhsp-muted hover:text-mhsp-navy transition-colors disabled:opacity-50"
+          className="inline-flex items-center gap-1 text-sm font-medium text-mhsp-muted hover:text-mhsp-navy transition-colors disabled:opacity-50"
           title="Clear localStorage and return home"
         >
           <RotateCcw className="h-3.5 w-3.5" />

@@ -69,7 +69,7 @@ export function EmailQueueModal({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger className="inline-flex items-center gap-1.5 rounded-lg border border-mhsp-line bg-white hover:border-mhsp-gold/60 hover:bg-mhsp-cream-warm/40 px-3 py-1.5 text-xs font-semibold text-mhsp-navy transition-all">
+      <DialogTrigger className="inline-flex items-center gap-1.5 rounded-lg border border-mhsp-line bg-white hover:border-mhsp-gold/60 hover:bg-mhsp-cream-warm/40 px-3 py-1.5 text-sm font-semibold text-mhsp-navy transition-all">
         <Mail className="h-3.5 w-3.5" /> Send Email
       </DialogTrigger>
       <DialogContent className="sm:max-w-2xl">
@@ -83,7 +83,7 @@ export function EmailQueueModal({
         </DialogHeader>
         <div className="space-y-3">
           <div>
-            <label className="text-xs font-medium text-muted-foreground">
+            <label className="text-sm font-medium text-muted-foreground">
               Recipient (optional hint)
             </label>
             <Input
@@ -93,15 +93,15 @@ export function EmailQueueModal({
             />
           </div>
           <div>
-            <label className="text-xs font-medium text-muted-foreground">Subject</label>
+            <label className="text-sm font-medium text-muted-foreground">Subject</label>
             <Input value={subject} onChange={(e) => setSubject(e.target.value)} />
           </div>
           <div>
-            <label className="text-xs font-medium text-muted-foreground">Body</label>
+            <label className="text-sm font-medium text-muted-foreground">Body</label>
             <Textarea
               value={body}
               onChange={(e) => setBody(e.target.value)}
-              className="min-h-64 font-mono text-xs"
+              className="min-h-64 font-mono text-sm"
             />
           </div>
         </div>
@@ -112,7 +112,7 @@ export function EmailQueueModal({
           <Button
             onClick={queue}
             disabled={submitting || !body.trim()}
-            className="bg-mhsp-gold hover:bg-mhsp-gold-soft text-mhsp-navy"
+            className="bg-mhsp-gold hover:bg-mhsp-gold-soft text-white"
           >
             {submitting ? (
               <>
