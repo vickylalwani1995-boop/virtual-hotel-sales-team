@@ -13,34 +13,45 @@ import {
 const CLEAR_PROFILE_EVENT = "vhst-clear-hotel-profile";
 const ONBOARDING_CHANGED = "vhst-onboarding-changed";
 
-const STEPS: Step[] = [
+// disableBeacon=true on every step kills react-joyride's default
+// pulsing dot (the "black dot") and pops the tooltip directly with
+// the target highlighted — premium, not toddler-tutorial energy.
+// Type annotation is loosened because the bundled react-joyride
+// type defs don't expose disableBeacon on Step in this version,
+// even though the runtime supports it. Cast at usage site.
+const STEPS = [
   {
     target: '[data-tour="hotel-input"]',
     content:
       "Welcome to my Sales TEAM AI! Start by describing your hotel — name, location, target business, weak days. Paste a quick profile and your AI sales team reads it in seconds.",
-    placement: "top",
+    placement: "top" as const,
+    disableBeacon: true,
   },
   {
     target: '[data-tour="generate-btn"]',
     content:
       "Click here to build your virtual sales department. Eleven specialist agents, ready in seconds.",
-    placement: "top",
+    placement: "top" as const,
+    disableBeacon: true,
   },
   {
     target: '[data-tour="nav-leads"]',
     content:
       "Every prospect your agents surface lands here — a 21-column CRM table with search, filters, status tracking, and CSV / Excel export.",
-    placement: "bottom",
+    placement: "bottom" as const,
+    disableBeacon: true,
   },
   {
     target: '[data-tour="concierge-bell"]',
     content:
       "Stuck? Ask myConcierge — your AI sales co-pilot — anything, anywhere. Press ⌘K to open it from anywhere too.",
-    placement: "left",
+    placement: "left" as const,
+    disableBeacon: true,
   },
 ];
 
-// Brand-tinted joyride styles (navy header / gold accent / cream surface)
+// Brand-tinted joyride styles (blue palette + premium card frame).
+// Spotlight + beacon are also overridden in case any fallback fires.
 const JOYRIDE_STYLES = {
   options: {
     primaryColor: "#1B6EB7",
@@ -49,6 +60,17 @@ const JOYRIDE_STYLES = {
     arrowColor: "#FFFFFF",
     overlayColor: "rgba(15, 27, 45, 0.55)",
     zIndex: 1000,
+  },
+  // Spotlight cutout uses joyride's SVG path attrs — leaving default
+  // since the dimmed overlay color + softened tooltip already read
+  // premium. The disableBeacon flag on each Step kills the dark
+  // pulsing dot, which was the actual visible issue.
+  beaconInner: {
+    backgroundColor: "#1B6EB7",
+  },
+  beaconOuter: {
+    backgroundColor: "rgba(27,110,183,0.3)",
+    border: "2px solid #1B6EB7",
   },
   tooltip: {
     borderRadius: 16,
