@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Phone, Sparkles, Users } from "lucide-react";
+import { Phone, Sparkles, Users, BarChart3 } from "lucide-react";
 import { MhspLogo } from "@/components/MhspLogo";
 import { UserChip } from "@/components/UserChip";
 import { useDemoMode } from "@/lib/demo-mode";
@@ -57,6 +57,16 @@ export function Nav() {
         </Link>
 
         <div className="flex-1" />
+
+        {/* Dashboard link */}
+        <Link
+          href="/dashboard"
+          className="inline-flex items-center gap-1.5 text-sm font-semibold text-mhsp-navy hover:text-[#1B6EB7] transition-colors shrink-0"
+          aria-label="Dashboard"
+        >
+          <BarChart3 className="h-4 w-4" />
+          <span className="hidden md:inline">Dashboard</span>
+        </Link>
 
         {/* Leads link with count badge */}
         <Link
