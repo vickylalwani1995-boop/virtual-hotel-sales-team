@@ -360,6 +360,20 @@ export default function LeadsPage() {
   /* ============================ RENDER ============================ */
   return (
     <main>
+      {/* Cross-version banner — Vicky's Phase 1 also live */}
+      <div className="border-b border-[#E5ECF4] bg-mhsp-gold/10">
+        <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 py-2 text-center text-xs sm:text-sm">
+          <span className="text-mhsp-navy/80">
+            👀 Also live:{" "}
+            <Link
+              href="/leads-vicky-v1"
+              className="font-semibold text-mhsp-navy underline underline-offset-2 hover:text-mhsp-gold transition-colors"
+            >
+              Vicky&apos;s Phase 1 prototype at /leads-vicky-v1
+            </Link>
+          </span>
+        </div>
+      </div>
       {/* HERO BAND */}
       <section className="relative overflow-hidden border-b border-[#E5ECF4]">
         <div
