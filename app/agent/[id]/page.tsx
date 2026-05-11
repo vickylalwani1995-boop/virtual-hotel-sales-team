@@ -185,7 +185,19 @@ function AgentDetail({ id }: { id: string }) {
               </p>
             </div>
           ) : (
-            <AgentChat agent={agent} hotelProfile={profile} />
+            <>
+              <div className="mb-3 flex items-center justify-end">
+                <Link
+                  href={`/call/${agent.id}?profile=${encodeURIComponent(profile)}`}
+                  className="group inline-flex items-center gap-2 rounded-xl bg-gradient-to-br from-[#1E5896] to-[#0F4C81] hover:from-[#1B6EB7] hover:to-[#0F4C81] text-white px-4 py-2 text-sm font-bold uppercase tracking-[0.12em] shadow-[0_8px_18px_-8px_rgba(15,76,129,0.55)] hover:-translate-y-0.5 transition-all"
+                  title="Start a voice call with this agent"
+                >
+                  <span className="text-base leading-none">📞</span>
+                  Start Call
+                </Link>
+              </div>
+              <AgentChat agent={agent} hotelProfile={profile} />
+            </>
           )}
         </div>
       </div>
