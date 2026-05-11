@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { Phone, Sparkles, Users } from "lucide-react";
 import { MhspLogo } from "@/components/MhspLogo";
 import { UserChip } from "@/components/UserChip";
+import { NotificationCenter } from "@/components/NotificationCenter";
 import { useDemoMode } from "@/lib/demo-mode";
 import { getAllLeads } from "@/lib/leads";
 
@@ -103,6 +104,8 @@ export function Nav() {
           <Sparkles className="h-3.5 w-3.5" />
           <span className="hidden md:inline">Demo Mode</span>
         </button>
+
+        <NotificationCenter />
 
         <UserChip />
       </div>

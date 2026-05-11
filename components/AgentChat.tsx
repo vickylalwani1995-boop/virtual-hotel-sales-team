@@ -33,6 +33,7 @@ import { quickActionsFor } from "@/lib/quick-actions";
 import { VoiceInput } from "@/components/VoiceInput";
 import { LeadCaptureBar } from "@/components/LeadCaptureBar";
 import { useDemoMode } from "@/lib/demo-mode";
+import { addNotification } from "@/lib/notifications";
 
 const FUNNEL_TINT: Record<"calculated" | "hustle", string> = {
   calculated: "bg-mhsp-navy/8 border-mhsp-navy/15",
@@ -243,6 +244,14 @@ export function AgentChat({
         setMessages((prev) => [...prev, aMsg]);
         setIsStreaming(false);
         setStreamingMessage("");
+        // Surface in the Notification Center
+        addNotification({
+          type: "completed",
+          title: `${agent.name} finished`,
+          description: aMsg.content.replace(/\s+/g, " ").slice(0, 120),
+          agentId: agent.id,
+          actionUrl: `/agent/${agent.id}`,
+        });
       }
 
       async function playStreamSimulated(text: string) {

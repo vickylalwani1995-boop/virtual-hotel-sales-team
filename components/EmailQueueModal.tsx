@@ -17,6 +17,7 @@ import {
 import { Mail, Loader2 } from "lucide-react";
 import { logActivity } from "@/lib/activity-log";
 import { parseEmailFromMarkdown } from "@/lib/email-parser";
+import { addNotification } from "@/lib/notifications";
 
 export function EmailQueueModal({
   agentId,
@@ -52,6 +53,13 @@ export function EmailQueueModal({
         agentId,
         subject: subject || "(no subject)",
         preview: body.slice(0, 100),
+      });
+      addNotification({
+        type: "email",
+        title: `Email queued${recipient ? ` for ${recipient}` : ""}`,
+        description: subject || "(no subject)",
+        agentId,
+        actionUrl: "/activity",
       });
       toast.success("Email queued - will sync with MyHospitalitySalesPro");
       setOpen(false);

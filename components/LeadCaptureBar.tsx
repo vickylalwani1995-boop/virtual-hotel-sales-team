@@ -9,6 +9,7 @@ import {
   hasLeadTable,
   parseLeadsFromMarkdown,
 } from "@/lib/parse-leads-from-markdown";
+import { addNotification } from "@/lib/notifications";
 
 /**
  * Renders below a Lead Generation agent's reply when the reply
@@ -49,6 +50,13 @@ export function LeadCaptureBar({
           hotelProfile,
         })),
       );
+      addNotification({
+        type: "lead",
+        title: `${parsed.length} ${parsed.length === 1 ? "lead" : "leads"} captured`,
+        description: "Saved to Lead Manager from chat output.",
+        agentId,
+        actionUrl: "/leads",
+      });
       setSaved(true);
       toast.success(
         `${parsed.length} ${parsed.length === 1 ? "lead" : "leads"} added to Lead Manager.`,
