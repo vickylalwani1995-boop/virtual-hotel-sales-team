@@ -31,6 +31,7 @@ import {
 } from "@/lib/agent-chat-history";
 import { quickActionsFor } from "@/lib/quick-actions";
 import { VoiceInput } from "@/components/VoiceInput";
+import { LeadCaptureBar } from "@/components/LeadCaptureBar";
 import { useDemoMode } from "@/lib/demo-mode";
 
 const FUNNEL_TINT: Record<"calculated" | "hustle", string> = {
@@ -455,6 +456,8 @@ export function AgentChat({
                 content={m.content}
                 avatarGrad={avatarGrad}
                 icon={agent.icon}
+                agentId={agent.id}
+                hotelProfile={hotelProfile ?? undefined}
               />
             )
           )}
@@ -465,6 +468,8 @@ export function AgentChat({
             streaming
             avatarGrad={avatarGrad}
             icon={agent.icon}
+            agentId={agent.id}
+            hotelProfile={hotelProfile ?? undefined}
           />
         )}
         {isStreaming && !streamingMessage && (
@@ -637,11 +642,15 @@ function AssistantBubble({
   avatarGrad,
   icon,
   streaming = false,
+  agentId,
+  hotelProfile,
 }: {
   content: string;
   avatarGrad: string;
   icon: string;
   streaming?: boolean;
+  agentId?: string;
+  hotelProfile?: string;
 }) {
   return (
     <motion.div
@@ -661,6 +670,13 @@ function AssistantBubble({
         </div>
         {streaming && (
           <span className="inline-block w-1 h-3.5 align-middle bg-mhsp-gold animate-pulse rounded-sm ml-0.5" />
+        )}
+        {!streaming && agentId && (
+          <LeadCaptureBar
+            content={content}
+            agentId={agentId}
+            hotelProfile={hotelProfile}
+          />
         )}
       </div>
     </motion.div>

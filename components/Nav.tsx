@@ -1,14 +1,30 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Phone, Sparkles } from "lucide-react";
+import { Phone, Sparkles, Users } from "lucide-react";
 import { MhspLogo } from "@/components/MhspLogo";
 import { UserChip } from "@/components/UserChip";
 import { useDemoMode } from "@/lib/demo-mode";
+import { getAllLeads } from "@/lib/leads";
 
 export function Nav() {
   const [demo, setDemo] = useDemoMode();
+  const [leadCount, setLeadCount] = useState(0);
+
+  // Keep the Leads badge live: read on mount, refresh on
+  // window events emitted by the leads helpers.
+  useEffect(() => {
+    const sync = () => setLeadCount(getAllLeads().length);
+    sync();
+    window.addEventListener("vhst-leads-changed", sync);
+    window.addEventListener("storage", sync);
+    return () => {
+      window.removeEventListener("vhst-leads-changed", sync);
+      window.removeEventListener("storage", sync);
+    };
+  }, []);
 
   function toggle() {
     const next = !demo;
@@ -41,6 +57,21 @@ export function Nav() {
         </Link>
 
         <div className="flex-1" />
+
+        {/* Leads link with count badge */}
+        <Link
+          href="/leads"
+          className="relative inline-flex items-center gap-1.5 text-sm font-semibold text-mhsp-navy hover:text-[#1B6EB7] transition-colors shrink-0"
+          aria-label={`Leads (${leadCount})`}
+        >
+          <Users className="h-4 w-4" />
+          <span className="hidden md:inline">Leads</span>
+          {leadCount > 0 && (
+            <span className="inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full bg-[#1B6EB7] text-white text-sm font-bold font-numeric leading-none">
+              {leadCount > 99 ? "99+" : leadCount}
+            </span>
+          )}
+        </Link>
 
         {/* Phone - hidden on mobile, icon-only on tablet, full on desktop */}
         <a
