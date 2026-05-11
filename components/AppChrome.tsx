@@ -7,6 +7,8 @@ import { Footer } from "@/components/Footer";
 import { Concierge } from "@/components/Concierge";
 import { AuthGuard } from "@/components/AuthGuard";
 import { ScrollToTop } from "@/components/ScrollToTop";
+import { KeyboardShortcuts } from "@/components/KeyboardShortcuts";
+import { OfflineBanner } from "@/components/OfflineBanner";
 import { OnboardingTour } from "@/components/OnboardingTour";
 
 const CHROMELESS_ROUTES = ["/login"];
@@ -19,6 +21,8 @@ export function AppChrome({ children }: { children: React.ReactNode }) {
     return (
       <AuthGuard>
         <ScrollToTop />
+        <KeyboardShortcuts />
+        <OfflineBanner />
         <div className="flex-1 flex flex-col">{children}</div>
       </AuthGuard>
     );
@@ -27,6 +31,8 @@ export function AppChrome({ children }: { children: React.ReactNode }) {
   return (
     <AuthGuard>
       <ScrollToTop />
+      <KeyboardShortcuts />
+      <OfflineBanner />
       <Nav />
       <div className="flex-1 flex flex-col">{children}</div>
       <Footer />
