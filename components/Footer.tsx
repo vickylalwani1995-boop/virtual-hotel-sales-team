@@ -111,16 +111,6 @@ export function Footer() {
                 About
               </a>
             </li>
-            <li>
-              <a
-                href="https://myhospitalitysalespro.com/contact"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-mhsp-muted hover:text-mhsp-navy transition-colors"
-              >
-                Contact
-              </a>
-            </li>
           </ul>
         </div>
 

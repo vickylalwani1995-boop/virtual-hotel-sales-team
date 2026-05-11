@@ -1,5 +1,6 @@
 import { AGENTS, FUNNELS, type Agent, type Funnel } from "@/lib/agents";
 import { AgentCard } from "@/components/AgentCard";
+import { Crosshair, Zap } from "lucide-react";
 
 const FUNNEL_ORDER: { key: Funnel; ids: string[] }[] = [
   {
@@ -28,7 +29,7 @@ const FUNNEL_ORDER: { key: Funnel; ids: string[] }[] = [
 export function AgentGrid({ profile }: { profile: string }) {
   let cardIndex = 0;
   return (
-    <div className="space-y-12">
+    <div className="space-y-14 sm:space-y-16">
       {FUNNEL_ORDER.map(({ key, ids }) => {
         const meta = FUNNELS[key];
         const items = ids
@@ -43,7 +44,6 @@ export function AgentGrid({ profile }: { profile: string }) {
             label={meta.label}
             tagline={meta.tagline}
             description={meta.description}
-            emoji={meta.emoji}
             items={items}
             profile={profile}
             offset={offset}
@@ -59,7 +59,6 @@ function FunnelSection({
   label,
   tagline,
   description,
-  emoji,
   items,
   profile,
   offset,
@@ -68,49 +67,62 @@ function FunnelSection({
   label: string;
   tagline: string;
   description: string;
-  emoji: string;
   items: readonly Agent[];
   profile: string;
   offset: number;
 }) {
   const isCalculated = funnel === "calculated";
-  const accentText = isCalculated ? "text-mhsp-navy" : "text-mhsp-teal";
-  const accentBg = isCalculated
-    ? "from-mhsp-navy/10 to-mhsp-gold/5"
-    : "from-mhsp-teal/12 to-mhsp-gold/5";
-  const stripe = isCalculated ? "bg-mhsp-navy" : "bg-mhsp-teal";
+  const Icon = isCalculated ? Crosshair : Zap;
+
+  const iconTile = isCalculated
+    ? "bg-gradient-to-br from-[#1E5896] to-[#0F4C81]"
+    : "bg-gradient-to-br from-[#2F8FCC] to-[#1B6EB7]";
+
+  const stripGradient = isCalculated
+    ? "from-[#0F4C81] via-[#1B6EB7] to-[#0F4C81]"
+    : "from-[#2F8FCC] via-[#1B6EB7] to-[#2F8FCC]";
 
   return (
     <section>
-      {/* Funnel banner */}
-      <div
-        className={`relative overflow-hidden rounded-2xl bg-gradient-to-r ${accentBg} border border-mhsp-line p-6 mb-5`}
-      >
-        <span
-          className={`absolute left-0 top-0 bottom-0 w-1 ${stripe}`}
-        />
-        <div className="flex items-end justify-between gap-4 flex-wrap">
-          <div className="pl-3">
-            <p className="text-[11px] font-bold tracking-[0.2em] uppercase text-mhsp-gold">
-              {emoji} {tagline}
-            </p>
-            <h2 className={`font-display text-2xl mt-1 ${accentText}`}>
-              {label}
-            </h2>
-            <p className="text-sm text-mhsp-muted mt-1.5 max-w-xl leading-relaxed">
-              {description}
-            </p>
+      {/* Funnel banner — premium card style */}
+      <div className="relative overflow-hidden rounded-2xl bg-white border border-[#E5ECF4] shadow-[0_20px_50px_-25px_rgba(15,76,129,0.16),0_4px_14px_-4px_rgba(15,76,129,0.06)] mb-6">
+        {/* Top accent strip */}
+        <div className={`h-1 w-full bg-gradient-to-r ${stripGradient}`} />
+
+        <div className="p-6 sm:p-7 flex items-start justify-between gap-4 flex-wrap">
+          <div className="flex items-start gap-4 min-w-0 flex-1">
+            <div
+              className={`shrink-0 h-14 w-14 rounded-xl flex items-center justify-center text-white shadow-[0_8px_22px_-8px_rgba(15,76,129,0.55)] ${iconTile}`}
+            >
+              <Icon className="h-6 w-6" strokeWidth={2.25} />
+            </div>
+            <div className="min-w-0">
+              <p className="text-sm font-bold tracking-[0.18em] uppercase text-mhsp-gold">
+                {tagline}
+              </p>
+              <h2 className="font-heading text-2xl sm:text-[28px] font-bold text-mhsp-navy mt-1 leading-tight">
+                The {label} Funnel
+              </h2>
+              <p className="text-sm sm:text-base text-mhsp-muted mt-2 leading-relaxed max-w-2xl">
+                {description}
+              </p>
+            </div>
           </div>
-          <div
-            className={`inline-flex items-baseline gap-1.5 px-3 py-1.5 rounded-full bg-white border border-mhsp-line text-xs ${accentText}`}
-          >
-            <span className="font-numeric text-base font-bold">{items.length}</span>
-            <span className="text-mhsp-muted font-medium">agents</span>
+
+          {/* Agent count pill */}
+          <div className="shrink-0 inline-flex items-baseline gap-1.5 rounded-full bg-[#F4F8FC] border border-[#DCE5EF] px-4 py-2">
+            <span className="font-numeric text-2xl font-bold text-mhsp-navy leading-none">
+              {items.length}
+            </span>
+            <span className="text-sm text-mhsp-muted font-semibold">
+              agents
+            </span>
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      {/* Agent cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
         {items.map((a, i) => (
           <AgentCard key={a.id} agent={a} profile={profile} index={offset + i} />
         ))}
