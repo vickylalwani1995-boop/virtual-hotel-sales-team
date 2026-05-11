@@ -71,6 +71,7 @@ export function Nav() {
 
         {/* Leads link with count badge */}
         <Link
+          data-tour="nav-leads"
           href="/leads"
           className="relative inline-flex items-center gap-1.5 text-sm font-semibold text-mhsp-navy hover:text-[#1B6EB7] transition-colors shrink-0"
           aria-label={`Leads (${leadCount})`}
