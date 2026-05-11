@@ -49,6 +49,35 @@ export function LenisProvider({ children }: { children: React.ReactNode }) {
         syncTouch: true,
         wheelMultiplier: 1,
         touchMultiplier: 1.5,
+        // Return true = don't intercept; let the native scroll happen.
+        // Without this, Lenis hijacks wheel events on inner containers
+        // (modals, dropdowns, the Concierge sidebar, the leads table)
+        // and the page appears "stuck" because Lenis is trying to scroll
+        // a body that's locked, or scrolling the wrong axis.
+        prevent: (node: Element) => {
+          if (
+            node.tagName === "TEXTAREA" ||
+            node.tagName === "INPUT" ||
+            node.tagName === "SELECT"
+          ) {
+            return true;
+          }
+          if (
+            node instanceof HTMLElement &&
+            node.hasAttribute("data-lenis-prevent")
+          ) {
+            return true;
+          }
+          // While a modal/drawer has locked body scroll, let wheel
+          // events flow to inner overflow-auto containers natively.
+          if (
+            typeof document !== "undefined" &&
+            document.body.style.overflow === "hidden"
+          ) {
+            return true;
+          }
+          return false;
+        },
       }}
     >
       {children}

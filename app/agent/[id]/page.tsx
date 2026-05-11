@@ -4,22 +4,14 @@ import { Suspense, use } from "react";
 import Link from "next/link";
 import { notFound, useSearchParams } from "next/navigation";
 import { getAgent } from "@/lib/agents";
+import { iconForAgent } from "@/lib/agent-icons";
 import { AgentChat } from "@/components/AgentChat";
-import { ArrowLeft } from "lucide-react";
-
-const GRADIENT: Record<string, string> = {
-  teal: "from-mhsp-teal to-mhsp-navy",
-  green: "from-emerald-500 to-mhsp-teal",
-  blue: "from-mhsp-teal to-mhsp-navy-soft",
-  purple: "from-purple-500 to-mhsp-navy",
-  orange: "from-orange-500 to-mhsp-gold",
-  amber: "from-amber-400 to-mhsp-gold",
-  indigo: "from-indigo-500 to-mhsp-navy",
-  pink: "from-pink-400 to-purple-500",
-  red: "from-rose-500 to-mhsp-navy",
-  emerald: "from-emerald-500 to-mhsp-teal",
-  violet: "from-violet-500 to-mhsp-navy",
-};
+import {
+  ArrowLeft,
+  Crosshair,
+  Zap,
+  Phone,
+} from "lucide-react";
 
 function ProfileChips({ profile }: { profile: string }) {
   const fields = [
@@ -43,8 +35,8 @@ function ProfileChips({ profile }: { profile: string }) {
   }
   if (rows.length === 0) {
     return (
-      <div className="mt-5 pt-5 border-t border-mhsp-line/60">
-        <p className="text-[14px] font-semibold tracking-[0.18em] text-mhsp-gold uppercase mb-2">
+      <div className="mt-5 pt-5 border-t border-[#E5ECF4]">
+        <p className="text-sm font-bold tracking-[0.18em] text-mhsp-gold uppercase mb-2">
           Working with
         </p>
         <p className="text-sm text-mhsp-muted leading-relaxed line-clamp-6">
@@ -54,17 +46,17 @@ function ProfileChips({ profile }: { profile: string }) {
     );
   }
   return (
-    <div className="mt-6 pt-6 border-t border-mhsp-line/60">
-      <p className="text-[14px] font-semibold tracking-[0.18em] text-mhsp-gold uppercase mb-3">
+    <div className="mt-6 pt-6 border-t border-[#E5ECF4]">
+      <p className="text-sm font-bold tracking-[0.18em] text-mhsp-gold uppercase mb-3">
         Working with
       </p>
       <dl className="space-y-2.5">
         {rows.map((r) => (
           <div key={r.label} className="flex flex-col gap-0.5">
-            <dt className="text-[14px] font-semibold uppercase tracking-wider text-mhsp-muted">
+            <dt className="text-sm font-semibold uppercase tracking-wider text-mhsp-muted">
               {r.label}
             </dt>
-            <dd className="text-sm text-mhsp-navy font-medium leading-snug">
+            <dd className="text-sm text-mhsp-navy font-medium leading-snug break-words">
               {r.value}
             </dd>
           </div>
@@ -72,10 +64,6 @@ function ProfileChips({ profile }: { profile: string }) {
       </dl>
     </div>
   );
-}
-
-function labelFromName(name: string) {
-  return name.replace(/\s+Agent$/i, "").toUpperCase();
 }
 
 function AgentDetail({ id }: { id: string }) {
@@ -90,117 +78,193 @@ function AgentDetail({ id }: { id: string }) {
 
   if (!agent) return notFound();
 
-  const gradient = GRADIENT[agent.color] ?? GRADIENT.teal;
+  const Icon = iconForAgent(agent.id);
   const isCalculated = agent.funnel === "calculated";
+  const isLive = agent.tier === 1;
+  const FunnelIcon = isCalculated ? Crosshair : Zap;
+  const cleanName = agent.name.replace(/\s+Agent$/i, "");
+
+  const iconTile = isCalculated
+    ? "bg-gradient-to-br from-[#1E5896] to-[#0F4C81]"
+    : "bg-gradient-to-br from-[#2F8FCC] to-[#1B6EB7]";
+
+  const stripGradient = isCalculated
+    ? "from-[#0F4C81] via-[#1B6EB7] to-[#0F4C81]"
+    : "from-[#2F8FCC] via-[#1B6EB7] to-[#2F8FCC]";
 
   return (
-    <main className="max-w-7xl mx-auto px-6 py-8">
-      <div className="mb-6 text-sm text-mhsp-muted">
-        <Link
-          href={`/agents?profile=${encodeURIComponent(profile)}`}
-          className="hover:text-mhsp-navy transition-colors inline-flex items-center gap-1"
-        >
-          <ArrowLeft className="h-3.5 w-3.5" /> Sales Team
-        </Link>
-        <span className="mx-2 text-mhsp-line">/</span>
-        <span className="text-mhsp-navy">{agent.name}</span>
-      </div>
+    <main>
+      {/* ============= HERO BAND ============= */}
+      <section className="relative overflow-hidden border-b border-[#E5ECF4]">
+        <div
+          className="absolute inset-0 -z-10"
+          style={{
+            background:
+              "radial-gradient(900px 480px at 14% 0%, rgba(47,143,204,0.10), transparent 60%), radial-gradient(800px 480px at 92% 100%, rgba(15,76,129,0.08), transparent 65%), linear-gradient(180deg, #FCFDFE 0%, #F1F5FA 100%)",
+          }}
+        />
+        <div
+          className="absolute inset-0 -z-10 opacity-[0.035] pointer-events-none"
+          style={{
+            backgroundImage:
+              "radial-gradient(rgba(15,76,129,0.7) 1px, transparent 1px)",
+            backgroundSize: "26px 26px",
+          }}
+        />
 
-      {/* Hero strip */}
-      <div
-        className={`relative h-32 rounded-2xl overflow-hidden mb-6 bg-gradient-to-br ${gradient}`}
-      >
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_30%,rgba(255,255,255,0.18),transparent_60%)]" />
-        <div className="absolute right-6 top-1/2 -translate-y-1/2 text-7xl drop-shadow-[0_4px_12px_rgba(0,0,0,0.18)]">
-          {agent.icon}
-        </div>
-        <span
-          className={`absolute top-4 left-6 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[14px] font-bold tracking-wider uppercase ${
-            agent.tier === 1
-              ? "bg-mhsp-success text-white"
-              : "bg-mhsp-gold text-white"
-          }`}
-        >
-          <span className="h-1 w-1 rounded-full bg-current" />
-          {agent.tier === 1 ? "LIVE" : "READY"}
-        </span>
-        <span
-          className={`absolute top-4 left-24 inline-flex items-center gap-1 rounded-full px-2 py-1 text-[14px] font-bold tracking-[0.14em] uppercase ${
-            isCalculated
-              ? "bg-white/15 text-white border border-white/30"
-              : "bg-white/15 text-white border border-white/30"
-          }`}
-        >
-          {isCalculated ? "🎯 Calculated" : "⚡ Hustle"}
-        </span>
-      </div>
+        <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 py-8 sm:py-10 lg:py-12">
+          {/* Breadcrumb */}
+          <Link
+            href={`/agents?profile=${encodeURIComponent(profile)}`}
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-mhsp-muted hover:text-mhsp-navy transition-colors"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to Sales Team
+          </Link>
 
-      <div className="grid grid-cols-1 lg:grid-cols-[35%_65%] gap-6">
-        {/* Left - agent identity */}
-        <aside>
-          <div className="bg-white rounded-2xl border border-mhsp-line p-6 shadow-[0_2px_10px_-4px_rgba(15,76,129,0.08)]">
-            <p className="eyebrow">{labelFromName(agent.name)}</p>
-            <h1 className="font-display text-3xl text-mhsp-navy mt-2 leading-tight">
-              {agent.name}
-            </h1>
-            <p className="text-[14px] font-semibold tracking-[0.16em] uppercase text-mhsp-gold mt-1">
-              {agent.roleTitle}
-            </p>
-            <p className="text-sm text-mhsp-muted mt-3 leading-relaxed">
-              {agent.description}
-            </p>
-
-            <div className="mt-5 pt-5 border-t border-mhsp-line/60 space-y-1.5">
-              {agent.id !== "00_director_of_sales" && (
-                <p className="text-sm text-mhsp-muted">
-                  <span className="font-semibold text-mhsp-navy">Reports to:</span>{" "}
-                  Director of Sales
-                </p>
-              )}
-              <p className="text-sm text-mhsp-muted">
-                <span className="font-semibold text-mhsp-navy">Used by:</span>{" "}
-                <span className="font-numeric text-mhsp-success">1,200+</span>{" "}
-                hotels nationwide
-              </p>
-              <p className="text-sm text-mhsp-muted">
-                <span className="font-semibold text-mhsp-navy">Funnel:</span>{" "}
-                {isCalculated ? "🎯 Calculated" : "⚡ Hustle"}
-              </p>
-            </div>
-
-            {profile && <ProfileChips profile={profile} />}
-          </div>
-        </aside>
-
-        {/* Right - chat */}
-        <div>
-          {!profile ? (
-            <div className="bg-white rounded-2xl border border-mhsp-line border-dashed p-10 text-center">
-              <p className="text-mhsp-muted text-sm">
-                No hotel profile yet.{" "}
-                <Link href="/" className="underline text-mhsp-navy font-medium">
-                  Add one first
-                </Link>{" "}
-                so the agent has context.
-              </p>
-            </div>
-          ) : (
-            <>
-              <div className="mb-3 flex items-center justify-end">
-                <Link
-                  href={`/call/${agent.id}?profile=${encodeURIComponent(profile)}`}
-                  className="group inline-flex items-center gap-2 rounded-xl bg-gradient-to-br from-[#1E5896] to-[#0F4C81] hover:from-[#1B6EB7] hover:to-[#0F4C81] text-white px-4 py-2 text-sm font-bold uppercase tracking-[0.12em] shadow-[0_8px_18px_-8px_rgba(15,76,129,0.55)] hover:-translate-y-0.5 transition-all"
-                  title="Start a voice call with this agent"
-                >
-                  <span className="text-base leading-none">📞</span>
-                  Start Call
-                </Link>
+          {/* Agent header row */}
+          <div className="mt-6 flex flex-col lg:flex-row lg:items-start lg:justify-between gap-5">
+            <div className="flex items-start gap-3 sm:gap-4 min-w-0">
+              <div
+                className={`shrink-0 h-14 w-14 sm:h-16 sm:w-16 rounded-2xl flex items-center justify-center text-white shadow-[0_10px_24px_-8px_rgba(15,76,129,0.55)] ${iconTile}`}
+              >
+                <Icon
+                  className="h-7 w-7 sm:h-8 sm:w-8"
+                  strokeWidth={2.25}
+                />
               </div>
-              <AgentChat agent={agent} hotelProfile={profile} />
-            </>
-          )}
+              <div className="min-w-0">
+                <p className="text-sm font-bold tracking-[0.18em] uppercase text-mhsp-gold">
+                  {agent.roleTitle}
+                </p>
+                <h1 className="font-heading mt-1 text-[28px] sm:text-[36px] lg:text-[44px] font-bold leading-[1.05] tracking-tight text-mhsp-navy">
+                  {cleanName}
+                </h1>
+                {/* Funnel + status chips */}
+                <div className="mt-3 flex flex-wrap items-center gap-2">
+                  <span
+                    className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-sm font-bold uppercase tracking-wider ${
+                      isCalculated
+                        ? "bg-[#EAF2FA] text-[#0F4C81] border-[#C9DAEB]"
+                        : "bg-[#E3F1FA] text-[#1B6EB7] border-[#C7DFEE]"
+                    }`}
+                  >
+                    <FunnelIcon className="h-3.5 w-3.5" strokeWidth={2.5} />
+                    {isCalculated ? "Calculated" : "Hustle"}
+                  </span>
+                  <span
+                    className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-sm font-bold uppercase tracking-wider ${
+                      isLive
+                        ? "bg-mhsp-success/10 text-mhsp-success border-mhsp-success/30"
+                        : "bg-mhsp-gold/10 text-mhsp-gold border-mhsp-gold/30"
+                    }`}
+                  >
+                    <span
+                      className={`h-1.5 w-1.5 rounded-full ${
+                        isLive
+                          ? "bg-mhsp-success animate-pulse"
+                          : "bg-mhsp-gold"
+                      }`}
+                    />
+                    {isLive ? "Live" : "Ready"}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Start Call CTA — desktop only on right */}
+            {profile && (
+              <Link
+                href={`/call/${agent.id}?profile=${encodeURIComponent(profile)}`}
+                className="group shrink-0 inline-flex items-center justify-center gap-2 rounded-xl bg-[#1B6EB7] hover:bg-[#0F4C81] text-white px-5 sm:px-6 py-3 text-sm font-bold uppercase tracking-[0.12em] shadow-[0_10px_24px_-10px_rgba(27,110,183,0.55)] hover:shadow-[0_14px_32px_-10px_rgba(15,76,129,0.65)] hover:-translate-y-0.5 transition-all"
+                title="Start a voice call with this agent"
+              >
+                <Phone className="h-4 w-4" />
+                Start Call
+              </Link>
+            )}
+          </div>
+
+          {/* Description */}
+          <p className="mt-6 text-base sm:text-lg text-mhsp-muted leading-relaxed max-w-3xl">
+            {agent.description}
+          </p>
         </div>
-      </div>
+
+        {/* Bottom accent strip */}
+        <div className={`h-1 w-full bg-gradient-to-r ${stripGradient}`} />
+      </section>
+
+      {/* ============= MAIN GRID ============= */}
+      <section className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 py-8 sm:py-10 lg:py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.85fr)] gap-5 sm:gap-6">
+          {/* Left — agent identity card */}
+          <aside className="lg:sticky lg:top-24 lg:self-start">
+            <div className="bg-white rounded-2xl border border-[#E5ECF4] p-5 sm:p-6 shadow-[0_8px_28px_-14px_rgba(15,76,129,0.14),0_2px_8px_-4px_rgba(15,76,129,0.06)]">
+              <p className="text-sm font-bold tracking-[0.16em] uppercase text-mhsp-gold">
+                About
+              </p>
+              <h2 className="font-heading mt-1.5 text-xl font-bold text-mhsp-navy leading-tight">
+                {cleanName}
+              </h2>
+
+              <div className="mt-5 pt-5 border-t border-[#E5ECF4] space-y-2">
+                {agent.id !== "00_director_of_sales" && (
+                  <p className="text-sm text-mhsp-muted">
+                    <span className="font-semibold text-mhsp-navy">
+                      Reports to:
+                    </span>{" "}
+                    Director of Sales
+                  </p>
+                )}
+                <p className="text-sm text-mhsp-muted">
+                  <span className="font-semibold text-mhsp-navy">
+                    Used by:
+                  </span>{" "}
+                  <span className="font-numeric text-mhsp-success font-bold">
+                    1,200+
+                  </span>{" "}
+                  hotels nationwide
+                </p>
+                <p className="text-sm text-mhsp-muted">
+                  <span className="font-semibold text-mhsp-navy">Funnel:</span>{" "}
+                  <span className="inline-flex items-center gap-1">
+                    <FunnelIcon
+                      className={`h-3 w-3 ${
+                        isCalculated ? "text-mhsp-navy" : "text-mhsp-teal"
+                      }`}
+                      strokeWidth={2.5}
+                    />
+                    {isCalculated ? "Calculated" : "Hustle"}
+                  </span>
+                </p>
+              </div>
+
+              {profile && <ProfileChips profile={profile} />}
+            </div>
+          </aside>
+
+          {/* Right — chat */}
+          <div className="min-w-0">
+            {!profile ? (
+              <div className="bg-white rounded-2xl border border-[#E5ECF4] border-dashed p-8 sm:p-10 text-center">
+                <p className="text-mhsp-muted text-base">
+                  No hotel profile yet.{" "}
+                  <Link
+                    href="/#start"
+                    className="underline text-mhsp-navy font-semibold hover:text-[#1B6EB7] transition-colors"
+                  >
+                    Add one first
+                  </Link>{" "}
+                  so the agent has context.
+                </p>
+              </div>
+            ) : (
+              <AgentChat agent={agent} hotelProfile={profile} />
+            )}
+          </div>
+        </div>
+      </section>
     </main>
   );
 }
@@ -212,7 +276,13 @@ export default function AgentDetailPage({
 }) {
   const { id } = use(params);
   return (
-    <Suspense fallback={<div className="p-10 text-mhsp-muted">Loading…</div>}>
+    <Suspense
+      fallback={
+        <div className="min-h-[60vh] flex items-center justify-center">
+          <div className="h-7 w-7 rounded-full border-2 border-[#1B6EB7] border-t-transparent animate-spin" />
+        </div>
+      }
+    >
       <AgentDetail id={id} />
     </Suspense>
   );

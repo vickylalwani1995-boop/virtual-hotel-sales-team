@@ -104,8 +104,8 @@ const SOURCE_LABELS: Record<LeadSource, string> = {
 };
 
 const FUNNEL_LABELS: Record<LeadFunnel, string> = {
-  calculated: "🎯 Calculated",
-  hustle: "⚡ Hustle",
+  calculated: "Calculated",
+  hustle: "Hustle",
 };
 
 export default function LeadsPage() {
@@ -360,20 +360,6 @@ export default function LeadsPage() {
   /* ============================ RENDER ============================ */
   return (
     <main>
-      {/* Cross-version banner — Vicky's Phase 1 also live */}
-      <div className="border-b border-[#E5ECF4] bg-mhsp-gold/10">
-        <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 py-2 text-center text-xs sm:text-sm">
-          <span className="text-mhsp-navy/80">
-            👀 Also live:{" "}
-            <Link
-              href="/leads-vicky-v1"
-              className="font-semibold text-mhsp-navy underline underline-offset-2 hover:text-mhsp-gold transition-colors"
-            >
-              Vicky&apos;s Phase 1 prototype at /leads-vicky-v1
-            </Link>
-          </span>
-        </div>
-      </div>
       {/* HERO BAND */}
       <section className="relative overflow-hidden border-b border-[#E5ECF4]">
         <div
@@ -397,6 +383,13 @@ export default function LeadsPage() {
                 Every prospect your AI sales team has surfaced — searchable,
                 exportable, ready to work.
               </p>
+              <Link
+                href="/leads-vicky-v1"
+                className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-mhsp-muted hover:text-[#1B6EB7] transition-colors"
+              >
+                Also try Vicky&apos;s Phase 1 prototype
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
             </div>
           </div>
 
@@ -441,31 +434,49 @@ export default function LeadsPage() {
           <EmptyState onAddDemo={handleAddDemoLeads} />
         ) : (
           <>
-            {/* ACTION BAR */}
-            <div className="flex flex-col lg:flex-row lg:items-center gap-3 mb-5">
-              <AddLeadsButton onAddDemo={handleAddDemoLeads} />
-              <ExportButton
-                onCSV={(s) => handleExportCSV(s)}
-                onExcel={(s) => handleExportExcel(s)}
-                selectedCount={selected.size}
-              />
-              <BulkActionsButton
-                disabled={selected.size === 0}
-                count={selected.size}
-                onMarkContacted={handleBulkMarkContacted}
-                onDelete={handleBulkDelete}
-              />
-              <div className="lg:ml-auto text-sm text-mhsp-muted font-numeric">
-                Showing{" "}
-                <span className="font-bold text-mhsp-navy">
-                  {paged.length}
-                </span>{" "}
-                of{" "}
-                <span className="font-bold text-mhsp-navy">
-                  {filtered.length}
-                </span>{" "}
-                · Total{" "}
-                <span className="font-bold text-mhsp-navy">{leads.length}</span>
+            {/* PIPELINE TOOLBAR — premium card grouping the action bar
+                with a section heading. */}
+            <div className="mb-5 rounded-2xl border border-[#E5ECF4] bg-white shadow-[0_8px_24px_-14px_rgba(15,76,129,0.12),0_2px_8px_-4px_rgba(15,76,129,0.05)] overflow-hidden">
+              <div className="h-1 w-full bg-gradient-to-r from-[#2F8FCC] via-[#1B6EB7] to-[#0F4C81]" />
+              <div className="p-4 sm:p-5">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+                  <div>
+                    <p className="text-sm font-bold tracking-[0.16em] uppercase text-mhsp-gold">
+                      Pipeline
+                    </p>
+                    <h2 className="font-heading mt-0.5 text-lg sm:text-xl font-bold text-mhsp-navy leading-tight">
+                      All leads
+                    </h2>
+                  </div>
+                  <div className="text-sm text-mhsp-muted font-numeric">
+                    Showing{" "}
+                    <span className="font-bold text-mhsp-navy">
+                      {paged.length}
+                    </span>{" "}
+                    of{" "}
+                    <span className="font-bold text-mhsp-navy">
+                      {filtered.length}
+                    </span>{" "}
+                    · Total{" "}
+                    <span className="font-bold text-mhsp-navy">
+                      {leads.length}
+                    </span>
+                  </div>
+                </div>
+                <div className="flex flex-col lg:flex-row lg:items-center gap-2.5">
+                  <AddLeadsButton onAddDemo={handleAddDemoLeads} />
+                  <ExportButton
+                    onCSV={(s) => handleExportCSV(s)}
+                    onExcel={(s) => handleExportExcel(s)}
+                    selectedCount={selected.size}
+                  />
+                  <BulkActionsButton
+                    disabled={selected.size === 0}
+                    count={selected.size}
+                    onMarkContacted={handleBulkMarkContacted}
+                    onDelete={handleBulkDelete}
+                  />
+                </div>
               </div>
             </div>
 
@@ -510,8 +521,8 @@ export default function LeadsPage() {
                   onChange={(v) => setFunnelFilter(v as "all" | LeadFunnel)}
                   options={[
                     { value: "all", label: "Funnel: All" },
-                    { value: "calculated", label: "🎯 Calculated" },
-                    { value: "hustle", label: "⚡ Hustle" },
+                    { value: "calculated", label: "Calculated" },
+                    { value: "hustle", label: "Hustle" },
                   ]}
                 />
               </div>

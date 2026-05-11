@@ -2,21 +2,13 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
+import {
+  ArrowRight,
+  Crosshair,
+  Zap,
+} from "lucide-react";
 import type { Agent } from "@/lib/agents";
-
-const GRADIENT: Record<string, string> = {
-  teal: "from-mhsp-teal to-mhsp-navy",
-  green: "from-emerald-500 to-mhsp-teal",
-  blue: "from-mhsp-teal to-mhsp-navy-soft",
-  purple: "from-purple-500 to-mhsp-navy",
-  orange: "from-orange-500 to-mhsp-gold",
-  amber: "from-amber-400 to-mhsp-gold",
-  indigo: "from-indigo-500 to-mhsp-navy",
-  pink: "from-pink-400 to-purple-500",
-  red: "from-rose-500 to-mhsp-navy",
-  emerald: "from-emerald-500 to-mhsp-teal",
-  violet: "from-violet-500 to-mhsp-navy",
-};
+import { iconForAgent } from "@/lib/agent-icons";
 
 const SPECIALTIES: Record<string, string[]> = {
   "00_director_of_sales": ["Strategy", "Reporting", "Coordination"],
@@ -42,72 +34,113 @@ export function AgentCard({
   index?: number;
 }) {
   const href = `/agent/${agent.id}?profile=${encodeURIComponent(profile)}`;
-  const gradient = GRADIENT[agent.color] ?? GRADIENT.teal;
+  const Icon = iconForAgent(agent.id);
   const tags = SPECIALTIES[agent.id] ?? [];
   const isLive = agent.tier === 1;
   const isCalculated = agent.funnel === "calculated";
+  const cleanName = agent.name.replace(/\s+Agent$/i, "");
+
+  const iconTile = isCalculated
+    ? "bg-gradient-to-br from-[#1E5896] to-[#0F4C81]"
+    : "bg-gradient-to-br from-[#2F8FCC] to-[#1B6EB7]";
+
+  const stripGradient = isCalculated
+    ? "from-[#0F4C81] via-[#1B6EB7] to-[#0F4C81]"
+    : "from-[#2F8FCC] via-[#1B6EB7] to-[#2F8FCC]";
+
+  const FunnelIcon = isCalculated ? Crosshair : Zap;
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 16 }}
+      initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay: index * 0.04, ease: "easeOut" }}
+      transition={{ duration: 0.35, delay: index * 0.04, ease: "easeOut" }}
     >
       <Link href={href} className="group block h-full">
-        <article className="h-full bg-white rounded-2xl border border-mhsp-line overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_50px_-15px_rgba(15,76,129,0.22)] hover:border-mhsp-gold/60">
+        <article className="relative h-full bg-white rounded-2xl border border-[#E5ECF4] overflow-hidden shadow-[0_8px_28px_-14px_rgba(15,76,129,0.14),0_2px_8px_-4px_rgba(15,76,129,0.06)] hover:-translate-y-1 hover:shadow-[0_24px_50px_-20px_rgba(15,76,129,0.25),0_8px_18px_-8px_rgba(15,76,129,0.12)] hover:border-[#C9DAEB] transition-all duration-300">
+          {/* Top accent strip */}
           <div
-            className={`relative bg-gradient-to-br ${gradient} aspect-[16/9] flex items-center justify-center`}
-          >
-            <span className="text-6xl drop-shadow-[0_4px_12px_rgba(0,0,0,0.18)]">
-              {agent.icon}
-            </span>
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.20),transparent_60%)]" />
+            className={`h-1 w-full bg-gradient-to-r ${stripGradient}`}
+          />
 
-            {/* Funnel badge - top left */}
-            <span
-              className={`absolute top-3 left-3 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-bold tracking-[0.14em] uppercase ${
-                isCalculated
-                  ? "bg-mhsp-navy text-white"
-                  : "bg-mhsp-teal text-white"
-              }`}
-            >
-              {isCalculated ? "🎯 Calculated" : "⚡ Hustle"}
-            </span>
+          {/* Decorative corner glow */}
+          <span
+            className="absolute -top-8 -right-8 h-32 w-32 rounded-full opacity-[0.07] pointer-events-none"
+            style={{
+              background: isCalculated
+                ? "radial-gradient(closest-side, #0F4C81, transparent)"
+                : "radial-gradient(closest-side, #2F8FCC, transparent)",
+            }}
+          />
 
-            {/* Live/Ready - top right */}
-            <span
-              className={`absolute top-3 right-3 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[14px] font-bold tracking-wider uppercase ${
-                isLive
-                  ? "bg-mhsp-success text-white"
-                  : "bg-mhsp-gold text-white"
-              }`}
-            >
-              <span className="h-1 w-1 rounded-full bg-current" />
-              {isLive ? "LIVE" : "READY"}
-            </span>
-          </div>
-          <div className="p-5">
-            <p className="text-[14px] font-semibold tracking-[0.18em] text-mhsp-gold uppercase">
+          <div className="relative p-5 sm:p-6">
+            {/* Header — icon tile + status pill */}
+            <div className="flex items-start justify-between gap-3">
+              <div
+                className={`shrink-0 h-12 w-12 rounded-xl flex items-center justify-center text-white shadow-[0_6px_18px_-8px_rgba(15,76,129,0.5)] ${iconTile}`}
+              >
+                <Icon className="h-[22px] w-[22px]" strokeWidth={2.25} />
+              </div>
+              <span
+                className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-bold uppercase tracking-wider border ${
+                  isLive
+                    ? "bg-mhsp-success/10 text-mhsp-success border-mhsp-success/30"
+                    : "bg-mhsp-gold/10 text-mhsp-gold border-mhsp-gold/30"
+                }`}
+              >
+                <span
+                  className={`h-1.5 w-1.5 rounded-full ${
+                    isLive ? "bg-mhsp-success animate-pulse" : "bg-mhsp-gold"
+                  }`}
+                />
+                {isLive ? "Live" : "Ready"}
+              </span>
+            </div>
+
+            {/* Role title eyebrow */}
+            <p className="mt-5 text-sm font-bold tracking-[0.16em] uppercase text-mhsp-gold">
               {agent.roleTitle}
             </p>
-            <h3 className="font-display text-xl text-mhsp-navy mt-1.5 leading-tight">
-              {agent.name}
+
+            {/* Name */}
+            <h3 className="font-heading mt-1.5 text-[22px] font-bold leading-tight text-mhsp-navy">
+              {cleanName}
             </h3>
-            <p className="text-sm text-mhsp-muted mt-2 leading-relaxed line-clamp-2">
+
+            {/* Description */}
+            <p className="mt-2 text-sm text-mhsp-muted leading-relaxed line-clamp-2">
               {agent.description}
             </p>
+
+            {/* Specialty chips */}
             {tags.length > 0 && (
-              <div className="flex flex-wrap gap-1.5 mt-4 pt-4 border-t border-mhsp-line/60">
+              <div className="mt-4 flex flex-wrap gap-1.5">
                 {tags.map((t) => (
                   <span
                     key={t}
-                    className="text-[14px] font-medium uppercase tracking-wider text-mhsp-navy/70 bg-mhsp-cream-warm rounded-full px-2 py-0.5"
+                    className="text-sm font-semibold rounded-full bg-[#F4F8FC] border border-[#DCE5EF] text-mhsp-navy/80 px-2.5 py-0.5"
                   >
                     {t}
                   </span>
                 ))}
               </div>
             )}
+
+            {/* Footer — funnel + arrow */}
+            <div className="mt-5 pt-5 border-t border-[#E5ECF4] flex items-center justify-between">
+              <span
+                className={`inline-flex items-center gap-1.5 text-sm font-bold tracking-[0.14em] uppercase ${
+                  isCalculated ? "text-mhsp-navy" : "text-mhsp-teal"
+                }`}
+              >
+                <FunnelIcon className="h-3.5 w-3.5" strokeWidth={2.5} />
+                {isCalculated ? "Calculated" : "Hustle"}
+              </span>
+              <span className="inline-flex items-center gap-1 text-sm font-bold uppercase tracking-[0.12em] text-[#1B6EB7] group-hover:text-[#0F4C81]">
+                Open
+                <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
+              </span>
+            </div>
           </div>
         </article>
       </Link>
