@@ -120,6 +120,7 @@ export function Concierge() {
           transition={{ duration: 0.3 }}
           onClick={() => setOpen(true)}
           aria-label="Open myConcierge chat (Ctrl+K)"
+          data-tour="concierge-bell"
           className="fixed bottom-6 right-6 z-50 group"
         >
           <span className="absolute inset-0 rounded-full bg-mhsp-gold/40 animate-ping" style={{ animationDuration: "5s" }} />

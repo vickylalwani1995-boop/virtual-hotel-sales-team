@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   Sparkles,
@@ -37,6 +37,17 @@ export function HotelInput() {
   const router = useRouter();
   const [profile, setProfile] = useState(DEFAULT_PROFILE);
   const [demo] = useDemoMode();
+
+  // Listen for the onboarding tour's "I'll enter my own" choice:
+  // wipe the default and let the user start fresh.
+  useEffect(() => {
+    function onClear() {
+      setProfile("");
+    }
+    window.addEventListener("vhst-clear-hotel-profile", onClear);
+    return () =>
+      window.removeEventListener("vhst-clear-hotel-profile", onClear);
+  }, []);
 
   const charCount = profile.length;
   const lineCount = profile.split("\n").length;
@@ -107,6 +118,7 @@ export function HotelInput() {
         <div className="px-5 sm:px-8 pt-5 pb-3">
           <div className="relative">
             <textarea
+              data-tour="hotel-input"
               value={profile}
               onChange={(e) => setProfile(e.target.value)}
               placeholder="Hotel Name: ...
@@ -137,6 +149,7 @@ Main Need: ..."
           </button>
           <div className="flex-1" />
           <button
+            data-tour="generate-btn"
             type="button"
             onClick={handleSubmit}
             disabled={!profile.trim()}

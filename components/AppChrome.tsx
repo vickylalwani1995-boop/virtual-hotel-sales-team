@@ -7,6 +7,7 @@ import { Footer } from "@/components/Footer";
 import { Concierge } from "@/components/Concierge";
 import { AuthGuard } from "@/components/AuthGuard";
 import { ScrollToTop } from "@/components/ScrollToTop";
+import { OnboardingTour } from "@/components/OnboardingTour";
 
 const CHROMELESS_ROUTES = ["/login"];
 
@@ -32,6 +33,7 @@ export function AppChrome({ children }: { children: React.ReactNode }) {
       <Suspense fallback={null}>
         <Concierge />
       </Suspense>
+      <OnboardingTour />
     </AuthGuard>
   );
 }

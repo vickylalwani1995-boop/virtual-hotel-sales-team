@@ -2,8 +2,10 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ChevronDown, LogOut, User as UserIcon } from "lucide-react";
+import { ChevronDown, LogOut, User as UserIcon, RotateCcw } from "lucide-react";
 import { useAuth, signOut } from "@/lib/auth";
+import { resetOnboarding } from "@/lib/onboarding";
+import { toast } from "sonner";
 
 export function UserChip() {
   const { user, hydrated } = useAuth();
@@ -61,6 +63,18 @@ export function UserChip() {
               Signed in {new Date(user.loggedInAt).toLocaleTimeString()}
             </p>
           </div>
+          <button
+            type="button"
+            onClick={() => {
+              resetOnboarding();
+              setOpen(false);
+              toast.success("Onboarding tour reset — reload the home page to see it.");
+            }}
+            className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-mhsp-text hover:bg-mhsp-cream-warm/50 transition-colors"
+          >
+            <RotateCcw className="h-4 w-4 text-mhsp-muted" />
+            Reset onboarding tour
+          </button>
           <button
             type="button"
             onClick={handleSignOut}
