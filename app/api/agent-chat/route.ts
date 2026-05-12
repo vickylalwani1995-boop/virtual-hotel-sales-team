@@ -22,6 +22,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const agentId: string | undefined = body?.agentId;
     const hotelProfile = body?.hotelProfile ?? "";
+    const teamBriefing: string = body?.teamBriefing ?? "";
     const messages: ClientMessage[] = Array.isArray(body?.messages)
       ? body.messages
       : [];
@@ -74,8 +75,11 @@ export async function POST(req: NextRequest) {
       ? `First message - introduce yourself briefly (2 sentences) and ask one specific question about what the user wants help with. Reference the hotel profile.`
       : `Engage in natural back-and-forth. Be concise by default, expand when asked. Use markdown for structure (bold, tables, lists). End with a follow-up question OR a suggested next action. Stay in character as the ${agent.name}.`;
 
-    const system = `${skill}
+    const workspaceSection = teamBriefing
+      ? `\n---\n\n${teamBriefing}\n\n**Your teammates (reference by name when relevant):**\nDonna Marie (Director of Sales · Funnel Captain) · Marcus Reed (Lead Generation · Backyard Hunter) · Sarah Chen (Outbound Sales · No-Fear Closer) · James Walsh (Account Manager · Top Account Steward) · Priya Sharma (RFP Closing · Big Revenue Closer) · Tom Walker (LNR Closing · Corporate Anchor) · Alex Brooks (Group Sales · Block Builder) · Sophie Lin (Meeting & Catering · Event Hustler) · Liam Chen (After-Sales · Repeat Magnet) · Nina Patel (Retention · Win-Back Specialist) · Maya Reddy (Revenue & Leadership · Revenue Reporter)\n\nNEVER say "I can't access other agents' data" — use the workspace above. Reference leads by name. Reference teammates' work by name.\n`
+      : "";
 
+    const system = `${skill}${workspaceSection}
 ---
 
 You are talking with a hotel sales captain in conversation.

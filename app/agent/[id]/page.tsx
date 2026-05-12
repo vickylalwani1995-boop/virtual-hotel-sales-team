@@ -21,7 +21,7 @@ function ProfileChips({ profile }: { profile: string }) {
     "Brand",
     "Average Daily Rate",
     "Current Occupancy",
-    "Weak Days",
+    "Slow Days",
     "Main Need",
     "Target Business",
     "Meeting Space",

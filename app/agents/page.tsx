@@ -15,6 +15,9 @@ import {
   TrendingUp,
   Award,
   Activity,
+  MousePointerClick,
+  GitBranch,
+  MessageSquare,
 } from "lucide-react";
 import { AGENTS } from "@/lib/agents";
 
@@ -51,6 +54,137 @@ function profileChips(
   return out;
 }
 
+function GuidedFlowStrip({ profile }: { profile: string }) {
+  const steps = [
+    {
+      num: "01",
+      eyebrow: "Your first move",
+      title: "Start with Director",
+      desc: "Get the weekly sales plan and let the Director route you to the right agent.",
+      href: `/agent/00_director_of_sales?profile=${encodeURIComponent(profile)}`,
+      cta: "Open Director",
+      Icon: MousePointerClick,
+      gradientFrom: "#0F4C81",
+      gradientTo: "#1B6EB7",
+    },
+    {
+      num: "02",
+      eyebrow: "Pick your path",
+      title: "Choose a Funnel",
+      desc: "Calculated for big corporate accounts. Hustle for local and backyard demand.",
+      href: "#funnels",
+      cta: "See funnels",
+      Icon: GitBranch,
+      gradientFrom: "#1B6EB7",
+      gradientTo: "#2283BE",
+    },
+    {
+      num: "03",
+      eyebrow: "Take action",
+      title: "Chat with an Agent",
+      desc: "Ask, generate, download, and act on real sales intelligence — in seconds.",
+      href: "#funnels",
+      cta: "Browse agents",
+      Icon: MessageSquare,
+      gradientFrom: "#1E6FAD",
+      gradientTo: "#2F8FCC",
+    },
+  ];
+
+  return (
+    <section className="border-y border-[#E5ECF4] bg-[#F1F5FA]">
+      <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 py-8 sm:py-10">
+        <p className="text-center text-sm font-bold tracking-[0.2em] uppercase text-mhsp-muted mb-6">
+          How to get started
+        </p>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 relative">
+          {/* Connecting arrow line — desktop only */}
+          <div
+            className="hidden sm:block absolute top-[56px] left-[calc(33.33%-12px)] right-[calc(33.33%-12px)] h-px pointer-events-none"
+            style={{
+              background:
+                "linear-gradient(to right, transparent, rgba(27,110,183,0.25) 20%, rgba(27,110,183,0.25) 80%, transparent)",
+            }}
+          />
+
+          {steps.map((step) => (
+            <Link
+              key={step.num}
+              href={step.href}
+              className="group block focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1B6EB7] focus-visible:ring-offset-2 rounded-2xl"
+            >
+              <article className="relative h-full bg-white rounded-2xl border border-[#E5ECF4] group-hover:border-[#1B6EB7]/30 overflow-hidden shadow-[0_6px_24px_-12px_rgba(15,76,129,0.14)] group-hover:shadow-[0_20px_44px_-16px_rgba(15,76,129,0.22)] group-hover:-translate-y-1 transition-all duration-300">
+
+                {/* Gradient image header */}
+                <div
+                  className="relative px-5 pt-5 pb-6 overflow-hidden"
+                  style={{
+                    background: `linear-gradient(135deg, ${step.gradientFrom} 0%, ${step.gradientTo} 100%)`,
+                  }}
+                >
+                  {/* Dot-grid texture overlay */}
+                  <div
+                    className="absolute inset-0 pointer-events-none"
+                    style={{
+                      backgroundImage:
+                        "radial-gradient(rgba(255,255,255,0.18) 1px, transparent 1px)",
+                      backgroundSize: "14px 14px",
+                    }}
+                  />
+                  {/* Soft radial highlight */}
+                  <div
+                    className="absolute -top-6 -right-6 h-28 w-28 rounded-full pointer-events-none"
+                    style={{
+                      background:
+                        "radial-gradient(closest-side, rgba(255,255,255,0.12), transparent)",
+                    }}
+                  />
+
+                  {/* Step number + icon row */}
+                  <div className="relative flex items-start justify-between gap-3">
+                    <span
+                      className="font-numeric font-bold leading-none select-none"
+                      style={{ fontSize: 56, color: "rgba(255,255,255,0.15)" }}
+                    >
+                      {step.num}
+                    </span>
+                    <div className="shrink-0 h-11 w-11 rounded-xl border border-white/20 bg-white/15 backdrop-blur-sm flex items-center justify-center shadow-[0_4px_12px_-4px_rgba(0,0,0,0.2)]">
+                      <step.Icon
+                        className="h-5 w-5 text-white"
+                        strokeWidth={2.25}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Content body */}
+                <div className="p-5">
+                  <p className="text-sm font-bold tracking-[0.15em] uppercase text-mhsp-muted">
+                    {step.eyebrow}
+                  </p>
+                  <h3 className="font-heading text-[18px] font-bold text-mhsp-navy mt-1 leading-tight">
+                    {step.title}
+                  </h3>
+                  <p className="mt-2 text-sm text-mhsp-muted leading-relaxed">
+                    {step.desc}
+                  </p>
+
+                  {/* CTA row */}
+                  <div className="mt-4 flex items-center gap-1 text-sm font-bold text-[#1B6EB7] group-hover:text-[#0F4C81] transition-colors">
+                    {step.cta}
+                    <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+                  </div>
+                </div>
+              </article>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function AgentsContent() {
   const searchParams = useSearchParams();
   const profile = searchParams.get("profile") ?? "";
@@ -76,8 +210,7 @@ function AgentsContent() {
         <div
           className="absolute inset-0 -z-10 opacity-[0.035] pointer-events-none"
           style={{
-            backgroundImage:
-              "radial-gradient(rgba(15,76,129,0.7) 1px, transparent 1px)",
+            backgroundImage: "radial-gradient(rgba(15,76,129,0.7) 1px, transparent 1px)",
             backgroundSize: "26px 26px",
           }}
         />
@@ -124,12 +257,8 @@ function AgentsContent() {
                       className="inline-flex items-center gap-2 rounded-full border border-[#DCE5EF] bg-white px-3 py-1.5 text-sm shadow-[0_2px_8px_-4px_rgba(15,76,129,0.10)]"
                     >
                       <c.Icon className="h-3.5 w-3.5 text-[#1B6EB7]" />
-                      <span className="text-mhsp-muted font-medium">
-                        {c.label}:
-                      </span>
-                      <span className="font-bold text-mhsp-navy">
-                        {c.value}
-                      </span>
+                      <span className="text-mhsp-muted font-medium">{c.label}:</span>
+                      <span className="font-bold text-mhsp-navy">{c.value}</span>
                     </span>
                   ))}
                 </div>
@@ -137,27 +266,34 @@ function AgentsContent() {
 
               {/* Action row */}
               {profile && (
-                <div className="mt-8 flex flex-col sm:flex-row gap-3">
-                  <Link
-                    href={`/agent/00_director_of_sales?profile=${encodeURIComponent(profile)}`}
-                    className="group inline-flex items-center justify-center gap-2 rounded-xl bg-[#1B6EB7] hover:bg-[#0F4C81] text-white px-6 py-3 text-sm font-bold uppercase tracking-[0.14em] shadow-[0_10px_24px_-10px_rgba(27,110,183,0.5)] hover:shadow-[0_14px_32px_-10px_rgba(15,76,129,0.6)] hover:-translate-y-0.5 transition-all"
-                  >
-                    Start with Director
-                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                  </Link>
-                  <Link
-                    href="/activity"
-                    className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#DCE5EF] bg-white hover:bg-[#F4F8FC] text-mhsp-navy px-6 py-3 text-sm font-semibold transition-all"
-                  >
-                    <Activity className="h-4 w-4" />
-                    View activity log
-                  </Link>
+                <div className="mt-8 space-y-3">
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <Link
+                      href={`/agent/00_director_of_sales?profile=${encodeURIComponent(profile)}`}
+                      className="group inline-flex items-center justify-center gap-2 rounded-xl bg-[#1B6EB7] hover:bg-[#0F4C81] text-white px-7 py-3.5 text-sm font-bold uppercase tracking-[0.14em] shadow-[0_12px_28px_-10px_rgba(27,110,183,0.55)] hover:shadow-[0_16px_36px_-10px_rgba(15,76,129,0.65)] hover:-translate-y-0.5 transition-all"
+                    >
+                      Start with Director
+                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                    </Link>
+                    <Link
+                      href="/activity"
+                      className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#DCE5EF] bg-white hover:bg-[#F4F8FC] text-mhsp-navy px-6 py-3.5 text-sm font-semibold transition-all"
+                    >
+                      <Activity className="h-4 w-4" />
+                      View activity log
+                    </Link>
+                  </div>
+                  <p className="text-sm text-mhsp-muted">
+                    <span className="font-semibold text-mhsp-navy">Best place to begin:</span>{" "}
+                    Director of Sales will route you to the right agent.
+                  </p>
                 </div>
               )}
             </div>
 
-            {/* RIGHT — stats panel */}
-            <div className="lg:pt-2">
+            {/* RIGHT — stats panel + Donna card */}
+            <div className="lg:pt-2 space-y-4">
+              {/* At a glance card */}
               <div className="bg-white rounded-2xl border border-[#E5ECF4] shadow-[0_20px_50px_-25px_rgba(15,76,129,0.20),0_4px_14px_-4px_rgba(15,76,129,0.06)] overflow-hidden">
                 <div className="h-1 w-full bg-gradient-to-r from-[#2F8FCC] via-[#1B6EB7] to-[#0F4C81]" />
                 <div className="p-5 sm:p-6">
@@ -168,35 +304,123 @@ function AgentsContent() {
                     Your sales department.
                   </h2>
 
-                  <dl className="mt-5 grid grid-cols-2 gap-3">
-                    <StatCell
-                      value={AGENTS.length.toString()}
-                      label="Total agents"
-                    />
-                    <StatCell
-                      value={`${liveCount} / ${readyCount}`}
-                      label="Live / Ready"
-                      muted
-                    />
-                    <StatCell
-                      value={calculatedCount.toString()}
-                      label="🎯 Calculated"
-                    />
-                    <StatCell
-                      value={hustleCount.toString()}
-                      label="⚡ Hustle"
-                    />
-                  </dl>
+                  <div className="mt-5 space-y-2.5">
+                    {/* Hero stat — total agents */}
+                    <div className="flex items-center justify-between rounded-xl bg-gradient-to-r from-[#0F4C81] to-[#1E5896] px-4 py-3.5">
+                      <span className="text-sm font-bold text-white/70 uppercase tracking-[0.14em]">
+                        Total agents
+                      </span>
+                      <span className="font-numeric text-3xl font-bold text-white leading-none">
+                        {AGENTS.length}
+                      </span>
+                    </div>
+
+                    {/* Live / Ready split */}
+                    <div className="grid grid-cols-2 gap-2.5">
+                      <div className="rounded-xl border border-[#EAF2FA] bg-[#FAFCFE] px-4 py-3 flex items-center gap-3">
+                        <span className="h-2 w-2 rounded-full bg-mhsp-success shrink-0 shadow-[0_0_0_3px_rgba(21,128,61,0.14)] animate-pulse" />
+                        <div>
+                          <p className="font-numeric text-2xl font-bold text-mhsp-success leading-none">
+                            {liveCount}
+                          </p>
+                          <p className="text-sm text-mhsp-muted mt-0.5">Live</p>
+                        </div>
+                      </div>
+                      <div className="rounded-xl border border-[#EAF2FA] bg-[#FAFCFE] px-4 py-3 flex items-center gap-3">
+                        <span className="h-2 w-2 rounded-full bg-mhsp-gold shrink-0 shadow-[0_0_0_3px_rgba(27,110,183,0.14)]" />
+                        <div>
+                          <p className="font-numeric text-2xl font-bold text-mhsp-navy/75 leading-none">
+                            {readyCount}
+                          </p>
+                          <p className="text-sm text-mhsp-muted mt-0.5">Ready</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Funnel split */}
+                    <div className="grid grid-cols-2 gap-2.5">
+                      <div className="rounded-xl border border-[#EAF2FA] bg-[#FAFCFE] px-4 py-3">
+                        <p className="text-sm font-bold tracking-[0.12em] uppercase text-mhsp-navy/50 mb-1.5">
+                          🎯 Calculated
+                        </p>
+                        <p className="font-numeric text-2xl font-bold text-mhsp-navy leading-none">
+                          {calculatedCount}
+                        </p>
+                      </div>
+                      <div className="rounded-xl border border-[#EAF2FA] bg-[#FAFCFE] px-4 py-3">
+                        <p className="text-sm font-bold tracking-[0.12em] uppercase text-mhsp-teal/70 mb-1.5">
+                          ⚡ Hustle
+                        </p>
+                        <p className="font-numeric text-2xl font-bold text-mhsp-navy leading-none">
+                          {hustleCount}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
 
                   <div className="mt-5 pt-5 border-t border-[#E5ECF4] flex items-center gap-2 text-sm text-mhsp-muted">
                     <Building2 className="h-4 w-4 text-[#1B6EB7]" />
                     <span>
                       Trained on the{" "}
-                      <span className="font-bold text-mhsp-navy">
-                        MHSP method
-                      </span>
+                      <span className="font-bold text-mhsp-navy">MHSP method</span>
                     </span>
                   </div>
+                </div>
+              </div>
+
+              {/* Donna intro card */}
+              <div className="bg-white rounded-2xl border border-[#E5ECF4] shadow-[0_8px_28px_-14px_rgba(15,76,129,0.12)] overflow-hidden">
+                <div className="h-1 w-full bg-gradient-to-r from-[#2F8FCC] via-[#1B6EB7] to-[#0F4C81]" />
+                <div className="p-5">
+                  {/* Video placeholder */}
+                  <div className="relative rounded-xl bg-gradient-to-br from-[#0F4C81] to-[#1B6EB7] aspect-video flex items-center justify-center mb-4 overflow-hidden">
+                    <div
+                      className="absolute inset-0 opacity-[0.06] pointer-events-none"
+                      style={{
+                        backgroundImage: "radial-gradient(rgba(255,255,255,0.9) 1px, transparent 1px)",
+                        backgroundSize: "14px 14px",
+                      }}
+                    />
+                    <button
+                      type="button"
+                      className="relative h-14 w-14 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center hover:bg-white/30 transition-colors"
+                      aria-label="Play Donna intro video"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        className="h-6 w-6 text-white ml-0.5"
+                        aria-hidden="true"
+                      >
+                        <path d="M8 5v14l11-7z" />
+                      </svg>
+                    </button>
+                  </div>
+                  <p className="text-sm font-bold tracking-[0.16em] uppercase text-mhsp-gold">
+                    Meet Donna
+                  </p>
+                  <h3 className="font-heading text-lg font-bold text-mhsp-navy mt-1 leading-tight">
+                    Your AI Sales Host
+                  </h3>
+                  <p className="mt-1 text-sm text-mhsp-muted">
+                    Not sure where to start? Ask Donna.
+                  </p>
+                  <button
+                    type="button"
+                    className="mt-3 w-full inline-flex items-center justify-center gap-2 rounded-xl border border-[#DCE5EF] bg-[#F4F8FC] hover:bg-[#E8F0F9] text-mhsp-navy px-4 py-2.5 text-sm font-bold transition-colors"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      className="h-3.5 w-3.5 text-mhsp-navy"
+                      aria-hidden="true"
+                    >
+                      <path d="M8 5v14l11-7z" />
+                    </svg>
+                    Play 15-sec intro
+                  </button>
                 </div>
               </div>
             </div>
@@ -204,38 +428,23 @@ function AgentsContent() {
         </div>
       </section>
 
+      {/* ============= GUIDED FLOW STRIP ============= */}
+      {profile && <GuidedFlowStrip profile={profile} />}
+
       {/* ============= AGENT GRID ============= */}
-      <section className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 py-12 sm:py-16">
-        {profile ? (
-          <AgentGrid profile={profile} />
-        ) : (
-          <EmptyState />
-        )}
+      <section
+        id="funnels"
+        className="bg-[#F7F9FC]"
+      >
+        <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 py-12 sm:py-16">
+          {profile ? (
+            <AgentGrid profile={profile} />
+          ) : (
+            <EmptyState />
+          )}
+        </div>
       </section>
     </main>
-  );
-}
-
-function StatCell({
-  value,
-  label,
-  muted = false,
-}: {
-  value: string;
-  label: string;
-  muted?: boolean;
-}) {
-  return (
-    <div className="rounded-xl border border-[#EAF2FA] bg-[#FAFCFE] px-3 py-3">
-      <p
-        className={`font-numeric font-bold ${
-          muted ? "text-xl text-mhsp-navy/85" : "text-2xl text-mhsp-navy"
-        } leading-none`}
-      >
-        {value}
-      </p>
-      <p className="mt-1.5 text-sm text-mhsp-muted leading-tight">{label}</p>
-    </div>
   );
 }
 

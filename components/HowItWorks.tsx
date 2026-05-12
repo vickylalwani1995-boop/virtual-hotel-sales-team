@@ -28,7 +28,7 @@ const HUSTLE = {
     "Wins back lapsed local accounts",
   ],
   agentCount: 5,
-  bestFor: "Hotels filling weak days with backyard wins",
+  bestFor: "Hotels filling slow days with backyard wins",
 };
 
 export function HowItWorks() {

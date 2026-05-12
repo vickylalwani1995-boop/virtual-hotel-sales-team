@@ -56,8 +56,11 @@ export function AgentCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35, delay: index * 0.04, ease: "easeOut" }}
     >
-      <Link href={href} className="group block h-full">
-        <article className="relative h-full bg-white rounded-2xl border border-[#E5ECF4] overflow-hidden shadow-[0_8px_28px_-14px_rgba(15,76,129,0.14),0_2px_8px_-4px_rgba(15,76,129,0.06)] hover:-translate-y-1 hover:shadow-[0_24px_50px_-20px_rgba(15,76,129,0.25),0_8px_18px_-8px_rgba(15,76,129,0.12)] hover:border-[#C9DAEB] transition-all duration-300">
+      <Link
+        href={href}
+        className="group block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1B6EB7] focus-visible:ring-offset-2 rounded-2xl"
+      >
+        <article className="relative h-full bg-white rounded-2xl border border-[#E5ECF4] overflow-hidden shadow-[0_8px_28px_-14px_rgba(15,76,129,0.14),0_2px_8px_-4px_rgba(15,76,129,0.06)] hover:-translate-y-1 hover:shadow-[0_24px_50px_-20px_rgba(15,76,129,0.25),0_8px_18px_-8px_rgba(15,76,129,0.12)] hover:border-[#1B6EB7]/30 transition-all duration-300">
           {/* Top accent strip */}
           <div
             className={`h-1 w-full bg-gradient-to-r ${stripGradient}`}
@@ -136,9 +139,9 @@ export function AgentCard({
                 <FunnelIcon className="h-3.5 w-3.5" strokeWidth={2.5} />
                 {isCalculated ? "Calculated" : "Hustle"}
               </span>
-              <span className="inline-flex items-center gap-1 text-sm font-bold uppercase tracking-[0.12em] text-[#1B6EB7] group-hover:text-[#0F4C81]">
+              <span className="inline-flex items-center gap-1.5 rounded-lg bg-[#EDF4FB] group-hover:bg-[#1B6EB7] border border-[#C9DAEB] group-hover:border-[#1B6EB7] text-[#1B6EB7] group-hover:text-white px-3 py-1.5 text-sm font-bold uppercase tracking-[0.12em] transition-all duration-200">
                 Open
-                <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
+                <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
               </span>
             </div>
           </div>

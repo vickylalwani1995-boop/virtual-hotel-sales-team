@@ -68,12 +68,12 @@ export function UserChip() {
             onClick={() => {
               resetOnboarding();
               setOpen(false);
-              toast.success("Onboarding tour reset — reload the home page to see it.");
+              toast.success("Onboarding reset — go to the home page to see it again.");
             }}
             className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-mhsp-text hover:bg-mhsp-cream-warm/50 transition-colors"
           >
             <RotateCcw className="h-4 w-4 text-mhsp-muted" />
-            Reset onboarding tour
+            Reset onboarding
           </button>
           <button
             type="button"
