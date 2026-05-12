@@ -1,23 +1,37 @@
 "use client";
 
-import { Suspense, use } from "react";
+import { Suspense, use, useMemo } from "react";
 import { notFound, useSearchParams } from "next/navigation";
 import { getAgent } from "@/lib/agents";
 import { CallSimulator } from "@/components/CallSimulator";
+import { getLeadById, type WorkspaceLead } from "@/lib/workspace";
 
 function CallPageInner({ id }: { id: string }) {
   const agent = getAgent(id);
   const searchParams = useSearchParams();
   const profileParam = searchParams.get("profile") ?? "";
+  const leadId = searchParams.get("lead") ?? "";
   const profile =
     profileParam ||
     (typeof window !== "undefined"
       ? window.localStorage.getItem("vhst-hotel-profile") ?? ""
       : "");
 
+  // Try to load lead context if a lead ID is passed
+  const lead: WorkspaceLead | undefined = useMemo(() => {
+    if (!leadId || typeof window === "undefined") return undefined;
+    return getLeadById(leadId);
+  }, [leadId]);
+
   if (!agent) return notFound();
 
-  return <CallSimulator agent={agent} hotelProfile={profile} />;
+  return (
+    <CallSimulator
+      agent={agent}
+      hotelProfile={profile}
+      lead={lead}
+    />
+  );
 }
 
 export default function CallPage({

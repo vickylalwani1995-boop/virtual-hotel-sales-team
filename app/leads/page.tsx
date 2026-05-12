@@ -54,6 +54,9 @@ import {
   type LeadStatus,
 } from "@/lib/leads";
 import { AGENTS } from "@/lib/agents";
+import { PullLeadsDialog } from "@/components/PullLeadsDialog";
+import { EmailComposer } from "@/components/EmailComposer";
+import { SequenceBuilder } from "@/components/SequenceBuilder";
 
 /** Inline LinkedIn glyph — lucide-react removed brand icons. */
 function LinkedinIcon({ className = "" }: { className?: string }) {
@@ -123,6 +126,12 @@ export default function LeadsPage() {
   const [sortKey, setSortKey] = useState<SortKey>("createdAt");
   const [sortDir, setSortDir] = useState<SortDir>("desc");
   const [drawerLead, setDrawerLead] = useState<Lead | null>(null);
+
+  // New feature dialogs
+  const [pullSource, setPullSource] = useState<"apollo" | "vibe" | null>(null);
+  const [emailComposerOpen, setEmailComposerOpen] = useState(false);
+  const [emailComposerLead, setEmailComposerLead] = useState<Lead | null>(null);
+  const [sequenceOpen, setSequenceOpen] = useState(false);
 
   // load + subscribe to leads changes
   useEffect(() => {
@@ -464,7 +473,11 @@ export default function LeadsPage() {
                   </div>
                 </div>
                 <div className="flex flex-col lg:flex-row lg:items-center gap-2.5">
-                  <AddLeadsButton onAddDemo={handleAddDemoLeads} />
+                  <AddLeadsButton
+                    onAddDemo={handleAddDemoLeads}
+                    onPullApollo={() => setPullSource("apollo")}
+                    onPullVibe={() => setPullSource("vibe")}
+                  />
                   <ExportButton
                     onCSV={(s) => handleExportCSV(s)}
                     onExcel={(s) => handleExportExcel(s)}
@@ -475,6 +488,14 @@ export default function LeadsPage() {
                     count={selected.size}
                     onMarkContacted={handleBulkMarkContacted}
                     onDelete={handleBulkDelete}
+                    onSendSequence={() => setSequenceOpen(true)}
+                    onQueueCalls={() => {
+                      if (selected.size === 0) return;
+                      toast.success(`Queued ${selected.size} leads for outbound calls. Use the call simulator to start.`);
+                      for (const id of selected) updateLead(id, { status: "contacted" });
+                      setLeads(getAllLeads());
+                      setSelected(new Set());
+                    }}
                   />
                 </div>
               </div>
@@ -697,6 +718,49 @@ export default function LeadsPage() {
         lead={drawerLead}
         onClose={() => setDrawerLead(null)}
         onChange={() => setLeads(getAllLeads())}
+        onEmail={(lead) => {
+          setEmailComposerLead(lead);
+          setEmailComposerOpen(true);
+          setDrawerLead(null);
+        }}
+      />
+
+      {/* PULL LEADS DIALOG */}
+      {pullSource && (
+        <PullLeadsDialog
+          open={!!pullSource}
+          onClose={() => setPullSource(null)}
+          source={pullSource}
+          onLeadsAdded={() => setLeads(getAllLeads())}
+        />
+      )}
+
+      {/* EMAIL COMPOSER */}
+      <EmailComposer
+        open={emailComposerOpen}
+        onClose={() => {
+          setEmailComposerOpen(false);
+          setEmailComposerLead(null);
+        }}
+        lead={emailComposerLead ? {
+          id: emailComposerLead.id,
+          fullName: emailComposerLead.prospectFullName,
+          firstName: emailComposerLead.prospectFirstName,
+          lastName: emailComposerLead.prospectLastName,
+          email: emailComposerLead.contactProfessionalEmail,
+          jobTitle: emailComposerLead.prospectJobTitle,
+          companyName: emailComposerLead.prospectCompanyName,
+        } as import("@/lib/workspace").WorkspaceLead : null}
+        agentName="Sales Team"
+        agentId="leads_page"
+      />
+
+      {/* SEQUENCE BUILDER */}
+      <SequenceBuilder
+        open={sequenceOpen}
+        onClose={() => setSequenceOpen(false)}
+        preSelectedLeadIds={selected.size > 0 ? [...selected] : undefined}
+        agentName="Sales Team"
       />
     </main>
   );
@@ -1036,7 +1100,7 @@ function MenuItem({
   );
 }
 
-function AddLeadsButton({ onAddDemo }: { onAddDemo: () => void }) {
+function AddLeadsButton({ onAddDemo, onPullApollo, onPullVibe }: { onAddDemo: () => void; onPullApollo: () => void; onPullVibe: () => void }) {
   const [open, setOpen] = useState(false);
   const ref = useClickOutside<HTMLDivElement>(() => setOpen(false));
   return (
@@ -1052,18 +1116,18 @@ function AddLeadsButton({ onAddDemo }: { onAddDemo: () => void }) {
       <Menu open={open}>
         <MenuItem
           Icon={Cloud}
-          label="Pull from Apollo (coming soon)"
+          label="Pull from Apollo"
           onClick={() => {
             setOpen(false);
-            toast.info("Apollo integration is coming — Vicky's wiring it.");
+            onPullApollo();
           }}
         />
         <MenuItem
           Icon={Cloud}
-          label="Pull from Vibe (coming soon)"
+          label="Pull from Vibe"
           onClick={() => {
             setOpen(false);
-            toast.info("Vibe Prospecting is coming — Vicky's wiring it.");
+            onPullVibe();
           }}
         />
         <Link
@@ -1144,11 +1208,15 @@ function BulkActionsButton({
   count,
   onMarkContacted,
   onDelete,
+  onSendSequence,
+  onQueueCalls,
 }: {
   disabled: boolean;
   count: number;
   onMarkContacted: () => void;
   onDelete: () => void;
+  onSendSequence: () => void;
+  onQueueCalls: () => void;
 }) {
   const [open, setOpen] = useState(false);
   const ref = useClickOutside<HTMLDivElement>(() => setOpen(false));
@@ -1171,10 +1239,18 @@ function BulkActionsButton({
       <Menu open={open}>
         <MenuItem
           Icon={Send}
-          label="Send email sequence (coming soon)"
+          label="Send email sequence"
           onClick={() => {
             setOpen(false);
-            toast.info("Sequence builder is coming — Vicky's wiring it.");
+            onSendSequence();
+          }}
+        />
+        <MenuItem
+          Icon={Phone}
+          label="Queue outbound calls"
+          onClick={() => {
+            setOpen(false);
+            onQueueCalls();
           }}
         />
         <MenuItem
@@ -1247,10 +1323,12 @@ function LeadDrawer({
   lead,
   onClose,
   onChange,
+  onEmail,
 }: {
   lead: Lead | null;
   onClose: () => void;
   onChange: () => void;
+  onEmail?: (lead: Lead) => void;
 }) {
   const [note, setNote] = useState("");
   const [status, setStatus] = useState<LeadStatus>("new");
@@ -1521,6 +1599,21 @@ function LeadDrawer({
                 </select>
               </div>
               <div className="flex flex-col sm:flex-row gap-2">
+                {lead.contactProfessionalEmail && onEmail && (
+                  <button
+                    type="button"
+                    onClick={() => onEmail(lead)}
+                    className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 text-sm font-bold uppercase tracking-[0.1em] transition-all"
+                  >
+                    <Mail className="h-4 w-4" /> Send email
+                  </button>
+                )}
+                <Link
+                  href={`/call/02_outbound_sales?lead=${encodeURIComponent(lead.id)}`}
+                  className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg border border-[#DCE5EF] bg-white hover:bg-[#F4F8FC] text-mhsp-navy px-4 py-2.5 text-sm font-bold uppercase tracking-[0.1em] transition-all"
+                >
+                  <Phone className="h-4 w-4" /> Call lead
+                </Link>
                 <Link
                   href={`/agent/02_outbound_sales?lead=${encodeURIComponent(lead.id)}`}
                   className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg bg-[#1B6EB7] hover:bg-[#0F4C81] text-white px-4 py-2.5 text-sm font-bold uppercase tracking-[0.1em] transition-all"
@@ -1532,7 +1625,7 @@ function LeadDrawer({
                   onClick={() => setConfirmDeleteOpen(true)}
                   className="inline-flex items-center justify-center gap-2 rounded-lg border border-[#FECACA] bg-white hover:bg-[#FEF2F2] text-[#B91C1C] px-4 py-2.5 text-sm font-semibold transition-colors"
                 >
-                  <Trash2 className="h-4 w-4" /> Delete lead
+                  <Trash2 className="h-4 w-4" /> Delete
                 </button>
               </div>
             </footer>

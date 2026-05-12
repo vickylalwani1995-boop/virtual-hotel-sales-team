@@ -38,6 +38,7 @@ import type { Agent } from "@/lib/agents";
 import { AGENTS, getAgent } from "@/lib/agents";
 import { iconForAgent } from "@/lib/agent-icons";
 import { logActivity } from "@/lib/activity-log";
+import type { WorkspaceLead } from "@/lib/workspace";
 
 /* ----- minimal Web Speech API types (cross-browser) ----- */
 type SpeechRecognitionResult = {
@@ -124,9 +125,11 @@ function splitForSpeech(buf: string): { sentences: string[]; tail: string } {
 export function CallSimulator({
   agent,
   hotelProfile,
+  lead,
 }: {
   agent: Agent;
   hotelProfile: string;
+  lead?: WorkspaceLead;
 }) {
   const router = useRouter();
 
@@ -635,7 +638,8 @@ export function CallSimulator({
         )
         .join("\n"),
     );
-    router.push(`/agent/02_outbound_sales?call=${ctx}`);
+    const profile = encodeURIComponent(hotelProfile || "");
+    router.push(`/agent/02_outbound_sales?profile=${profile}&call=${ctx}`);
   }
 
   const Icon = iconForAgent(agent.id);
@@ -653,7 +657,11 @@ export function CallSimulator({
         onSave={saveToActivity}
         onFollowUp={generateFollowUp}
         onStartAnother={() => router.refresh()}
-        onBack={() => router.push(`/agent/${agent.id}`)}
+        onBack={() =>
+          router.push(
+            `/agent/${agent.id}?profile=${encodeURIComponent(hotelProfile || "")}`
+          )
+        }
       />
     );
   }
@@ -679,7 +687,7 @@ export function CallSimulator({
       {/* Top bar: state + back-to-agent escape */}
       <div className="relative flex items-center justify-between px-4 sm:px-6 lg:px-8 pt-5">
         <Link
-          href={`/agent/${agent.id}`}
+          href={`/agent/${agent.id}?profile=${encodeURIComponent(hotelProfile || "")}`}
           className="inline-flex items-center gap-1.5 text-sm font-semibold text-white/70 hover:text-white transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
@@ -733,6 +741,12 @@ export function CallSimulator({
         <p className="mt-1 text-sm text-white/55 font-semibold tracking-[0.18em] uppercase">
           {agent.roleTitle}
         </p>
+        {lead && (
+          <p className="mt-2 text-sm text-white/60">
+            Calling <span className="font-semibold text-white/80">{lead.fullName}</span>
+            {lead.companyName ? ` · ${lead.companyName}` : ""}
+          </p>
+        )}
 
         {/* Status text */}
         <div className="mt-7 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.06] backdrop-blur-sm px-4 py-2">

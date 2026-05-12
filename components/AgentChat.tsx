@@ -43,6 +43,7 @@ import {
   type WorkspaceState,
 } from "@/lib/workspace";
 import { FileUploader } from "@/components/FileUploader";
+import { getWelcomeAgent } from "@/lib/welcome-team";
 
 const FUNNEL_TINT: Record<"calculated" | "hustle", string> = {
   calculated: "bg-mhsp-navy/8 border-mhsp-navy/15",
@@ -77,7 +78,7 @@ export function AgentChat({
   const [wsSnapshot, setWsSnapshot] = useState<WorkspaceState>(() =>
     typeof window !== "undefined"
       ? getWorkspace()
-      : { leads: [], emails: [], files: [], activityLog: [], currentFocus: "", lastUpdated: "" }
+      : { hotelProfile: null, leads: [], emails: [], sequences: [], calls: [], files: [], activityLog: [], currentFocus: "", lastUpdated: "" }
   );
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [hydrated, setHydrated] = useState(false);
@@ -405,28 +406,36 @@ export function AgentChat({
     FUNNEL_TINT[agent.funnel as "calculated" | "hustle"] ||
     "bg-mhsp-cream-warm/40 border-mhsp-line";
   const avatarGrad = AVATAR_GRADIENT[agent.color] ?? AVATAR_GRADIENT.teal;
+  const welcome = getWelcomeAgent(agent);
 
   const chips = useMemo(() => quickActionsFor(agent.id), [agent.id]);
   const showWelcome = hydrated && messages.length === 0 && !isStreaming;
 
   return (
-    <div className="flex flex-col h-[calc(100vh-180px)] min-h-[640px] bg-white rounded-2xl border border-mhsp-line overflow-hidden shadow-[0_2px_10px_-4px_rgba(11,36,71,0.06)]">
+    <div className="flex flex-col h-[calc(100vh-170px)] min-h-[560px] sm:min-h-[620px] bg-white rounded-2xl border border-mhsp-line overflow-hidden shadow-[0_2px_12px_-4px_rgba(11,36,71,0.08)]">
       {/* Header */}
       <header
         className={`flex items-center gap-3 px-4 py-3 border-b shrink-0 ${headerTint}`}
       >
-        <div
-          className={`shrink-0 w-9 h-9 rounded-full bg-gradient-to-br ${avatarGrad} flex items-center justify-center text-lg shadow-sm`}
-        >
-          {agent.icon}
-        </div>
+        {welcome.photo ? (
+          <div className="shrink-0 w-9 h-9 rounded-full overflow-hidden ring-2 ring-white/70 shadow-sm">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={welcome.photo} alt={welcome.realName} className="h-full w-full object-cover" />
+          </div>
+        ) : (
+          <div
+            className={`shrink-0 w-9 h-9 rounded-full bg-gradient-to-br ${avatarGrad} flex items-center justify-center text-lg shadow-sm`}
+          >
+            {agent.icon}
+          </div>
+        )}
         <div className="flex-1 min-w-0">
           <h2 className="font-display text-[18px] text-mhsp-navy leading-tight truncate">
-            {agent.name}
+            {welcome.realName}
           </h2>
           <div className="flex items-center gap-1.5 mt-0.5">
             <span className="h-1.5 w-1.5 rounded-full bg-mhsp-success animate-pulse" />
-            <span className="text-[12px] text-mhsp-muted">Online</span>
+            <span className="text-[12px] text-mhsp-muted">{welcome.jobTitle}</span>
             {demoMode && (
               <span className="ml-1.5 inline-flex items-center gap-1 rounded-full bg-mhsp-success/10 border border-mhsp-success/30 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-mhsp-success">
                 Demo
@@ -479,12 +488,13 @@ export function AgentChat({
       <div
         ref={scrollRef}
         onScroll={onScroll}
-        className="flex-1 overflow-y-auto px-4 py-5 space-y-3 bg-mhsp-cream/40"
+        className="flex-1 overflow-y-auto overscroll-contain px-4 py-5 space-y-3 bg-mhsp-cream/40"
       >
         {showWelcome && (
           <Welcome
-            agent={agent}
+            icon={agent.icon}
             avatarGrad={avatarGrad}
+            displayName={welcome.realName}
             chips={chips}
             onChip={fillFromChip}
           />
@@ -523,7 +533,7 @@ export function AgentChat({
       </div>
 
       {/* Input area */}
-      <div className="border-t border-mhsp-line bg-mhsp-cream/70 px-4 pt-3 pb-4 shrink-0">
+      <div className="border-t border-mhsp-line bg-mhsp-cream/80 backdrop-blur-sm px-4 pt-3 pb-4 shrink-0">
         {showWelcome && chips.length > 0 && (
           <div className="flex gap-2 mb-3 overflow-x-auto pb-1 -mx-1 px-1">
             {chips.map((chip) => (
@@ -565,7 +575,7 @@ export function AgentChat({
                 baseInputRef.current = input;
               }}
               rows={1}
-              placeholder={`Ask ${agent.name} anything... (or use voice)`}
+              placeholder={`Ask ${welcome.realName} anything... (or use voice)`}
               disabled={isStreaming}
               className="flex-1 resize-none bg-transparent text-[14px] leading-relaxed text-mhsp-text placeholder:text-mhsp-muted/70 focus:outline-none max-h-[144px] disabled:opacity-60"
             />
@@ -639,13 +649,15 @@ export function AgentChat({
 }
 
 function Welcome({
-  agent,
+  icon,
   avatarGrad,
+  displayName,
   chips,
   onChip,
 }: {
-  agent: Agent;
+  icon: string;
   avatarGrad: string;
+  displayName: string;
   chips: string[];
   onChip: (text: string) => void;
 }) {
@@ -654,13 +666,13 @@ function Welcome({
       <div
         className={`mx-auto w-16 h-16 rounded-full bg-gradient-to-br ${avatarGrad} flex items-center justify-center text-3xl shadow-md mb-4`}
       >
-        {agent.icon}
+        {icon}
       </div>
       <h3 className="font-display text-xl text-mhsp-navy">
         Start the conversation
       </h3>
       <p className="text-sm text-mhsp-muted mt-1.5 max-w-md mx-auto">
-        Ask {agent.name} anything - or use one of the quick starts below the
+        Ask {displayName} anything - or use one of the quick starts below the
         message box.
       </p>
       {chips.length > 0 && (
@@ -841,7 +853,7 @@ function WorkspacePanel({
               <span className="font-semibold text-[#0F4C81]">Top leads: </span>
               {ws.leads
                 .slice(0, 3)
-                .map((l) => l.name)
+                .map((l) => l.fullName)
                 .join(", ")}
               {ws.leads.length > 3 && (
                 <span> +{ws.leads.length - 3} more</span>

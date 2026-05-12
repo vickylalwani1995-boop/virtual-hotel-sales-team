@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import { Toaster } from "sonner";
 import { AppChrome } from "@/components/AppChrome";
-import { LenisProvider } from "@/components/LenisProvider";
 import "./globals.css";
 
 const inter = Inter({
@@ -66,9 +65,7 @@ export default function RootLayout({
         className="min-h-full flex flex-col bg-mhsp-cream text-mhsp-text"
         suppressHydrationWarning
       >
-        <LenisProvider>
-          <AppChrome>{children}</AppChrome>
-        </LenisProvider>
+        <AppChrome>{children}</AppChrome>
         <Toaster
           position="bottom-left"
           richColors

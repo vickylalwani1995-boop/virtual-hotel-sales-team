@@ -55,6 +55,9 @@ export function HotelInput() {
   function handleSubmit() {
     const value = profile.trim();
     if (!value) return;
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem("vhst-hotel-profile", value);
+    }
     router.push(`/agents?profile=${encodeURIComponent(value)}`);
   }
 

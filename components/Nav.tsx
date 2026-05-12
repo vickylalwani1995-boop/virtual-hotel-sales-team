@@ -50,7 +50,7 @@ export function Nav() {
 
   // Close drawer on navigation so body overflow is always restored.
   // Without this, browser back/forward or programmatic navigation
-  // leaves the drawer open → body stays overflow:hidden → Lenis stops.
+  // leaves the drawer open and native scrolling can remain locked.
   useEffect(() => {
     setDrawerOpen(false);
   }, [pathname]);

@@ -5,23 +5,9 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { ArrowRight, Building2, Sparkles, Target, Zap } from "lucide-react";
 import { consumeWelcomeFlag, getUser, isLoggedIn } from "@/lib/auth";
-import { AGENTS } from "@/lib/agents";
+import { AGENTS, type Agent } from "@/lib/agents";
 import { MhspLogo } from "@/components/MhspLogo";
-
-// ─── Agent photos ─────────────────────────────────────────────────────────────
-const AGENT_PHOTOS: Record<string, string> = {
-  "00_director_of_sales": "https://randomuser.me/api/portraits/women/44.jpg",
-  "01_lead_generation":   "https://randomuser.me/api/portraits/men/32.jpg",
-  "02_outbound_sales":    "https://randomuser.me/api/portraits/women/26.jpg",
-  "03_account_manager":   "https://randomuser.me/api/portraits/men/56.jpg",
-  "04_rfp_closing":       "https://randomuser.me/api/portraits/women/67.jpg",
-  "05_lnr_closing":       "https://randomuser.me/api/portraits/men/41.jpg",
-  "06_group_sales":       "https://randomuser.me/api/portraits/men/12.jpg",
-  "07_meeting_catering":  "https://randomuser.me/api/portraits/women/68.jpg",
-  "08_after_sales":       "https://randomuser.me/api/portraits/men/75.jpg",
-  "09_retention":         "https://randomuser.me/api/portraits/women/22.jpg",
-  "10_revenue_leadership":"https://randomuser.me/api/portraits/women/11.jpg",
-};
+import { getWelcomeAgent, saveWelcomeTeam } from "@/lib/welcome-team";
 
 function seqNum(n: number) { return String(n).padStart(2, "0"); }
 
@@ -66,6 +52,7 @@ export default function WelcomePage() {
     const u = getUser();
     setUsername(u?.username ?? "");
     setHotel(readHotelData());
+    saveWelcomeTeam(AGENTS);
     setReady(true);
   }, [router]);
 
@@ -86,19 +73,19 @@ export default function WelcomePage() {
     : `Welcome back, ${capitalize(username)}.`;
 
   return (
-    <main className="min-h-screen bg-[#F4F6FA] pb-20">
+    <main className="min-h-screen bg-[#F4F6FA] pb-10 sm:pb-14">
 
       {/* ── LOGO ─────────────────────────────────────────────────────── */}
       <motion.div
         initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
-        className="flex justify-center pt-8 sm:pt-10"
+        className="flex justify-center pt-5 sm:pt-7"
       >
         <MhspLogo height={42} />
       </motion.div>
 
       {/* ── HERO ─────────────────────────────────────────────────────── */}
-      <section className="text-center px-4 pt-6 pb-10 sm:pb-14">
+      <section className="text-center px-4 pt-4 pb-8 sm:pb-10">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.28, delay: 0.08 }}
@@ -127,10 +114,19 @@ export default function WelcomePage() {
           11 agents online&nbsp;&nbsp;·&nbsp;&nbsp;2 funnels active
         </motion.p>
 
+        <motion.p
+          initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, delay: 0.3 }}
+          className="mt-4 mx-auto max-w-2xl text-sm sm:text-base text-[#5E7086] leading-relaxed"
+        >
+          Your team is initialized with your hotel context. Open the workspace to route tasks,
+          start agent chats, and launch call simulations without re-entering setup data.
+        </motion.p>
+
         <motion.div
           initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35, delay: 0.32 }}
-          className="mt-7"
+          className="mt-6"
         >
           <button
             onClick={() => router.push("/")}
@@ -259,7 +255,8 @@ function FunnelSection({
 // ─── Captain Card ─────────────────────────────────────────────────────────────
 
 function CaptainCard({ agent, num }: { agent: (typeof AGENTS)[number]; num: number }) {
-  const photo = AGENT_PHOTOS[agent.id];
+  const profile = getWelcomeAgent(agent as Agent);
+  const photo = profile.photo;
 
   return (
     <div className="relative rounded-2xl bg-white border-2 border-[#1B6EB7]/30
@@ -285,18 +282,18 @@ function CaptainCard({ agent, num }: { agent: (typeof AGENTS)[number]; num: numb
             {photo && (
               <div className="shrink-0 h-16 w-16 rounded-full overflow-hidden ring-2 ring-[#1B6EB7]/12">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={photo} alt={agent.realName} className="h-full w-full object-cover" />
+                <img src={photo} alt={profile.realName} className="h-full w-full object-cover" />
               </div>
             )}
             <div className="min-w-0">
               <h3 className="font-heading font-bold text-[#0F2547] text-[22px] sm:text-[26px] leading-tight">
-                {agent.realName}
+                {profile.realName}
               </h3>
               <p className="mt-1 text-[13px] sm:text-[14px] font-semibold text-[#1B6EB7] leading-tight">
-                {agent.jobTitle}
+                {profile.jobTitle}
               </p>
               <p className="mt-1 text-[10px] font-bold tracking-[0.2em] uppercase text-[#0F4C81]/45">
-                {agent.mhspRole}
+                {profile.mhspRole}
               </p>
             </div>
           </div>
@@ -315,13 +312,13 @@ function CaptainCard({ agent, num }: { agent: (typeof AGENTS)[number]; num: numb
           {/* Name / titles */}
           <div className="shrink-0 w-[200px] lg:w-[240px] xl:w-[260px]">
             <h3 className="font-heading font-bold text-[#0F2547] text-[26px] lg:text-[30px] leading-tight">
-              {agent.realName}
+              {profile.realName}
             </h3>
             <p className="mt-1.5 text-[14px] lg:text-[15px] font-semibold text-[#1B6EB7] leading-tight">
-              {agent.jobTitle}
+              {profile.jobTitle}
             </p>
             <p className="mt-2 text-[10px] font-bold tracking-[0.22em] uppercase text-[#0F4C81]/45">
-              {agent.mhspRole}
+              {profile.mhspRole}
             </p>
           </div>
 
@@ -330,7 +327,7 @@ function CaptainCard({ agent, num }: { agent: (typeof AGENTS)[number]; num: numb
             <div className="shrink-0 h-[84px] w-[84px] lg:h-[96px] lg:w-[96px]
                             rounded-full overflow-hidden ring-2 ring-[#1B6EB7]/15">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={photo} alt={agent.realName} className="h-full w-full object-cover" />
+              <img src={photo} alt={profile.realName} className="h-full w-full object-cover" />
             </div>
           )}
 
@@ -354,7 +351,8 @@ function CaptainCard({ agent, num }: { agent: (typeof AGENTS)[number]; num: numb
 // ─── Agent Card ───────────────────────────────────────────────────────────────
 
 function AgentCard({ agent, num }: { agent: (typeof AGENTS)[number]; num: number }) {
-  const photo = AGENT_PHOTOS[agent.id];
+  const profile = getWelcomeAgent(agent as Agent);
+  const photo = profile.photo;
 
   return (
     <div className="group flex flex-col rounded-xl bg-white
@@ -377,7 +375,7 @@ function AgentCard({ agent, num }: { agent: (typeof AGENTS)[number]; num: number
                           group-hover:ring-[#1B6EB7]/20
                           transition-all">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={photo} alt={agent.realName} className="h-full w-full object-cover" />
+            <img src={photo} alt={profile.realName} className="h-full w-full object-cover" />
           </div>
         )}
       </div>
@@ -386,17 +384,17 @@ function AgentCard({ agent, num }: { agent: (typeof AGENTS)[number]; num: number
       <h3 className="font-heading font-bold text-[#0F2547]
                      text-[18px] sm:text-[19px]
                      leading-tight">
-        {agent.realName}
+        {profile.realName}
       </h3>
 
       {/* Job title */}
       <p className="mt-1 text-[12px] sm:text-[13px] font-semibold text-[#1B6EB7] leading-tight">
-        {agent.jobTitle}
+        {profile.jobTitle}
       </p>
 
       {/* MHSP role */}
       <p className="mt-1.5 text-[9px] sm:text-[10px] font-bold tracking-[0.2em] uppercase text-[#0F4C81]/38">
-        {agent.mhspRole}
+        {profile.mhspRole}
       </p>
 
       {/* Divider line */}

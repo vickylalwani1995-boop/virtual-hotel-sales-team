@@ -1,6 +1,7 @@
 "use client";
 
 import { Suspense } from "react";
+import { useEffect } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { AgentGrid } from "@/components/AgentGrid";
@@ -20,6 +21,7 @@ import {
   MessageSquare,
 } from "lucide-react";
 import { AGENTS } from "@/lib/agents";
+import { getWelcomeAgent } from "@/lib/welcome-team";
 
 function extractHotelName(profile: string): string {
   const m = profile.match(/Hotel\s*Name\s*:\s*([^\n]+)/i);
@@ -190,6 +192,11 @@ function AgentsContent() {
   const profile = searchParams.get("profile") ?? "";
   const hotelName = extractHotelName(profile);
   const chips = profileChips(profile);
+
+  useEffect(() => {
+    if (!profile || typeof window === "undefined") return;
+    window.localStorage.setItem("vhst-hotel-profile", profile);
+  }, [profile]);
 
   const liveCount = AGENTS.filter((a) => a.tier === 1).length;
   const readyCount = AGENTS.length - liveCount;
@@ -368,12 +375,11 @@ function AgentsContent() {
                 </div>
               </div>
 
-              {/* Donna intro card */}
+              {/* Director spotlight card */}
               <div className="bg-white rounded-2xl border border-[#E5ECF4] shadow-[0_8px_28px_-14px_rgba(15,76,129,0.12)] overflow-hidden">
                 <div className="h-1 w-full bg-gradient-to-r from-[#2F8FCC] via-[#1B6EB7] to-[#0F4C81]" />
                 <div className="p-5">
-                  {/* Video placeholder */}
-                  <div className="relative rounded-xl bg-gradient-to-br from-[#0F4C81] to-[#1B6EB7] aspect-video flex items-center justify-center mb-4 overflow-hidden">
+                  <div className="relative rounded-xl bg-gradient-to-br from-[#0F4C81] to-[#1B6EB7] p-4 mb-4 overflow-hidden">
                     <div
                       className="absolute inset-0 opacity-[0.06] pointer-events-none"
                       style={{
@@ -381,21 +387,40 @@ function AgentsContent() {
                         backgroundSize: "14px 14px",
                       }}
                     />
-                    <button
-                      type="button"
-                      className="relative h-14 w-14 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center hover:bg-white/30 transition-colors"
-                      aria-label="Play Donna intro video"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                        className="h-6 w-6 text-white ml-0.5"
-                        aria-hidden="true"
-                      >
-                        <path d="M8 5v14l11-7z" />
-                      </svg>
-                    </button>
+                    <p className="relative text-sm font-bold tracking-[0.16em] uppercase text-white/70">
+                      Director Spotlight
+                    </p>
+                    <div className="relative mt-3 flex items-center gap-3">
+                      {(() => {
+                        const donna = getWelcomeAgent(AGENTS[0]);
+                        return (
+                          <>
+                            <div className="h-14 w-14 rounded-full overflow-hidden ring-2 ring-white/30">
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img src={donna.photo} alt={donna.realName} className="h-full w-full object-cover" />
+                            </div>
+                            <div>
+                              <p className="text-white text-base font-bold">{donna.realName}</p>
+                              <p className="text-white/75 text-sm">{donna.jobTitle}</p>
+                            </div>
+                          </>
+                        );
+                      })()}
+                    </div>
+                    <div className="relative mt-4 grid grid-cols-3 gap-2">
+                      {AGENTS.slice(1, 4).map((agent) => {
+                        const member = getWelcomeAgent(agent);
+                        return (
+                          <div key={agent.id} className="rounded-lg bg-white/10 border border-white/20 px-2 py-2 text-center">
+                            <div className="mx-auto h-8 w-8 rounded-full overflow-hidden ring-1 ring-white/30">
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img src={member.photo} alt={member.realName} className="h-full w-full object-cover" />
+                            </div>
+                            <p className="mt-1 text-[10px] text-white/80 truncate">{member.realName}</p>
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
                   <p className="text-sm font-bold tracking-[0.16em] uppercase text-mhsp-gold">
                     Meet Donna
@@ -404,23 +429,15 @@ function AgentsContent() {
                     Your AI Sales Host
                   </h3>
                   <p className="mt-1 text-sm text-mhsp-muted">
-                    Not sure where to start? Ask Donna.
+                    Start with the Director of Sales for weekly priorities, then branch into the right specialist.
                   </p>
-                  <button
-                    type="button"
+                  <Link
+                    href={profile ? `/agent/00_director_of_sales?profile=${encodeURIComponent(profile)}` : "/#start"}
                     className="mt-3 w-full inline-flex items-center justify-center gap-2 rounded-xl border border-[#DCE5EF] bg-[#F4F8FC] hover:bg-[#E8F0F9] text-mhsp-navy px-4 py-2.5 text-sm font-bold transition-colors"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                      className="h-3.5 w-3.5 text-mhsp-navy"
-                      aria-hidden="true"
-                    >
-                      <path d="M8 5v14l11-7z" />
-                    </svg>
-                    Play 15-sec intro
-                  </button>
+                    Open Director Chat
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </Link>
                 </div>
               </div>
             </div>

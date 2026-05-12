@@ -10,6 +10,10 @@ import {
   Clock,
   Lock,
   Target,
+  Building2,
+  Landmark,
+  CreditCard,
+  BadgeCheck,
   type LucideIcon,
 } from "lucide-react";
 import { HotelInput } from "@/components/HotelInput";
@@ -206,6 +210,88 @@ export default function Home() {
 
       {/* ============= HOW IT WORKS ============= */}
       <HowItWorks />
+
+      {/* ============= ALL PROPERTY HISTORY ============= */}
+      <section className="border-y border-[#E5ECF4] bg-[#F7FAFD]">
+        <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 py-14 sm:py-16">
+          <div className="max-w-3xl">
+            <span className="inline-flex items-center gap-2 rounded-full border border-[#DCE5EF] bg-white px-3 py-1.5 text-sm font-semibold tracking-[0.16em] uppercase text-[#1B6EB7] shadow-sm">
+              <Building2 className="h-3.5 w-3.5" />
+              All Property History
+            </span>
+            <h2 className="font-heading mt-4 text-3xl sm:text-4xl font-bold tracking-tight text-mhsp-navy">
+              Every property action in one timeline.
+            </h2>
+            <p className="mt-3 text-base sm:text-lg text-mhsp-muted leading-relaxed">
+              Track rate shifts, occupancy trends, campaign activity, and recent bookings across every managed property without jumping between tools.
+            </p>
+          </div>
+
+          <div className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5">
+            <InfoCard
+              icon={<Target className="h-5 w-5" />}
+              title="Portfolio Snapshot"
+              value="26 Properties"
+              desc="Active across urban, airport, and resort segments."
+            />
+            <InfoCard
+              icon={<TrendingUp className="h-5 w-5" />}
+              title="30-Day Performance"
+              value="+11.8% Revenue"
+              desc="Weekday pickup improved after dual-funnel execution."
+            />
+            <InfoCard
+              icon={<Clock className="h-5 w-5" />}
+              title="Latest Updates"
+              value="143 Events"
+              desc="Bookings, outreach, and retention actions in one feed."
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* ============= BANK INTEGRATION ============= */}
+      <section className="bg-white">
+        <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 py-14 sm:py-16">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.1fr] gap-8 lg:gap-10 items-start">
+            <div>
+              <span className="inline-flex items-center gap-2 rounded-full border border-[#DCE5EF] bg-[#F4F8FC] px-3 py-1.5 text-sm font-semibold tracking-[0.16em] uppercase text-[#0F4C81]">
+                <Landmark className="h-3.5 w-3.5" />
+                Bank Details Integration
+              </span>
+              <h2 className="font-heading mt-4 text-3xl sm:text-4xl font-bold tracking-tight text-mhsp-navy">
+                Built for finance-ready operations.
+              </h2>
+              <p className="mt-3 text-base sm:text-lg text-mhsp-muted leading-relaxed">
+                Connect banking rails securely to reconcile payouts, invoice settlements, and fee visibility alongside sales activity.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <BankCard
+                icon={<CreditCard className="h-5 w-5" />}
+                title="Account Linking"
+                detail="Connect operating + escrow accounts with role-based access."
+              />
+              <BankCard
+                icon={<BadgeCheck className="h-5 w-5" />}
+                title="Verified Payouts"
+                detail="Automated payout checks with daily reconciliation alerts."
+              />
+              <BankCard
+                icon={<ShieldCheck className="h-5 w-5" />}
+                title="Security"
+                detail="Encrypted tokens, audit logs, and permissioned workflows."
+              />
+              <BankCard
+                icon={<Sparkles className="h-5 w-5" />}
+                title="Revenue Sync"
+                detail="Map cash movement to each agent-generated opportunity."
+              />
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* ============= TEAM PREVIEW ============= */}
       <TeamPreview />
@@ -460,5 +546,48 @@ function AgentTile({
         {label}
       </span>
     </div>
+  );
+}
+
+function InfoCard({
+  icon,
+  title,
+  value,
+  desc,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  value: string;
+  desc: string;
+}) {
+  return (
+    <article className="rounded-2xl border border-[#E5ECF4] bg-white p-5 shadow-[0_8px_24px_-14px_rgba(15,76,129,0.18)]">
+      <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-[#2F8FCC] to-[#0F4C81] text-white flex items-center justify-center">
+        {icon}
+      </div>
+      <p className="mt-4 text-sm font-bold uppercase tracking-[0.14em] text-mhsp-muted">{title}</p>
+      <p className="mt-1 text-2xl font-bold text-mhsp-navy">{value}</p>
+      <p className="mt-2 text-sm text-mhsp-muted leading-relaxed">{desc}</p>
+    </article>
+  );
+}
+
+function BankCard({
+  icon,
+  title,
+  detail,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  detail: string;
+}) {
+  return (
+    <article className="rounded-2xl border border-[#E5ECF4] bg-[#F9FBFE] p-5 hover:border-[#C7D9EC] transition-colors">
+      <div className="h-10 w-10 rounded-lg bg-white border border-[#DCE5EF] text-[#1B6EB7] flex items-center justify-center">
+        {icon}
+      </div>
+      <h3 className="mt-3 text-lg font-bold text-mhsp-navy">{title}</h3>
+      <p className="mt-1.5 text-sm text-mhsp-muted leading-relaxed">{detail}</p>
+    </article>
   );
 }

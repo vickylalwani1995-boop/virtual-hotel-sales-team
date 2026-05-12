@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import type { Agent } from "@/lib/agents";
 import { iconForAgent } from "@/lib/agent-icons";
+import { getWelcomeAgent } from "@/lib/welcome-team";
 
 const SPECIALTIES: Record<string, string[]> = {
   "00_director_of_sales": ["Strategy", "Reporting", "Coordination"],
@@ -36,9 +37,10 @@ export function AgentCard({
   const href = `/agent/${agent.id}?profile=${encodeURIComponent(profile)}`;
   const Icon = iconForAgent(agent.id);
   const tags = SPECIALTIES[agent.id] ?? [];
+  const welcome = getWelcomeAgent(agent);
   const isLive = agent.tier === 1;
   const isCalculated = agent.funnel === "calculated";
-  const cleanName = agent.name.replace(/\s+Agent$/i, "");
+  const cleanName = welcome.realName || agent.name.replace(/\s+Agent$/i, "");
 
   const iconTile = isCalculated
     ? "bg-gradient-to-br from-[#1E5896] to-[#0F4C81]"
@@ -102,13 +104,27 @@ export function AgentCard({
 
             {/* Role title eyebrow */}
             <p className="mt-5 text-sm font-bold tracking-[0.16em] uppercase text-mhsp-gold">
-              {agent.roleTitle}
+              {welcome.mhspRole || agent.roleTitle}
             </p>
 
             {/* Name */}
             <h3 className="font-heading mt-1.5 text-[22px] font-bold leading-tight text-mhsp-navy">
               {cleanName}
             </h3>
+
+            {welcome.photo && (
+              <div className="mt-3 flex items-center gap-2 text-sm text-mhsp-muted">
+                <div className="h-7 w-7 rounded-full overflow-hidden ring-2 ring-[#E2E8F0]">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={welcome.photo}
+                    alt={welcome.realName}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <span className="font-semibold text-mhsp-navy">{welcome.jobTitle}</span>
+              </div>
+            )}
 
             {/* Description */}
             <p className="mt-2 text-sm text-mhsp-muted leading-relaxed line-clamp-2">

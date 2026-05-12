@@ -20,8 +20,8 @@ const ONBOARDING_CHANGED = "vhst-onboarding-changed";
  *  1. A visible circular beacon in the centre of the screen that could
  *     not be fully suppressed via disableBeacon.
  *  2. Joyride locks body scroll (overflow:hidden) while the spotlight
- *     is active, which caused Lenis to see a locked body and stop
- *     responding to wheel events until the page was reloaded.
+ *     is active, which caused scroll to remain locked until reload in
+ *     some navigation paths.
  *
  * The welcome modal achieves the same onboarding goal — guide the user
  * to either the Westmore demo or their own profile — without any of

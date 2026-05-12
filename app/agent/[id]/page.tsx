@@ -6,6 +6,7 @@ import { notFound, useSearchParams } from "next/navigation";
 import { getAgent } from "@/lib/agents";
 import { iconForAgent } from "@/lib/agent-icons";
 import { AgentChat } from "@/components/AgentChat";
+import { getWelcomeAgent } from "@/lib/welcome-team";
 import {
   ArrowLeft,
   Crosshair,
@@ -79,10 +80,11 @@ function AgentDetail({ id }: { id: string }) {
   if (!agent) return notFound();
 
   const Icon = iconForAgent(agent.id);
+  const welcome = getWelcomeAgent(agent);
   const isCalculated = agent.funnel === "calculated";
   const isLive = agent.tier === 1;
   const FunnelIcon = isCalculated ? Crosshair : Zap;
-  const cleanName = agent.name.replace(/\s+Agent$/i, "");
+  const cleanName = welcome.realName || agent.name.replace(/\s+Agent$/i, "");
 
   const iconTile = isCalculated
     ? "bg-gradient-to-br from-[#1E5896] to-[#0F4C81]"
@@ -125,6 +127,12 @@ function AgentDetail({ id }: { id: string }) {
           {/* Agent header row */}
           <div className="mt-6 flex flex-col lg:flex-row lg:items-start lg:justify-between gap-5">
             <div className="flex items-start gap-3 sm:gap-4 min-w-0">
+              {welcome.photo && (
+                <div className="shrink-0 h-14 w-14 sm:h-16 sm:w-16 rounded-2xl overflow-hidden ring-2 ring-[#D6E3F0] shadow-[0_10px_24px_-10px_rgba(15,76,129,0.45)]">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={welcome.photo} alt={welcome.realName} className="h-full w-full object-cover" />
+                </div>
+              )}
               <div
                 className={`shrink-0 h-14 w-14 sm:h-16 sm:w-16 rounded-2xl flex items-center justify-center text-white shadow-[0_10px_24px_-8px_rgba(15,76,129,0.55)] ${iconTile}`}
               >
@@ -135,7 +143,7 @@ function AgentDetail({ id }: { id: string }) {
               </div>
               <div className="min-w-0">
                 <p className="text-sm font-bold tracking-[0.18em] uppercase text-mhsp-gold">
-                  {agent.roleTitle}
+                  {welcome.mhspRole || agent.roleTitle}
                 </p>
                 <h1 className="font-heading mt-1 text-[28px] sm:text-[36px] lg:text-[44px] font-bold leading-[1.05] tracking-tight text-mhsp-navy">
                   {cleanName}

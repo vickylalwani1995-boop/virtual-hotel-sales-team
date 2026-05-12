@@ -55,21 +55,21 @@ export function FileUploader({ agentId, agentName, disabled }: FileUploaderProps
         size: file.size,
         content: payload.content ?? "",
         uploadedInAgent: agentId,
-        description: data.summary,
+        summary: data.summary,
+        detectedType: data.category === "leads" ? "leads" : data.category === "rfp" ? "rfp" : "other",
       });
 
       // If leads were extracted, add them
       let leadCount = 0;
       if (Array.isArray(data.leads) && data.leads.length > 0) {
-        const leads = (data.leads as Partial<WorkspaceLead>[]).map((l) => ({
-          name: l.name ?? "Unknown",
-          title: l.title ?? "",
-          company: l.company ?? "",
-          email: l.email ?? "",
-          phone: l.phone,
-          industry: l.industry,
+        const leads: Partial<WorkspaceLead>[] = data.leads.map((l: Record<string, string>) => ({
+          fullName: l.fullName || l.name || "Unknown",
+          jobTitle: l.jobTitle || l.title || "",
+          companyName: l.companyName || l.company || "",
+          email: l.email || "",
+          mobilePhone: l.mobilePhone || l.phone || "",
+          industry: l.industry || "",
           source: "uploaded" as const,
-          addedBy: agentName,
           funnel: "hustle" as const,
           status: "new" as const,
           notes: `Extracted from ${file.name}`,

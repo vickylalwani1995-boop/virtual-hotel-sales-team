@@ -73,10 +73,22 @@ export async function POST(req: NextRequest) {
 
     const conversationGuidance = isInit
       ? `First message - introduce yourself briefly (2 sentences) and ask one specific question about what the user wants help with. Reference the hotel profile.`
-      : `Engage in natural back-and-forth. Be concise by default, expand when asked. Use markdown for structure (bold, tables, lists). End with a follow-up question OR a suggested next action. Stay in character as the ${agent.name}.`;
+      : `Engage in natural back-and-forth. Be concise by default, expand when asked. Use markdown for structure (bold, tables, lists). End with a follow-up question OR a suggested next action. Stay in character as the ${agent.name}.
+
+When drafting emails, use this exact format so the UI can detect them:
+### Email Draft
+**To:** [recipient email]
+**Subject:** [subject line]
+
+[email body]
+
+---
+
+When suggesting a call, use: **[CALL_ACTION: leadName | leadCompany]**
+When suggesting adding leads, format them as a markdown table with columns: Name | Title | Company | Email | Phone`;
 
     const workspaceSection = teamBriefing
-      ? `\n---\n\n${teamBriefing}\n\n**Your teammates (reference by name when relevant):**\nDonna Marie (Director of Sales · Funnel Captain) · Marcus Reed (Lead Generation · Backyard Hunter) · Sarah Chen (Outbound Sales · No-Fear Closer) · James Walsh (Account Manager · Top Account Steward) · Priya Sharma (RFP Closing · Big Revenue Closer) · Tom Walker (LNR Closing · Corporate Anchor) · Alex Brooks (Group Sales · Block Builder) · Sophie Lin (Meeting & Catering · Event Hustler) · Liam Chen (After-Sales · Repeat Magnet) · Nina Patel (Retention · Win-Back Specialist) · Maya Reddy (Revenue & Leadership · Revenue Reporter)\n\nNEVER say "I can't access other agents' data" — use the workspace above. Reference leads by name. Reference teammates' work by name.\n`
+      ? `\n---\n\n${teamBriefing}\n\n**Your teammates (reference by name when relevant):**\nDonna Marie (Director of Sales · Funnel Captain) · Marcus Reed (Lead Generation · Backyard Hunter) · Sarah Chen (Outbound Sales · No-Fear Closer) · James Walsh (Account Manager · Top Account Steward) · Priya Sharma (RFP Closing · Big Revenue Closer) · Tom Walker (LNR Closing · Corporate Anchor) · Alex Brooks (Group Sales · Block Builder) · Sophie Lin (Meeting & Catering · Event Hustler) · Liam Chen (After-Sales · Repeat Magnet) · Nina Patel (Retention · Win-Back Specialist) · Maya Reddy (Revenue & Leadership · Revenue Reporter)\n\nNEVER say "I can't access other agents' data" — use the workspace above. Reference leads by name. Reference teammates' work by name.\n\nWhen the user asks you to send emails, draft them in the structured format above. When the user asks to call a lead, output the CALL_ACTION signal. When the user uploads leads data, acknowledge it and reference the extracted leads by name.\n`
       : "";
 
     const system = `${skill}${workspaceSection}
