@@ -11,7 +11,7 @@ import { KeyboardShortcuts } from "@/components/KeyboardShortcuts";
 import { OfflineBanner } from "@/components/OfflineBanner";
 import { OnboardingTour } from "@/components/OnboardingTour";
 
-const CHROMELESS_ROUTES = ["/login"];
+const CHROMELESS_ROUTES = ["/login", "/welcome"];
 
 export function AppChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname() ?? "/";

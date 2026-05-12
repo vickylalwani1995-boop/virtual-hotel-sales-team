@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import {
@@ -23,6 +24,7 @@ export function Nav() {
   const [demo, setDemo] = useDemoMode();
   const [leadCount, setLeadCount] = useState(0);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const pathname = usePathname();
 
   // Live Leads badge
   useEffect(() => {
@@ -45,6 +47,13 @@ export function Nav() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [drawerOpen]);
+
+  // Close drawer on navigation so body overflow is always restored.
+  // Without this, browser back/forward or programmatic navigation
+  // leaves the drawer open → body stays overflow:hidden → Lenis stops.
+  useEffect(() => {
+    setDrawerOpen(false);
+  }, [pathname]);
 
   // Lock body scroll while drawer is open
   useEffect(() => {

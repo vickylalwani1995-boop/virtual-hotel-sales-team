@@ -20,7 +20,7 @@ const QUICK_CHIPS = [
   "What's the best agent for cold outreach?",
   "Help me write a proposal email",
   "Explain RevPAR vs ADR",
-  "Why is my hotel weak on weekdays?",
+  "Why are my weekday numbers slow?",
 ];
 
 function contextHint(ctx: PageContext): string {

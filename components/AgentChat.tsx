@@ -20,6 +20,7 @@ import {
   Download,
   FileText,
   X,
+  ChevronDown,
 } from "lucide-react";
 import type { Agent } from "@/lib/agents";
 import {
@@ -34,6 +35,14 @@ import { VoiceInput } from "@/components/VoiceInput";
 import { LeadCaptureBar } from "@/components/LeadCaptureBar";
 import { useDemoMode } from "@/lib/demo-mode";
 import { addNotification } from "@/lib/notifications";
+import {
+  getWorkspace,
+  generateTeamBriefing,
+  logWorkspaceActivity,
+  seedDemoWorkspace,
+  type WorkspaceState,
+} from "@/lib/workspace";
+import { FileUploader } from "@/components/FileUploader";
 
 const FUNNEL_TINT: Record<"calculated" | "hustle", string> = {
   calculated: "bg-mhsp-navy/8 border-mhsp-navy/15",
@@ -65,6 +74,11 @@ export function AgentChat({
   hotelProfile: string | null;
 }) {
   const [demoMode] = useDemoMode();
+  const [wsSnapshot, setWsSnapshot] = useState<WorkspaceState>(() =>
+    typeof window !== "undefined"
+      ? getWorkspace()
+      : { leads: [], emails: [], files: [], activityLog: [], currentFocus: "", lastUpdated: "" }
+  );
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [hydrated, setHydrated] = useState(false);
   const [input, setInput] = useState("");
@@ -80,6 +94,18 @@ export function AgentChat({
   const isAtBottomRef = useRef(true);
   const abortRef = useRef<AbortController | null>(null);
   const hasInitRef = useRef(false);
+
+  // Seed demo workspace when demo mode is on
+  useEffect(() => {
+    if (demoMode) seedDemoWorkspace();
+  }, [demoMode]);
+
+  // Keep workspace snapshot fresh
+  useEffect(() => {
+    function update() { setWsSnapshot(getWorkspace()); }
+    window.addEventListener("vhst-workspace-changed", update);
+    return () => window.removeEventListener("vhst-workspace-changed", update);
+  }, []);
 
   // Hydrate from localStorage
   useEffect(() => {
@@ -194,6 +220,7 @@ export function AgentChat({
           body: JSON.stringify({
             agentId: agent.id,
             hotelProfile: hotelProfile ?? "",
+            teamBriefing: generateTeamBriefing(agent.id),
             messages: nextHistory.map((m) => ({
               role: m.role,
               content: m.content,
@@ -252,6 +279,12 @@ export function AgentChat({
           agentId: agent.id,
           actionUrl: `/agent/${agent.id}`,
         });
+        // Log to shared workspace activity
+        logWorkspaceActivity(
+          agent.id,
+          agent.realName,
+          `responded in ${agent.jobTitle} chat`
+        );
       }
 
       async function playStreamSimulated(text: string) {
@@ -439,6 +472,9 @@ export function AgentChat({
         </div>
       </header>
 
+      {/* Workspace panel */}
+      <WorkspacePanel ws={wsSnapshot} agentId={agent.id} />
+
       {/* Messages */}
       <div
         ref={scrollRef}
@@ -503,6 +539,11 @@ export function AgentChat({
         )}
 
         <div className="flex items-end gap-2">
+          <FileUploader
+            agentId={agent.id}
+            agentName={agent.realName}
+            disabled={isStreaming}
+          />
           <VoiceInput
             onTranscript={voiceTranscript}
             onComplete={voiceComplete}
@@ -713,6 +754,102 @@ function TypingIndicator({
           <span className="block w-1.5 h-1.5 rounded-full bg-mhsp-gold animate-bounce" />
         </div>
       </div>
+    </div>
+  );
+}
+
+// ─── Workspace Panel ─────────────────────────────────────────────────────────
+
+function relTime(iso: string): string {
+  const diff = (Date.now() - new Date(iso).getTime()) / 1000;
+  if (diff < 60) return `${Math.floor(diff)}s ago`;
+  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+  return new Date(iso).toLocaleDateString();
+}
+
+function WorkspacePanel({
+  ws,
+  agentId,
+}: {
+  ws: WorkspaceState;
+  agentId: string;
+}) {
+  const [expanded, setExpanded] = useState(false);
+  const hasData =
+    ws.leads.length > 0 || ws.emails.length > 0 || ws.files.length > 0;
+  if (!hasData) return null;
+
+  const othersActivity = ws.activityLog
+    .filter((a) => a.agentId !== agentId)
+    .slice(0, 3);
+
+  return (
+    <div className="border-b border-mhsp-line bg-[#F4F8FC] shrink-0">
+      <button
+        type="button"
+        onClick={() => setExpanded((v) => !v)}
+        className="w-full flex items-center justify-between px-4 py-2 text-left hover:bg-[#EBF3FB] transition-colors"
+      >
+        <div className="flex items-center gap-2 text-[12px] font-semibold text-[#0F4C81]">
+          <span className="h-1.5 w-1.5 rounded-full bg-mhsp-success animate-pulse" />
+          <span>Team workspace:</span>
+          {ws.leads.length > 0 && (
+            <span className="font-bold">{ws.leads.length} leads</span>
+          )}
+          {ws.emails.length > 0 && (
+            <>
+              <span className="text-[#0F4C81]/30">·</span>
+              <span className="font-bold">{ws.emails.length} emails</span>
+            </>
+          )}
+          {ws.files.length > 0 && (
+            <>
+              <span className="text-[#0F4C81]/30">·</span>
+              <span className="font-bold">{ws.files.length} files</span>
+            </>
+          )}
+        </div>
+        <ChevronDown
+          className={`h-3.5 w-3.5 text-[#0F4C81]/40 transition-transform ${expanded ? "rotate-180" : ""}`}
+          strokeWidth={2.5}
+        />
+      </button>
+
+      {expanded && (
+        <div className="px-4 pb-3 pt-1 space-y-1.5 border-t border-[#E5ECF4]">
+          {othersActivity.length > 0 ? (
+            othersActivity.map((a) => (
+              <div
+                key={a.id}
+                className="flex items-baseline gap-1.5 text-[12px] text-mhsp-muted"
+              >
+                <span className="font-semibold text-[#0F4C81] shrink-0">
+                  {a.agentName}:
+                </span>
+                <span className="flex-1 truncate">{a.action}</span>
+                <span className="shrink-0 text-[11px]">
+                  {relTime(a.timestamp)}
+                </span>
+              </div>
+            ))
+          ) : (
+            <p className="text-[12px] text-mhsp-muted">No teammate activity yet.</p>
+          )}
+          {ws.leads.length > 0 && (
+            <div className="text-[12px] text-mhsp-muted pt-0.5">
+              <span className="font-semibold text-[#0F4C81]">Top leads: </span>
+              {ws.leads
+                .slice(0, 3)
+                .map((l) => l.name)
+                .join(", ")}
+              {ws.leads.length > 3 && (
+                <span> +{ws.leads.length - 3} more</span>
+              )}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

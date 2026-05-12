@@ -14,7 +14,7 @@ const DEFAULT_PROFILE = `Hotel Name: The Westmore Hotel Dallas
 Location: Downtown Dallas, Texas, USA
 Rooms: 220
 Target Business: Corporate, Group Meetings, Medical, Long-Stay Project Teams
-Weak Days: Sunday to Tuesday
+Slow Days: Sunday to Tuesday
 Main Need: More weekday corporate occupancy + group business
 Meeting Space: Yes - 4 banquet halls, max 600 pax
 Catering: Yes - in-house + outdoor catering
@@ -27,7 +27,7 @@ const FIELD_HINTS = [
   "Location",
   "Rooms",
   "Target Business",
-  "Weak Days",
+  "Slow Days",
   "Main Need",
   "ADR",
   "Occupancy",
@@ -125,7 +125,7 @@ export function HotelInput() {
 Location: ...
 Rooms: ...
 Target Business: ...
-Weak Days: ...
+Slow Days: ...
 Main Need: ..."
               className="w-full min-h-[260px] sm:min-h-[300px] resize-none font-mono text-sm leading-relaxed bg-[#FAFCFE] border border-[#E5ECF4] rounded-xl px-4 py-3.5 pb-9 text-mhsp-text placeholder:text-mhsp-muted/60 focus:outline-none focus:ring-4 focus:ring-[#1B6EB7]/15 focus:border-[#1B6EB7]/50 focus:bg-white transition-all"
             />

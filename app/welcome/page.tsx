@@ -1,244 +1,411 @@
 "use client";
 
-import { useEffect, useRef, useState, type ComponentType } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import {
-  Target,
-  Search,
-  Send,
-  Handshake,
-  FileText,
-  Briefcase,
-  Users,
-  Utensils,
-  HeartHandshake,
-  RefreshCw,
-  BarChart3,
-  ArrowRight,
-  Sparkles,
-} from "lucide-react";
+import { ArrowRight, Building2, Sparkles, Target, Zap } from "lucide-react";
 import { consumeWelcomeFlag, getUser, isLoggedIn } from "@/lib/auth";
 import { AGENTS } from "@/lib/agents";
 import { MhspLogo } from "@/components/MhspLogo";
 
-type IconType = ComponentType<{ className?: string; strokeWidth?: number }>;
-
-const AGENT_ICONS: Record<string, IconType> = {
-  "00_director_of_sales": Target,
-  "01_lead_generation": Search,
-  "02_outbound_sales": Send,
-  "03_account_manager": Handshake,
-  "04_rfp_closing": FileText,
-  "05_lnr_closing": Briefcase,
-  "06_group_sales": Users,
-  "07_meeting_catering": Utensils,
-  "08_after_sales": HeartHandshake,
-  "09_retention": RefreshCw,
-  "10_revenue_leadership": BarChart3,
+// ─── Agent photos ─────────────────────────────────────────────────────────────
+const AGENT_PHOTOS: Record<string, string> = {
+  "00_director_of_sales": "https://randomuser.me/api/portraits/women/44.jpg",
+  "01_lead_generation":   "https://randomuser.me/api/portraits/men/32.jpg",
+  "02_outbound_sales":    "https://randomuser.me/api/portraits/women/26.jpg",
+  "03_account_manager":   "https://randomuser.me/api/portraits/men/56.jpg",
+  "04_rfp_closing":       "https://randomuser.me/api/portraits/women/67.jpg",
+  "05_lnr_closing":       "https://randomuser.me/api/portraits/men/41.jpg",
+  "06_group_sales":       "https://randomuser.me/api/portraits/men/12.jpg",
+  "07_meeting_catering":  "https://randomuser.me/api/portraits/women/68.jpg",
+  "08_after_sales":       "https://randomuser.me/api/portraits/men/75.jpg",
+  "09_retention":         "https://randomuser.me/api/portraits/women/22.jpg",
+  "10_revenue_leadership":"https://randomuser.me/api/portraits/women/11.jpg",
 };
 
-function cleanAgentName(name: string): string {
-  return name.replace(/\s+Agent$/i, "");
+function seqNum(n: number) { return String(n).padStart(2, "0"); }
+
+function isGenericUsername(u: string) {
+  if (!u) return true;
+  const lower = u.toLowerCase();
+  return ["test","demo","admin","user","mhsp_sales","mhsp"].includes(lower)
+    || u.includes("_") || /\d/.test(u);
 }
 
-function prettyName(username: string): string {
-  if (!username) return "";
-  return username
-    .replace(/[_-]+/g, " ")
-    .replace(/\b\w/g, (c) => c.toUpperCase());
+function capitalize(s: string) {
+  return s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : s;
 }
+
+interface HotelData { name: string; rooms: string; slowDays: string; }
+
+function readHotelData(): HotelData {
+  const DEMO = { name: "The Westmore Hotel Dallas", rooms: "220", slowDays: "Sun–Tue" };
+  try {
+    const raw = localStorage.getItem("vhst-hotel-profile") ?? "";
+    if (!raw || raw.length < 10) return DEMO;
+    if (raw.toLowerCase().includes("westmore")) return DEMO;
+    const m = raw.match(/(\d{2,4})\s*(?:room|key|suite)/i);
+    return { name: "Your Hotel", rooms: m?.[1] ?? "—", slowDays: "—" };
+  } catch { return DEMO; }
+}
+
+// ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function WelcomePage() {
   const router = useRouter();
-  const [ready, setReady] = useState(false);
+  const [ready, setReady]       = useState(false);
   const [username, setUsername] = useState("");
-  // One-shot guard so React StrictMode's double-invocation in dev doesn't
-  // run consumeWelcomeFlag twice (which would consume on call #1 and then
-  // redirect on call #2 because the flag is already gone).
-  const checkedRef = useRef(false);
+  const [hotel, setHotel]       = useState<HotelData | null>(null);
+  const checked = useRef(false);
 
   useEffect(() => {
-    if (checkedRef.current) return;
-    checkedRef.current = true;
-
-    if (!isLoggedIn()) {
-      router.replace("/login");
-      return;
-    }
-    // Only show this page if it was reached via a fresh sign-in.
-    // If the flag isn't set (e.g. user typed /welcome directly), bounce home.
-    if (!consumeWelcomeFlag()) {
-      router.replace("/");
-      return;
-    }
+    if (checked.current) return;
+    checked.current = true;
+    if (!isLoggedIn())         { router.replace("/login"); return; }
+    if (!consumeWelcomeFlag()) { router.replace("/");      return; }
     const u = getUser();
     setUsername(u?.username ?? "");
+    setHotel(readHotelData());
     setReady(true);
   }, [router]);
 
-  function enterWorkspace() {
-    if (typeof window !== "undefined") window.scrollTo(0, 0);
-    router.push("/");
-  }
+  if (!ready) return (
+    <div className="min-h-screen flex items-center justify-center bg-[#F4F6FA]">
+      <div className="h-8 w-8 rounded-full border-2 border-[#1B6EB7] border-t-transparent animate-spin" />
+    </div>
+  );
 
-  if (!ready) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-[#FBFCFE]">
-        <div className="h-8 w-8 rounded-full border-2 border-[#1B6EB7] border-t-transparent animate-spin" />
-      </div>
-    );
-  }
+  const captain        = AGENTS.find((a) => a.isCaptain)!;
+  const calculatedTeam = AGENTS.filter((a) => a.funnel === "calculated" && !a.isCaptain);
+  const hustleTeam     = AGENTS.filter((a) => a.funnel === "hustle");
+  // captain=01, calculated 02–06, hustle 07–11
+  const hustleStart    = 2 + calculatedTeam.length;
+
+  const heading = isGenericUsername(username)
+    ? "Welcome back. Your sales team is ready."
+    : `Welcome back, ${capitalize(username)}.`;
 
   return (
-    <main
-      className="min-h-screen relative"
-      style={{
-        background:
-          "radial-gradient(700px 480px at 12% 10%, rgba(47,143,204,0.10), transparent 60%), radial-gradient(640px 480px at 92% 92%, rgba(15,76,129,0.08), transparent 65%), linear-gradient(180deg, #FBFCFE 0%, #F1F5FA 100%)",
-      }}
-    >
-      <div className="min-h-screen flex items-center justify-center p-4 sm:p-6 lg:p-10">
+    <main className="min-h-screen bg-[#F4F6FA] pb-20">
+
+      {/* ── LOGO ─────────────────────────────────────────────────────── */}
+      <motion.div
+        initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+        className="flex justify-center pt-8 sm:pt-10"
+      >
+        <MhspLogo height={42} />
+      </motion.div>
+
+      {/* ── HERO ─────────────────────────────────────────────────────── */}
+      <section className="text-center px-4 pt-6 pb-10 sm:pb-14">
         <motion.div
-          initial={{ opacity: 0, y: 18, scale: 0.98 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.5, ease: [0.22, 0.61, 0.36, 1] }}
-          className="relative w-full max-w-[1100px] bg-white rounded-[20px] sm:rounded-[28px] border border-[#E5ECF4] shadow-[0_30px_80px_-30px_rgba(15,76,129,0.18),0_8px_24px_-8px_rgba(15,76,129,0.08)] overflow-hidden"
+          initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.28, delay: 0.08 }}
+          className="flex justify-center"
         >
-          {/* Top accent strip */}
-          <div className="h-1 w-full bg-gradient-to-r from-[#2F8FCC] via-[#1B6EB7] to-[#0F4C81]" />
-
-          <div className="px-5 sm:px-10 lg:px-14 pt-8 sm:pt-12 pb-8 sm:pb-12">
-            {/* Logo */}
-            <motion.div
-              initial={{ opacity: 0, y: -6 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.1 }}
-              className="flex justify-center"
-            >
-              <MhspLogo height={44} />
-            </motion.div>
-
-            {/* Eyebrow */}
-            <motion.div
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.2 }}
-              className="mt-7 flex justify-center"
-            >
-              <span className="inline-flex items-center gap-2 rounded-full border border-[#E5ECF4] bg-[#F4F8FC] px-3 py-1 text-sm font-semibold tracking-[0.18em] uppercase text-[#0F4C81]">
-                <Sparkles className="h-3.5 w-3.5 text-[#1B6EB7]" />
-                my Sales TEAM AI
-              </span>
-            </motion.div>
-
-            {/* Heading */}
-            <motion.h1
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              className="mt-5 font-heading text-center text-[#0F1B2D] text-[32px] sm:text-[44px] lg:text-[54px] leading-[1.05] font-bold tracking-tight"
-            >
-              Welcome
-              {username ? (
-                <>
-                  {", "}
-                  <span className="text-[#1B6EB7]">
-                    {prettyName(username)}
-                  </span>
-                </>
-              ) : null}
-              .
-            </motion.h1>
-
-            <motion.p
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.4 }}
-              className="mt-4 text-center text-[#5A6B82] text-base sm:text-lg leading-relaxed max-w-2xl mx-auto"
-            >
-              Your virtual sales department is online. Eleven specialist
-              agents, ready to take their first brief.
-            </motion.p>
-
-            {/* Agent grid - full name + description */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.4, delay: 0.55 }}
-              className="mt-8 sm:mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4"
-            >
-              {AGENTS.map((a, i) => {
-                const Icon = AGENT_ICONS[a.id] ?? Target;
-                return (
-                  <motion.div
-                    key={a.id}
-                    initial={{ opacity: 0, y: 10, scale: 0.98 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    transition={{
-                      duration: 0.4,
-                      delay: 0.6 + i * 0.04,
-                      ease: [0.22, 0.61, 0.36, 1],
-                    }}
-                    className="group flex items-start gap-3 rounded-xl border border-[#E5ECF4] bg-white hover:bg-[#F4F8FC] hover:border-[#C9DAEB] hover:-translate-y-0.5 px-4 py-3.5 transition-all"
-                  >
-                    <div className="shrink-0 h-10 w-10 rounded-lg bg-gradient-to-br from-[#2F8FCC] to-[#0F4C81] flex items-center justify-center shadow-[0_4px_12px_-4px_rgba(27,110,183,0.45)]">
-                      <Icon
-                        className="h-[18px] w-[18px] text-white"
-                        strokeWidth={2}
-                      />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-sm font-bold text-[#0F1B2D] leading-tight">
-                        {cleanAgentName(a.name)}
-                      </p>
-                      <p className="mt-1 text-sm text-[#5A6B82] leading-snug">
-                        {a.description}
-                      </p>
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </motion.div>
-
-            {/* CTA */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 1.15 }}
-              className="mt-9 sm:mt-11 flex justify-center"
-            >
-              <button
-                onClick={enterWorkspace}
-                autoFocus
-                className="group cursor-pointer inline-flex items-center gap-2 rounded-xl bg-[#1B6EB7] hover:bg-[#0F4C81] text-white px-7 py-3.5 text-sm font-bold uppercase tracking-[0.14em] shadow-[0_10px_24px_-10px_rgba(27,110,183,0.5)] hover:shadow-[0_14px_32px_-10px_rgba(15,76,129,0.6)] hover:-translate-y-0.5 transition-all"
-              >
-                Enter Workspace
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </button>
-            </motion.div>
-
-            {/* Footer credit */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.4, delay: 1.35 }}
-              className="mt-10 sm:mt-12 pt-6 border-t border-[#E5ECF4] text-center"
-            >
-              <p className="text-sm text-[#5A6B82] tracking-[0.18em] uppercase">
-                Powered by{" "}
-                <span className="font-semibold text-[#0F4C81]">
-                  My Hospitality Sales Pro
-                </span>{" "}
-                &amp;{" "}
-                <span className="font-semibold text-[#0F4C81]">
-                  Inntelligent CRM
-                </span>
-              </p>
-            </motion.div>
-          </div>
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-[#1B6EB7]/25 bg-[#E8F0F9] px-4 py-1.5 text-[11px] font-bold tracking-[0.22em] uppercase text-[#0F4C81]">
+            <Sparkles className="h-3 w-3 text-[#1B6EB7]" strokeWidth={2.5} />
+            My Sales TEAM AI
+          </span>
         </motion.div>
-      </div>
+
+        <motion.h1
+          initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.42, delay: 0.15 }}
+          className="mt-5 font-heading font-bold text-[#0F2547] leading-[1.05] tracking-tight
+                     text-[28px] sm:text-[40px] md:text-[50px] lg:text-[58px]"
+        >
+          {heading}
+        </motion.h1>
+
+        <motion.p
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+          transition={{ duration: 0.35, delay: 0.25 }}
+          className="mt-3 text-[#6B7B8F] text-sm sm:text-base font-medium"
+        >
+          11 agents online&nbsp;&nbsp;·&nbsp;&nbsp;2 funnels active
+        </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, delay: 0.32 }}
+          className="mt-7"
+        >
+          <button
+            onClick={() => router.push("/")}
+            className="group inline-flex items-center gap-2 rounded-xl bg-[#0F4C81]
+                       hover:bg-[#0A3660] text-white px-7 sm:px-9 py-3 sm:py-3.5
+                       text-sm font-bold uppercase tracking-[0.14em]
+                       shadow-[0_10px_24px_-10px_rgba(15,76,129,0.5)]
+                       hover:shadow-[0_14px_32px_-10px_rgba(15,76,129,0.65)]
+                       hover:-translate-y-0.5 transition-all"
+          >
+            Enter Workspace
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+          </button>
+        </motion.div>
+      </section>
+
+      {/* ── CONTENT ──────────────────────────────────────────────────── */}
+      <motion.div
+        initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.38 }}
+        className="max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-8 space-y-5 sm:space-y-6"
+      >
+
+        {/* Hotel context bar */}
+        {hotel && (
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2
+                          rounded-xl bg-[#0F4C81] px-5 sm:px-7 py-3.5 sm:py-4">
+            <Building2 className="h-4 w-4 text-white/55 shrink-0" strokeWidth={1.75} />
+            <span className="text-white text-[11px] sm:text-[12px] font-bold tracking-[0.18em] uppercase">
+              {hotel.name}
+            </span>
+            <span className="text-white/30 font-bold">·</span>
+            <span className="text-white/70 text-[11px] sm:text-[12px] font-semibold tracking-[0.12em] uppercase">
+              {hotel.rooms} Rooms
+            </span>
+            <span className="text-white/30 font-bold">·</span>
+            <span className="text-white/70 text-[11px] sm:text-[12px] font-semibold tracking-[0.12em] uppercase">
+              Slow {hotel.slowDays}
+            </span>
+          </div>
+        )}
+
+        {/* ── CALCULATED FUNNEL ──────────────────────────────────────── */}
+        <FunnelSection
+          label="Calculated Funnel — Big Revenue"
+          sublabel="The Calculated Funnel"
+          SubIcon={Target}
+          bg="bg-[#F0F5FB]"
+          divider="border-[#C5D8EE]"
+        >
+          <CaptainCard agent={captain} num={1} />
+          <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 sm:gap-5">
+            {calculatedTeam.map((a, i) => (
+              <AgentCard key={a.id} agent={a} num={i + 2} />
+            ))}
+          </div>
+        </FunnelSection>
+
+        {/* Diamond divider */}
+        <div className="flex items-center gap-4 py-1">
+          <span className="flex-1 h-px bg-[#1B6EB7]/10" />
+          <span className="text-[#1B6EB7]/35 text-lg font-bold leading-none select-none">◆</span>
+          <span className="flex-1 h-px bg-[#1B6EB7]/10" />
+        </div>
+
+        {/* ── HUSTLE FUNNEL ──────────────────────────────────────────── */}
+        <FunnelSection
+          label="Hustle Funnel — Backyard Revenue"
+          sublabel="The Hustle Funnel"
+          SubIcon={Zap}
+          bg="bg-[#EAF2FA]"
+          divider="border-[#B3D4EE]"
+          labelColor="text-[#1B6EB7]"
+        >
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 sm:gap-5">
+            {hustleTeam.map((a, i) => (
+              <AgentCard key={a.id} agent={a} num={hustleStart + i} />
+            ))}
+          </div>
+        </FunnelSection>
+
+        {/* Footer */}
+        <div className="text-center pt-2 pb-4">
+          <p className="text-[12px] text-[#6B7B8F] tracking-[0.12em] uppercase font-semibold">
+            Powered by My Hospitality Sales Pro &amp; Inntelligent CRM
+          </p>
+        </div>
+      </motion.div>
     </main>
+  );
+}
+
+// ─── Funnel Section wrapper ────────────────────────────────────────────────────
+
+function FunnelSection({
+  label, sublabel, SubIcon, bg, divider,
+  labelColor = "text-[#0F4C81]",
+  children,
+}: {
+  label: string;
+  sublabel: string;
+  SubIcon: React.ComponentType<{ className?: string; strokeWidth?: number }>;
+  bg: string;
+  divider: string;
+  labelColor?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className={`rounded-2xl ${bg} p-5 sm:p-7 lg:p-8`}>
+      <div className={`pb-4 mb-6 border-b ${divider}`}>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          <span className={`text-[10px] font-bold tracking-[0.28em] uppercase ${labelColor}`}>
+            {label}
+          </span>
+          <span className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-[#0F4C81]/65">
+            <SubIcon className="h-3.5 w-3.5" strokeWidth={2} />
+            {sublabel}
+          </span>
+        </div>
+      </div>
+      {children}
+    </div>
+  );
+}
+
+// ─── Captain Card ─────────────────────────────────────────────────────────────
+
+function CaptainCard({ agent, num }: { agent: (typeof AGENTS)[number]; num: number }) {
+  const photo = AGENT_PHOTOS[agent.id];
+
+  return (
+    <div className="relative rounded-2xl bg-white border-2 border-[#1B6EB7]/30
+                    shadow-[0_4px_24px_-6px_rgba(27,110,183,0.10)] overflow-hidden mb-1">
+
+      {/* CAPTAIN badge — always top-right */}
+      <span className="absolute top-4 right-4 sm:top-5 sm:right-5 z-10
+                       inline-flex items-center rounded-full bg-[#0F4C81]
+                       text-white text-[10px] font-bold tracking-[0.18em] uppercase
+                       px-3 py-1 leading-none">
+        Captain
+      </span>
+
+      <div className="p-5 sm:p-7 lg:p-8">
+        {/* Agent number */}
+        <p className="font-mono text-[11px] font-bold text-[#1B6EB7]/40 mb-4 leading-none">
+          {seqNum(num)}
+        </p>
+
+        {/* ── MOBILE layout (< md): photo + titles stacked ── */}
+        <div className="md:hidden">
+          <div className="flex items-center gap-4 mb-4">
+            {photo && (
+              <div className="shrink-0 h-16 w-16 rounded-full overflow-hidden ring-2 ring-[#1B6EB7]/12">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={photo} alt={agent.realName} className="h-full w-full object-cover" />
+              </div>
+            )}
+            <div className="min-w-0">
+              <h3 className="font-heading font-bold text-[#0F2547] text-[22px] sm:text-[26px] leading-tight">
+                {agent.realName}
+              </h3>
+              <p className="mt-1 text-[13px] sm:text-[14px] font-semibold text-[#1B6EB7] leading-tight">
+                {agent.jobTitle}
+              </p>
+              <p className="mt-1 text-[10px] font-bold tracking-[0.2em] uppercase text-[#0F4C81]/45">
+                {agent.mhspRole}
+              </p>
+            </div>
+          </div>
+          <p className="text-[13px] sm:text-[14px] text-[#6B7B8F] leading-relaxed">
+            {agent.description}
+          </p>
+          <div className="mt-3 flex flex-wrap items-center gap-2 text-[12px] font-semibold text-[#0F4C81]/55">
+            <span>Reports to ownership</span>
+            <span className="text-[#1B6EB7]/40 font-bold">·</span>
+            <span>Briefs all 10 agents</span>
+          </div>
+        </div>
+
+        {/* ── DESKTOP layout (md+): name | photo | description ── */}
+        <div className="hidden md:flex items-start gap-6 lg:gap-8">
+          {/* Name / titles */}
+          <div className="shrink-0 w-[200px] lg:w-[240px] xl:w-[260px]">
+            <h3 className="font-heading font-bold text-[#0F2547] text-[26px] lg:text-[30px] leading-tight">
+              {agent.realName}
+            </h3>
+            <p className="mt-1.5 text-[14px] lg:text-[15px] font-semibold text-[#1B6EB7] leading-tight">
+              {agent.jobTitle}
+            </p>
+            <p className="mt-2 text-[10px] font-bold tracking-[0.22em] uppercase text-[#0F4C81]/45">
+              {agent.mhspRole}
+            </p>
+          </div>
+
+          {/* Photo */}
+          {photo && (
+            <div className="shrink-0 h-[84px] w-[84px] lg:h-[96px] lg:w-[96px]
+                            rounded-full overflow-hidden ring-2 ring-[#1B6EB7]/15">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={photo} alt={agent.realName} className="h-full w-full object-cover" />
+            </div>
+          )}
+
+          {/* Description + footnote */}
+          <div className="flex-1 min-w-0">
+            <p className="text-[14px] text-[#6B7B8F] leading-relaxed">
+              {agent.description}
+            </p>
+            <div className="mt-4 flex flex-wrap items-center gap-2 text-[12px] font-semibold text-[#0F4C81]/55">
+              <span>Reports to ownership</span>
+              <span className="text-[#1B6EB7]/40 font-bold">·</span>
+              <span>Briefs all 10 agents</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Agent Card ───────────────────────────────────────────────────────────────
+
+function AgentCard({ agent, num }: { agent: (typeof AGENTS)[number]; num: number }) {
+  const photo = AGENT_PHOTOS[agent.id];
+
+  return (
+    <div className="group flex flex-col rounded-xl bg-white
+                    border border-[#E2E8F0]
+                    hover:border-[#1B6EB7]/35
+                    hover:-translate-y-1
+                    hover:shadow-[0_10px_32px_-8px_rgba(27,110,183,0.13)]
+                    p-5 sm:p-6
+                    transition-all duration-200">
+
+      {/* Top row: number + photo */}
+      <div className="flex items-start justify-between mb-4 sm:mb-5">
+        <span className="font-mono text-[11px] font-bold text-[#1B6EB7]/40 leading-none pt-0.5">
+          {seqNum(num)}
+        </span>
+        {photo && (
+          <div className="shrink-0 h-[52px] w-[52px] sm:h-[58px] sm:w-[58px]
+                          rounded-full overflow-hidden
+                          ring-2 ring-[#E2E8F0]
+                          group-hover:ring-[#1B6EB7]/20
+                          transition-all">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={photo} alt={agent.realName} className="h-full w-full object-cover" />
+          </div>
+        )}
+      </div>
+
+      {/* Name */}
+      <h3 className="font-heading font-bold text-[#0F2547]
+                     text-[18px] sm:text-[19px]
+                     leading-tight">
+        {agent.realName}
+      </h3>
+
+      {/* Job title */}
+      <p className="mt-1 text-[12px] sm:text-[13px] font-semibold text-[#1B6EB7] leading-tight">
+        {agent.jobTitle}
+      </p>
+
+      {/* MHSP role */}
+      <p className="mt-1.5 text-[9px] sm:text-[10px] font-bold tracking-[0.2em] uppercase text-[#0F4C81]/38">
+        {agent.mhspRole}
+      </p>
+
+      {/* Divider line */}
+      <div className="my-3 sm:my-4 h-px bg-[#E8EFF7]" />
+
+      {/* Description — grows to fill card height */}
+      <p className="flex-1 text-[12px] sm:text-[13px] text-[#6B7B8F] leading-[1.62]">
+        {agent.description}
+      </p>
+    </div>
   );
 }

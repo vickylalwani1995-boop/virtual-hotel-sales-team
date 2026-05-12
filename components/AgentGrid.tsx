@@ -29,7 +29,7 @@ const FUNNEL_ORDER: { key: Funnel; ids: string[] }[] = [
 export function AgentGrid({ profile }: { profile: string }) {
   let cardIndex = 0;
   return (
-    <div className="space-y-14 sm:space-y-16">
+    <div className="space-y-16 sm:space-y-20">
       {FUNNEL_ORDER.map(({ key, ids }) => {
         const meta = FUNNELS[key];
         const items = ids
@@ -89,33 +89,48 @@ function FunnelSection({
         {/* Top accent strip */}
         <div className={`h-1 w-full bg-gradient-to-r ${stripGradient}`} />
 
-        <div className="p-6 sm:p-7 flex items-start justify-between gap-4 flex-wrap">
-          <div className="flex items-start gap-4 min-w-0 flex-1">
-            <div
-              className={`shrink-0 h-14 w-14 rounded-xl flex items-center justify-center text-white shadow-[0_8px_22px_-8px_rgba(15,76,129,0.55)] ${iconTile}`}
-            >
-              <Icon className="h-6 w-6" strokeWidth={2.25} />
+        <div className="p-6 sm:p-8">
+          <div className="flex items-start justify-between gap-4 flex-wrap">
+            <div className="flex items-start gap-4 min-w-0 flex-1">
+              <div
+                className={`shrink-0 h-14 w-14 rounded-xl flex items-center justify-center text-white shadow-[0_8px_22px_-8px_rgba(15,76,129,0.55)] ${iconTile}`}
+              >
+                <Icon className="h-6 w-6" strokeWidth={2.25} />
+              </div>
+              <div className="min-w-0">
+                <p className="text-sm font-bold tracking-[0.18em] uppercase text-mhsp-gold">
+                  {tagline}
+                </p>
+                <h2 className="font-heading text-2xl sm:text-[28px] font-bold text-mhsp-navy mt-1 leading-tight">
+                  The {label} Funnel
+                </h2>
+              </div>
             </div>
-            <div className="min-w-0">
-              <p className="text-sm font-bold tracking-[0.18em] uppercase text-mhsp-gold">
-                {tagline}
-              </p>
-              <h2 className="font-heading text-2xl sm:text-[28px] font-bold text-mhsp-navy mt-1 leading-tight">
-                The {label} Funnel
-              </h2>
-              <p className="text-sm sm:text-base text-mhsp-muted mt-2 leading-relaxed max-w-2xl">
-                {description}
-              </p>
+
+            {/* Agent count pill */}
+            <div className="shrink-0 inline-flex items-baseline gap-1.5 rounded-full bg-[#F4F8FC] border border-[#DCE5EF] px-4 py-2">
+              <span className="font-numeric text-2xl font-bold text-mhsp-navy leading-none">
+                {items.length}
+              </span>
+              <span className="text-sm text-mhsp-muted font-semibold">
+                agents
+              </span>
             </div>
           </div>
 
-          {/* Agent count pill */}
-          <div className="shrink-0 inline-flex items-baseline gap-1.5 rounded-full bg-[#F4F8FC] border border-[#DCE5EF] px-4 py-2">
-            <span className="font-numeric text-2xl font-bold text-mhsp-navy leading-none">
-              {items.length}
-            </span>
-            <span className="text-sm text-mhsp-muted font-semibold">
-              agents
+          {/* Description + microcopy */}
+          <div className="mt-4 pl-[72px] flex flex-col sm:flex-row sm:items-center gap-3">
+            <p className="text-sm sm:text-base text-mhsp-muted leading-relaxed flex-1">
+              {description}
+            </p>
+            <span className={`shrink-0 inline-flex items-center rounded-full border px-3 py-1 text-sm font-semibold whitespace-nowrap ${
+              isCalculated
+                ? "border-[#C9DAEB] bg-[#EDF4FB] text-mhsp-navy"
+                : "border-[#B3D9F0] bg-[#E8F5FC] text-mhsp-teal"
+            }`}>
+              {isCalculated
+                ? "For high-value accounts"
+                : "For backyard revenue"}
             </span>
           </div>
         </div>

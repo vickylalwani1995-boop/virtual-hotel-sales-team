@@ -14,7 +14,7 @@
 - Independent + boutique hotels in America = 70% of inventory
 - They can't afford a full sales team like Hilton or Marriott
 - One tired manager handles everything: leads, RFPs, groups, follow-ups
-- Result: weak weekday occupancy, missed RFPs, dead repeat business
+- Result: slow weekday occupancy, missed RFPs, dead repeat business
 - **Industry term for what they need: Synergistic Selling**
 
 ### The phrase that unlocks it
