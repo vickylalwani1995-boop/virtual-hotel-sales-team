@@ -4,6 +4,8 @@ import { promises as fs } from "fs";
 import path from "path";
 import { resolveApiKey } from "@/lib/api-key";
 import { getAgent } from "@/lib/agents";
+import { loadPlaybook } from "@/lib/playbooks-server";
+import { AGENT_TO_PLAYBOOK } from "@/lib/playbooks";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -57,9 +59,37 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Read skill file
-    const skillPath = path.join(process.cwd(), "skills", `${agentId}.md`);
-    const skill = await fs.readFile(skillPath, "utf-8");
+    // Load playbook (new system) or fall back to skill file (legacy)
+    const playbookId = AGENT_TO_PLAYBOOK[agentId] || agentId;
+    const playbook = await loadPlaybook(playbookId);
+    let skill: string;
+
+    if (playbook) {
+      // Build system prompt from structured playbook
+      const m = playbook.metadata;
+      const s = playbook.sections;
+      skill = `You are ${m.realName}, ${m.designation}.
+
+${s.knowledge}
+
+${s.responseFormat}
+
+## YOUR TONE & VOICE
+${s.toneVoice}
+
+## YOUR CAPABILITIES
+${(m.capabilities || []).join(", ")}
+
+## HARD RULES
+${s.hardRules}
+
+## HOW I WORK WITH THE TEAM
+${s.teamWork}`;
+    } else {
+      // Legacy: read from /skills/ folder
+      const skillPath = path.join(process.cwd(), "skills", `${agentId}.md`);
+      skill = await fs.readFile(skillPath, "utf-8");
+    }
 
     const isInit =
       messages.length === 1 &&
@@ -73,7 +103,7 @@ export async function POST(req: NextRequest) {
 
     const conversationGuidance = isInit
       ? `First message - introduce yourself briefly (2 sentences) and ask one specific question about what the user wants help with. Reference the hotel profile.`
-      : `Engage in natural back-and-forth. Be concise by default, expand when asked. Use markdown for structure (bold, tables, lists). End with a follow-up question OR a suggested next action. Stay in character as the ${agent.name}.
+      : `Engage in natural back-and-forth. Be concise by default, expand when asked. Use markdown for structure (bold, tables, lists). End with a follow-up question OR a suggested next action. Stay in character as ${agent.realName}, ${agent.designation}.
 
 When drafting emails, use this exact format so the UI can detect them:
 ### Email Draft
@@ -88,7 +118,7 @@ When suggesting a call, use: **[CALL_ACTION: leadName | leadCompany]**
 When suggesting adding leads, format them as a markdown table with columns: Name | Title | Company | Email | Phone`;
 
     const workspaceSection = teamBriefing
-      ? `\n---\n\n${teamBriefing}\n\n**Your teammates (reference by name when relevant):**\nDonna Marie (Director of Sales · Funnel Captain) · Marcus Reed (Lead Generation · Backyard Hunter) · Sarah Chen (Outbound Sales · No-Fear Closer) · James Walsh (Account Manager · Top Account Steward) · Priya Sharma (RFP Closing · Big Revenue Closer) · Tom Walker (LNR Closing · Corporate Anchor) · Alex Brooks (Group Sales · Block Builder) · Sophie Lin (Meeting & Catering · Event Hustler) · Liam Chen (After-Sales · Repeat Magnet) · Nina Patel (Retention · Win-Back Specialist) · Maya Reddy (Revenue & Leadership · Revenue Reporter)\n\nNEVER say "I can't access other agents' data" — use the workspace above. Reference leads by name. Reference teammates' work by name.\n\nWhen the user asks you to send emails, draft them in the structured format above. When the user asks to call a lead, output the CALL_ACTION signal. When the user uploads leads data, acknowledge it and reference the extracted leads by name.\n`
+      ? `\n---\n\n${teamBriefing}\n\n**Your teammates (reference by name when relevant):**\nDonna Marie (Director of Sales) · Marcus Reed (Lead Generation) · Sarah Chen (Outbound Sales) · Priya Sharma (Group & RFP Sales) · Liam Chen (Customer Success & Retention) · Maya Reddy (Revenue Analytics)\n\nNEVER say "I can't access other agents' data" — use the workspace above. Reference leads by name. Reference teammates' work by name.\n\nWhen the user asks you to send emails, draft them in the structured format above. When the user asks to call a lead, output the CALL_ACTION signal. When the user uploads leads data, acknowledge it and reference the extracted leads by name.\n`
       : "";
 
     const system = `${skill}${workspaceSection}

@@ -82,9 +82,8 @@ function AgentDetail({ id }: { id: string }) {
   const Icon = iconForAgent(agent.id);
   const welcome = getWelcomeAgent(agent);
   const isCalculated = agent.funnel === "calculated";
-  const isLive = agent.tier === 1;
   const FunnelIcon = isCalculated ? Crosshair : Zap;
-  const cleanName = welcome.realName || agent.name.replace(/\s+Agent$/i, "");
+  const cleanName = welcome.realName;
 
   const iconTile = isCalculated
     ? "bg-gradient-to-br from-[#1E5896] to-[#0F4C81]"
@@ -143,7 +142,7 @@ function AgentDetail({ id }: { id: string }) {
               </div>
               <div className="min-w-0">
                 <p className="text-sm font-bold tracking-[0.18em] uppercase text-mhsp-gold">
-                  {welcome.mhspRole || agent.roleTitle}
+                  {welcome.designation}
                 </p>
                 <h1 className="font-heading mt-1 text-[28px] sm:text-[36px] lg:text-[44px] font-bold leading-[1.05] tracking-tight text-mhsp-navy">
                   {cleanName}
@@ -161,20 +160,10 @@ function AgentDetail({ id }: { id: string }) {
                     {isCalculated ? "Calculated" : "Hustle"}
                   </span>
                   <span
-                    className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-sm font-bold uppercase tracking-wider ${
-                      isLive
-                        ? "bg-mhsp-success/10 text-mhsp-success border-mhsp-success/30"
-                        : "bg-mhsp-gold/10 text-mhsp-gold border-mhsp-gold/30"
-                    }`}
+                    className="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-sm font-bold uppercase tracking-wider bg-mhsp-success/10 text-mhsp-success border-mhsp-success/30"
                   >
-                    <span
-                      className={`h-1.5 w-1.5 rounded-full ${
-                        isLive
-                          ? "bg-mhsp-success animate-pulse"
-                          : "bg-mhsp-gold"
-                      }`}
-                    />
-                    {isLive ? "Live" : "Ready"}
+                    <span className="h-1.5 w-1.5 rounded-full bg-mhsp-success animate-pulse" />
+                    Online
                   </span>
                 </div>
               </div>
@@ -217,7 +206,7 @@ function AgentDetail({ id }: { id: string }) {
               </h2>
 
               <div className="mt-5 pt-5 border-t border-[#E5ECF4] space-y-2">
-                {agent.id !== "00_director_of_sales" && (
+                {agent.id !== "01_director" && (
                   <p className="text-sm text-mhsp-muted">
                     <span className="font-semibold text-mhsp-navy">
                       Reports to:

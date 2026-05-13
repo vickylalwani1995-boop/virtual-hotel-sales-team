@@ -1,177 +1,149 @@
 export const AGENTS = [
   {
-    id: "00_director_of_sales",
+    id: "01_director",
     realName: "Donna Marie",
-    jobTitle: "Director of Sales",
-    mhspRole: "The Funnel Captain",
-    // backward-compat fields used by agents page and home page constellation
-    name: "Director of Sales",
-    roleTitle: "The Funnel Captain",
-    icon: "🎯",
-    color: "teal",
-    tier: 1,
-    funnel: "calculated",
+    designation: "Director of Sales",
+    funnel: "calculated" as const,
     isCaptain: true,
+    photo: "https://randomuser.me/api/portraits/women/44.jpg",
     description:
-      "Owns sales strategy. Briefs every agent. Reports to ownership.",
+      "Owns the weekly sales plan. Briefs every agent. Reports to ownership. The team's single source of truth.",
+    capabilities: [
+      "weekly sales plan",
+      "team coordination",
+      "ownership reporting",
+      "pipeline review",
+      "strategy setting",
+    ],
+    solvesProblem:
+      "No one is steering the ship — the Director creates the plan and makes sure every agent executes it.",
   },
   {
-    id: "01_lead_generation",
+    id: "02_lead_gen",
     realName: "Marcus Reed",
-    jobTitle: "Lead Generation",
-    mhspRole: "The Backyard Hunter",
-    name: "Backyard Lead Hunter",
-    roleTitle: "The Backyard Hunter",
-    icon: "🔍",
-    color: "green",
-    tier: 1,
-    funnel: "hustle",
+    designation: "Lead Generation Specialist",
+    funnel: "hustle" as const,
     isCaptain: false,
+    photo: "https://randomuser.me/api/portraits/men/32.jpg",
     description:
-      "Hunts local, corporate, group, medical, and event leads — the backyard kind that other hotels miss.",
+      "Hunts local, corporate, medical, and event leads — the backyard kind that other hotels miss.",
+    capabilities: [
+      "prospect list building",
+      "Apollo / data enrichment",
+      "local market research",
+      "segment discovery",
+      "lead scoring",
+    ],
+    solvesProblem:
+      "Empty pipeline — Marcus fills it with real, qualified prospects from the hotel's backyard.",
   },
   {
-    id: "02_outbound_sales",
+    id: "03_outbound",
     realName: "Sarah Chen",
-    jobTitle: "Outbound Sales",
-    mhspRole: "The No-Fear Closer",
-    name: "Outbound Sales Agent",
-    roleTitle: "The No-Fear Closer",
-    icon: "✈️",
-    color: "blue",
-    tier: 1,
-    funnel: "calculated",
+    designation: "Outbound Sales Manager",
+    funnel: "calculated" as const,
     isCaptain: false,
+    photo: "https://randomuser.me/api/portraits/women/26.jpg",
     description:
       "Writes cold emails, call scripts, and LinkedIn messages — no-fear outreach that lands meetings.",
+    capabilities: [
+      "cold email sequences",
+      "call scripts",
+      "LinkedIn outreach",
+      "follow-up cadences",
+      "A/B subject lines",
+    ],
+    solvesProblem:
+      "Leads exist but nobody is reaching out — Sarah writes the outreach that gets replies.",
   },
   {
-    id: "03_account_manager",
-    realName: "James Walsh",
-    jobTitle: "Account Relationship Manager",
-    mhspRole: "The Top Account Steward",
-    name: "Account Relationship Manager",
-    roleTitle: "The Top Account Steward",
-    icon: "🤝",
-    color: "purple",
-    tier: 2,
-    funnel: "calculated",
-    isCaptain: false,
-    description:
-      "Protects the big revenue you already have. Keeps top accounts warm and renewing.",
-  },
-  {
-    id: "04_rfp_closing",
+    id: "04_rfp_group",
     realName: "Priya Sharma",
-    jobTitle: "RFP Closing",
-    mhspRole: "The Big Revenue Closer",
-    name: "RFP Closing Agent",
-    roleTitle: "The Big Revenue Closer",
-    icon: "📄",
-    color: "orange",
-    tier: 2,
-    funnel: "calculated",
+    designation: "Group & RFP Sales Lead",
+    funnel: "calculated" as const,
     isCaptain: false,
+    photo: "https://randomuser.me/api/portraits/women/67.jpg",
     description:
-      "Reads RFPs in seconds. Writes brand-level corporate responses that win.",
+      "Closes RFPs, qualifies group inquiries, and builds room blocks — the big-revenue closer.",
+    capabilities: [
+      "RFP response writing",
+      "group inquiry qualification",
+      "room block proposals",
+      "LNR rate structures",
+      "concession strategy",
+    ],
+    solvesProblem:
+      "RFPs go unanswered and group leads slip away — Priya closes them with polished proposals.",
   },
   {
-    id: "05_lnr_closing",
-    realName: "Tom Walker",
-    jobTitle: "LNR Closing",
-    mhspRole: "The Corporate Anchor",
-    name: "LNR Closing Agent",
-    roleTitle: "The Corporate Anchor",
-    icon: "💼",
-    color: "amber",
-    tier: 2,
-    funnel: "calculated",
-    isCaptain: false,
-    description:
-      "Handles Local Negotiated Rates. Anchors your calendar with predictable corporate volume.",
-  },
-  {
-    id: "06_group_sales",
-    realName: "Alex Brooks",
-    jobTitle: "Group Sales",
-    mhspRole: "The Block Builder",
-    name: "Group Sales Agent",
-    roleTitle: "The Block Builder",
-    icon: "👥",
-    color: "indigo",
-    tier: 2,
-    funnel: "hustle",
-    isCaptain: false,
-    description:
-      "Qualifies group inquiries. Builds room blocks for community events and associations.",
-  },
-  {
-    id: "07_meeting_catering",
-    realName: "Sophie Lin",
-    jobTitle: "Meeting & Catering",
-    mhspRole: "The Event Hustler",
-    name: "Meeting & Catering Agent",
-    roleTitle: "The Event Hustler",
-    icon: "🍽️",
-    color: "pink",
-    tier: 2,
-    funnel: "hustle",
-    isCaptain: false,
-    description:
-      "Qualifies meeting + catering inquiries. Pitches the F&B opportunity local hotels miss.",
-  },
-  {
-    id: "08_after_sales",
+    id: "05_retention",
     realName: "Liam Chen",
-    jobTitle: "After-Sales Service",
-    mhspRole: "The Repeat Magnet",
-    name: "After-Sales Service Agent",
-    roleTitle: "The Repeat Magnet",
-    icon: "💝",
-    color: "red",
-    tier: 1,
-    funnel: "hustle",
+    designation: "Customer Success & Retention Manager",
+    funnel: "hustle" as const,
     isCaptain: false,
+    photo: "https://randomuser.me/api/portraits/men/75.jpg",
     description:
-      "Sends post-stay follow-up and review requests — turns one-time guests into repeat backyard revenue.",
+      "Post-stay follow-up, review requests, win-back campaigns — turns one-time guests into repeat revenue.",
+    capabilities: [
+      "post-stay sequences",
+      "review generation",
+      "win-back campaigns",
+      "loyalty offers",
+      "repeat-stay tracking",
+    ],
+    solvesProblem:
+      "Guests check out and never come back — Liam builds the repeat-stay engine.",
   },
   {
-    id: "09_retention",
-    realName: "Nina Patel",
-    jobTitle: "Customer Revenue & Retention",
-    mhspRole: "The Win-Back Specialist",
-    name: "Customer Revenue & Retention Agent",
-    roleTitle: "The Win-Back Specialist",
-    icon: "🔄",
-    color: "emerald",
-    tier: 1,
-    funnel: "hustle",
-    isCaptain: false,
-    description:
-      "Finds repeat-booking opportunities. Wins back lapsed local accounts before competitors do.",
-  },
-  {
-    id: "10_revenue_leadership",
+    id: "06_revenue",
     realName: "Maya Reddy",
-    jobTitle: "Revenue & Leadership",
-    mhspRole: "The Revenue Reporter",
-    name: "Revenue & Leadership Agent",
-    roleTitle: "The Revenue Reporter",
-    icon: "📊",
-    color: "violet",
-    tier: 1,
-    funnel: "calculated",
+    designation: "Revenue Analytics Manager",
+    funnel: "calculated" as const,
     isCaptain: false,
+    photo: "https://randomuser.me/api/portraits/women/11.jpg",
     description:
-      "Creates dashboards and weekly leadership reports. Proves the explosive revenue to ownership.",
+      "Creates dashboards, weekly leadership reports, and pipeline analytics — proves the revenue to ownership.",
+    capabilities: [
+      "weekly reports",
+      "pipeline dashboards",
+      "KPI tracking",
+      "segment analysis",
+      "revenue forecasting",
+    ],
+    solvesProblem:
+      "Ownership wants proof — Maya builds the reports that show explosive revenue growth.",
   },
 ] as const;
 
 export type Agent = (typeof AGENTS)[number];
+export type AgentId = Agent["id"];
 export type Funnel = "calculated" | "hustle";
 
-export const getAgent = (id: string): Agent | undefined =>
-  AGENTS.find((a) => a.id === id);
+/** Map from old 11-agent IDs to new 6-agent IDs for backward compat */
+export const AGENT_REDIRECTS: Record<string, string> = {
+  "00_director_of_sales": "01_director",
+  "01_lead_generation": "02_lead_gen",
+  "02_outbound_sales": "03_outbound",
+  "03_account_manager": "05_retention",
+  "04_rfp_closing": "04_rfp_group",
+  "05_lnr_closing": "04_rfp_group",
+  "06_group_sales": "04_rfp_group",
+  "07_meeting_catering": "04_rfp_group",
+  "08_after_sales": "05_retention",
+  "09_retention": "05_retention",
+  "10_revenue_leadership": "06_revenue",
+};
+
+export const getAgent = (id: string): Agent | undefined => {
+  const direct = AGENTS.find((a) => a.id === id);
+  if (direct) return direct;
+  const redirected = AGENT_REDIRECTS[id];
+  if (redirected) return AGENTS.find((a) => a.id === redirected);
+  return undefined;
+};
+
+export const resolveAgentId = (id: string): string =>
+  AGENT_REDIRECTS[id] ?? id;
 
 export const FUNNELS: Record<
   Funnel,
@@ -188,7 +160,7 @@ export const FUNNELS: Record<
     tagline: "Big Account Hunters",
     description:
       "Direct relationships with the top accounts. Big revenue. Brand-level focus.",
-    emoji: "🎯",
+    emoji: "crosshair",
     accentClass: "text-mhsp-navy",
   },
   hustle: {
@@ -196,7 +168,7 @@ export const FUNNELS: Record<
     tagline: "Backyard Grassroots",
     description:
       "First one to convert the local opportunity wins. Medical, sports, construction, weddings, repeat stays - all the backyard revenue most hotels miss.",
-    emoji: "⚡",
+    emoji: "zap",
     accentClass: "text-mhsp-teal",
   },
 };

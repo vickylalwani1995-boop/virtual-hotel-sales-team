@@ -12,6 +12,10 @@ import {
   Square,
   Mail,
   ArrowUpDown,
+  Crosshair,
+  Zap,
+  Bot,
+  PenLine,
 } from "lucide-react";
 
 function LinkedinIcon({ className = "" }: { className?: string }) {
@@ -186,7 +190,7 @@ export default function LeadsPage() {
                   title="Wired in Phase 3"
                   className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-mhsp-cream-warm/40 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <span className="text-xl">🎯</span>
+                  <Crosshair className="h-5 w-5 text-mhsp-navy" />
                   <div>
                     <p className="text-sm font-semibold text-mhsp-navy">
                       Pull from Apollo
@@ -201,7 +205,7 @@ export default function LeadsPage() {
                   title="Wired in Phase 3"
                   className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-mhsp-cream-warm/40 transition-colors disabled:opacity-50 disabled:cursor-not-allowed border-t border-mhsp-line/60"
                 >
-                  <span className="text-xl">⚡</span>
+                  <Zap className="h-5 w-5 text-mhsp-teal" />
                   <div>
                     <p className="text-sm font-semibold text-mhsp-navy">
                       Pull from Vibe Prospecting
@@ -212,11 +216,11 @@ export default function LeadsPage() {
                   </div>
                 </button>
                 <Link
-                  href="/agent/01_lead_generation?profile=test"
+                  href="/agent/02_lead_gen?profile=test"
                   className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-mhsp-cream-warm/40 transition-colors border-t border-mhsp-line/60"
                   onClick={() => setAddMenuOpen(false)}
                 >
-                  <span className="text-xl">🤖</span>
+                  <Bot className="h-5 w-5 text-mhsp-navy" />
                   <div>
                     <p className="text-sm font-semibold text-mhsp-navy">
                       Generate via Agent
@@ -243,8 +247,8 @@ export default function LeadsPage() {
       {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-6">
         <Stat label="Total" value={stats.total} accent="navy" />
-        <Stat label="🎯 Calculated" value={stats.calc} accent="navy" />
-        <Stat label="⚡ Hustle" value={stats.hustle} accent="teal" />
+        <Stat label="Calculated" value={stats.calc} accent="navy" icon={Crosshair} />
+        <Stat label="Hustle" value={stats.hustle} accent="teal" icon={Zap} />
         <Stat label="New" value={stats.newCount} accent="gold" />
         <Stat label="Verified emails" value={stats.verified} accent="success" />
       </div>
@@ -270,8 +274,8 @@ export default function LeadsPage() {
           }
           options={[
             { value: "all", label: "All funnels" },
-            { value: "calculated", label: "🎯 Calculated" },
-            { value: "hustle", label: "⚡ Hustle" },
+            { value: "calculated", label: "Calculated" },
+            { value: "hustle", label: "Hustle" },
           ]}
         />
         <FilterSelect
@@ -295,10 +299,10 @@ export default function LeadsPage() {
           }
           options={[
             { value: "all", label: "All sources" },
-            { value: "apollo", label: "🎯 Apollo" },
-            { value: "vibe", label: "⚡ Vibe" },
-            { value: "agent", label: "🤖 Agent" },
-            { value: "manual", label: "✍️ Manual" },
+            { value: "apollo", label: "Apollo" },
+            { value: "vibe", label: "Vibe" },
+            { value: "agent", label: "Agent" },
+            { value: "manual", label: "Manual" },
           ]}
         />
       </div>
@@ -573,10 +577,12 @@ function Stat({
   label,
   value,
   accent,
+  icon: IconComp,
 }: {
   label: string;
   value: number;
   accent: "navy" | "gold" | "teal" | "success";
+  icon?: React.ComponentType<{ className?: string }>;
 }) {
   const accentClass = {
     navy: "text-mhsp-navy",
@@ -586,7 +592,8 @@ function Stat({
   }[accent];
   return (
     <div className="bg-white rounded-2xl border border-mhsp-line p-3 shadow-[0_2px_10px_-4px_rgba(15,76,129,0.06)]">
-      <p className="text-[10px] font-semibold tracking-[0.16em] uppercase text-mhsp-muted">
+      <p className="text-[10px] font-semibold tracking-[0.16em] uppercase text-mhsp-muted flex items-center gap-1">
+        {IconComp && <IconComp className="h-3 w-3" />}
         {label}
       </p>
       <p className={`font-numeric text-2xl font-bold mt-0.5 ${accentClass}`}>
@@ -599,7 +606,7 @@ function Stat({
 function EmptyState({ totalCount }: { totalCount: number }) {
   return (
     <div className="bg-white border border-mhsp-line border-dashed rounded-2xl p-12 text-center">
-      <div className="text-5xl mb-3 opacity-40">🎯</div>
+      <Crosshair className="h-12 w-12 mb-3 opacity-40 text-mhsp-navy mx-auto" />
       <h3 className="font-display text-xl text-mhsp-navy">
         {totalCount === 0
           ? "No leads yet"

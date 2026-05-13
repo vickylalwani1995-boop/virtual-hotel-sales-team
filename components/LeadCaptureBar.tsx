@@ -25,7 +25,7 @@ export function LeadCaptureBar({
   agentId: string;
   hotelProfile?: string;
 }) {
-  const isLeadGenAgent = agentId === "01_lead_generation";
+  const isLeadGenAgent = agentId === "02_lead_gen";
 
   const parsed = useMemo(
     () => (isLeadGenAgent && hasLeadTable(content) ? parseLeadsFromMarkdown(content) : []),

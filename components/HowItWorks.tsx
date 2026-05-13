@@ -3,9 +3,8 @@ import {
   Zap,
   Check,
   Sparkles,
-  ArrowRight,
+  User,
 } from "lucide-react";
-import Link from "next/link";
 
 const CALCULATED = {
   bullets: [
@@ -15,7 +14,7 @@ const CALCULATED = {
     "Manages top-account relationships",
     "Reports to ownership weekly",
   ],
-  agentCount: 6,
+  agentCount: 4,
   bestFor: "Hotels chasing $1M+ in big-account revenue",
 };
 
@@ -27,7 +26,7 @@ const HUSTLE = {
     "Mines repeat-stay opportunities",
     "Wins back lapsed local accounts",
   ],
-  agentCount: 5,
+  agentCount: 2,
   bestFor: "Hotels filling slow days with backyard wins",
 };
 
@@ -110,13 +109,24 @@ export function HowItWorks() {
           <p className="mt-2 text-base sm:text-lg text-mhsp-muted leading-relaxed">
             the MHSP method, on autopilot, every day.
           </p>
-          <Link
-            href="/agents"
-            className="mt-7 inline-flex items-center gap-2 text-sm font-bold uppercase tracking-[0.14em] text-[#1B6EB7] hover:text-[#0F4C81] transition-colors group whitespace-nowrap"
-          >
-            Meet the 11 specialists
-            <ArrowRight className="h-4 w-4 shrink-0 transition-transform group-hover:translate-x-1" />
-          </Link>
+
+          {/* Silhouette row */}
+          <div className="mt-8 flex items-center justify-center gap-2">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div
+                key={i}
+                className="h-9 w-9 rounded-full bg-[#E2E8F0] flex items-center justify-center opacity-40"
+              >
+                <User className="h-4 w-4 text-[#6B7B8F]" />
+              </div>
+            ))}
+          </div>
+          <p className="mt-3 text-sm font-semibold text-[#0F4C81]">
+            6 specialists ready to assemble
+          </p>
+          <p className="mt-1 text-xs text-[#6B7B8F]">
+            Brief a hotel above to unlock your team &rarr;
+          </p>
         </div>
       </div>
     </section>

@@ -163,7 +163,7 @@ export default function DashboardPage() {
     }
     return AGENTS.map((a) => ({
       id: a.id,
-      name: a.name.replace(/\s+Agent$/i, ""),
+      name: a.realName,
       runs: counts.get(a.id) ?? 0,
       funnel: a.funnel,
     }))
@@ -323,7 +323,7 @@ export default function DashboardPage() {
               {activityByAgent.length === 0 ? (
                 <EmptyInline
                   message="No agent runs yet."
-                  ctaHref="/agent/00_director_of_sales"
+                  ctaHref="/agent/01_director"
                   ctaLabel="Start with the Director of Sales"
                 />
               ) : (
@@ -391,7 +391,7 @@ export default function DashboardPage() {
                 {statusData.length === 0 ? (
                   <EmptyInline
                     message="No leads yet."
-                    ctaHref="/agent/01_lead_generation"
+                    ctaHref="/agent/02_lead_gen"
                     ctaLabel="Open Lead Generation"
                   />
                 ) : (

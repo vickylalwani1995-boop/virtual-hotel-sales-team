@@ -6,22 +6,17 @@ const FUNNEL_ORDER: { key: Funnel; ids: string[] }[] = [
   {
     key: "calculated",
     ids: [
-      "00_director_of_sales",
-      "02_outbound_sales",
-      "04_rfp_closing",
-      "05_lnr_closing",
-      "03_account_manager",
-      "10_revenue_leadership",
+      "01_director",
+      "03_outbound",
+      "04_rfp_group",
+      "06_revenue",
     ],
   },
   {
     key: "hustle",
     ids: [
-      "01_lead_generation",
-      "06_group_sales",
-      "07_meeting_catering",
-      "08_after_sales",
-      "09_retention",
+      "02_lead_gen",
+      "05_retention",
     ],
   },
 ];
@@ -84,53 +79,37 @@ function FunnelSection({
 
   return (
     <section>
-      {/* Funnel banner — premium card style */}
-      <div className="relative overflow-hidden rounded-2xl bg-white border border-[#E5ECF4] shadow-[0_20px_50px_-25px_rgba(15,76,129,0.16),0_4px_14px_-4px_rgba(15,76,129,0.06)] mb-6">
-        {/* Top accent strip */}
-        <div className={`h-1 w-full bg-gradient-to-r ${stripGradient}`} />
-
-        <div className="p-6 sm:p-8">
-          <div className="flex items-start justify-between gap-4 flex-wrap">
-            <div className="flex items-start gap-4 min-w-0 flex-1">
-              <div
-                className={`shrink-0 h-14 w-14 rounded-xl flex items-center justify-center text-white shadow-[0_8px_22px_-8px_rgba(15,76,129,0.55)] ${iconTile}`}
-              >
-                <Icon className="h-6 w-6" strokeWidth={2.25} />
-              </div>
-              <div className="min-w-0">
-                <p className="text-sm font-bold tracking-[0.18em] uppercase text-mhsp-gold">
-                  {tagline}
-                </p>
-                <h2 className="font-heading text-2xl sm:text-[28px] font-bold text-mhsp-navy mt-1 leading-tight">
-                  The {label} Funnel
-                </h2>
-              </div>
-            </div>
-
-            {/* Agent count pill */}
-            <div className="shrink-0 inline-flex items-baseline gap-1.5 rounded-full bg-[#F4F8FC] border border-[#DCE5EF] px-4 py-2">
-              <span className="font-numeric text-2xl font-bold text-mhsp-navy leading-none">
-                {items.length}
-              </span>
-              <span className="text-sm text-mhsp-muted font-semibold">
-                agents
-              </span>
-            </div>
+      {/* Funnel banner */}
+      <div className="relative overflow-hidden rounded-2xl bg-white border border-[#E5ECF4] mb-6">
+        <div className="flex items-center gap-4 sm:gap-5 p-5 sm:p-6">
+          <div
+            className={`shrink-0 h-12 w-12 rounded-xl flex items-center justify-center text-white shadow-md ${iconTile}`}
+          >
+            <Icon className="h-5 w-5" strokeWidth={2.25} />
           </div>
-
-          {/* Description + microcopy */}
-          <div className="mt-4 pl-[72px] flex flex-col sm:flex-row sm:items-center gap-3">
-            <p className="text-sm sm:text-base text-mhsp-muted leading-relaxed flex-1">
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-3 flex-wrap">
+              <h2 className="font-heading text-xl sm:text-2xl font-bold text-mhsp-navy leading-tight">
+                {label} Funnel
+              </h2>
+              <span className={`shrink-0 inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-bold tracking-[0.08em] uppercase whitespace-nowrap ${
+                isCalculated
+                  ? "border-[#C9DAEB] bg-[#EDF4FB] text-mhsp-navy"
+                  : "border-[#B3D9F0] bg-[#E8F5FC] text-mhsp-teal"
+              }`}>
+                {isCalculated ? "Big Revenue" : "Backyard Revenue"}
+              </span>
+            </div>
+            <p className="mt-1 text-sm text-mhsp-muted leading-relaxed line-clamp-1">
               {description}
             </p>
-            <span className={`shrink-0 inline-flex items-center rounded-full border px-3 py-1 text-sm font-semibold whitespace-nowrap ${
-              isCalculated
-                ? "border-[#C9DAEB] bg-[#EDF4FB] text-mhsp-navy"
-                : "border-[#B3D9F0] bg-[#E8F5FC] text-mhsp-teal"
-            }`}>
-              {isCalculated
-                ? "For high-value accounts"
-                : "For backyard revenue"}
+          </div>
+          <div className="shrink-0 hidden sm:flex items-baseline gap-1.5 rounded-full bg-[#F4F8FC] border border-[#E5ECF4] px-4 py-2">
+            <span className="font-numeric text-2xl font-bold text-mhsp-navy leading-none">
+              {items.length}
+            </span>
+            <span className="text-sm text-mhsp-muted font-medium">
+              agents
             </span>
           </div>
         </div>

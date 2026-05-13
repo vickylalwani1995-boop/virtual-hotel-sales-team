@@ -26,12 +26,12 @@ export function TeamPreview() {
             Meet your AI sales team.
           </h2>
           <p className="mt-5 text-base sm:text-lg lg:text-[19px] text-mhsp-muted leading-relaxed">
-            One Director of Sales plus 10 specialists, each trained on the MHSP
+            One Director of Sales plus 5 specialists, each trained on the MHSP
             methodology and ready to work the moment you describe your hotel.
           </p>
         </div>
 
-        {/* All 11 agents */}
+        {/* All 6 agents */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
           {AGENTS.map((agent, i) => (
             <AgentTeamCard key={agent.id} agent={agent} index={i} />
@@ -61,7 +61,6 @@ function AgentTeamCard({
   index: number;
 }) {
   const Icon = iconForAgent(agent.id);
-  const isLive = agent.tier === 1;
   const isCalculated = agent.funnel === "calculated";
 
   const iconTile = isCalculated
@@ -69,7 +68,7 @@ function AgentTeamCard({
     : "bg-gradient-to-br from-[#2F8FCC] to-[#1B6EB7]";
 
   const FunnelIcon = isCalculated ? Crosshair : Zap;
-  const cleanName = agent.name.replace(/\s+Agent$/i, "");
+  const cleanName = agent.realName;
 
   return (
     <Link
@@ -97,24 +96,16 @@ function AgentTeamCard({
           <Icon className="h-[22px] w-[22px]" strokeWidth={2.25} />
         </div>
         <span
-          className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-bold tracking-wider uppercase ${
-            isLive
-              ? "bg-mhsp-success/10 text-mhsp-success border border-mhsp-success/30"
-              : "bg-mhsp-gold/10 text-mhsp-gold border border-mhsp-gold/30"
-          }`}
+          className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-bold tracking-wider uppercase bg-mhsp-success/10 text-mhsp-success border border-mhsp-success/30"
         >
-          <span
-            className={`h-1.5 w-1.5 rounded-full ${
-              isLive ? "bg-mhsp-success animate-pulse" : "bg-mhsp-gold"
-            }`}
-          />
-          {isLive ? "Live" : "Ready"}
+          <span className="h-1.5 w-1.5 rounded-full bg-mhsp-success animate-pulse" />
+          Online
         </span>
       </div>
 
       {/* Role title (eyebrow) */}
       <p className="mt-5 text-sm font-bold tracking-[0.16em] uppercase text-mhsp-gold">
-        {agent.roleTitle}
+        {agent.designation}
       </p>
 
       {/* Name */}

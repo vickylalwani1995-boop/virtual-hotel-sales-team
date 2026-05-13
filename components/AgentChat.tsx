@@ -23,6 +23,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 import type { Agent } from "@/lib/agents";
+import { iconForAgent } from "@/lib/agent-icons";
 import {
   ChatMessage,
   clearChat,
@@ -275,7 +276,7 @@ export function AgentChat({
         // Surface in the Notification Center
         addNotification({
           type: "completed",
-          title: `${agent.name} finished`,
+          title: `${agent.realName} finished`,
           description: aMsg.content.replace(/\s+/g, " ").slice(0, 120),
           agentId: agent.id,
           actionUrl: `/agent/${agent.id}`,
@@ -284,7 +285,7 @@ export function AgentChat({
         logWorkspaceActivity(
           agent.id,
           agent.realName,
-          `responded in ${agent.jobTitle} chat`
+          `responded in ${agent.designation} chat`
         );
       }
 
@@ -337,7 +338,7 @@ export function AgentChat({
 
   function handleDownload() {
     const lines: string[] = [];
-    lines.push(`# Conversation with ${agent.name}`);
+    lines.push(`# Conversation with ${agent.realName}`);
     if (hotelProfile) {
       const firstLine = hotelProfile.split("\n")[0]?.trim();
       const hotelName =
@@ -349,7 +350,7 @@ export function AgentChat({
     lines.push(`Date: ${new Date().toISOString()}`);
     lines.push("");
     for (const m of messages) {
-      lines.push(`## ${m.role === "user" ? "You" : agent.name}`);
+      lines.push(`## ${m.role === "user" ? "You" : agent.realName}`);
       lines.push("");
       lines.push(m.content);
       lines.push("");
@@ -405,7 +406,9 @@ export function AgentChat({
   const headerTint =
     FUNNEL_TINT[agent.funnel as "calculated" | "hustle"] ||
     "bg-mhsp-cream-warm/40 border-mhsp-line";
-  const avatarGrad = AVATAR_GRADIENT[agent.color] ?? AVATAR_GRADIENT.teal;
+  const avatarGrad = agent.funnel === "calculated"
+    ? "from-[#1E5896] to-[#0F4C81]"
+    : "from-[#2F8FCC] to-[#1B6EB7]";
   const welcome = getWelcomeAgent(agent);
 
   const chips = useMemo(() => quickActionsFor(agent.id), [agent.id]);
@@ -424,9 +427,9 @@ export function AgentChat({
           </div>
         ) : (
           <div
-            className={`shrink-0 w-9 h-9 rounded-full bg-gradient-to-br ${avatarGrad} flex items-center justify-center text-lg shadow-sm`}
+            className={`shrink-0 w-9 h-9 rounded-full bg-gradient-to-br ${avatarGrad} flex items-center justify-center shadow-sm`}
           >
-            {agent.icon}
+            {(() => { const Icon = iconForAgent(agent.id); return <Icon className="h-5 w-5 text-white" />; })()}
           </div>
         )}
         <div className="flex-1 min-w-0">
@@ -435,7 +438,7 @@ export function AgentChat({
           </h2>
           <div className="flex items-center gap-1.5 mt-0.5">
             <span className="h-1.5 w-1.5 rounded-full bg-mhsp-success animate-pulse" />
-            <span className="text-[12px] text-mhsp-muted">{welcome.jobTitle}</span>
+            <span className="text-[12px] text-mhsp-muted">{welcome.designation}</span>
             {demoMode && (
               <span className="ml-1.5 inline-flex items-center gap-1 rounded-full bg-mhsp-success/10 border border-mhsp-success/30 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-mhsp-success">
                 Demo
@@ -492,7 +495,7 @@ export function AgentChat({
       >
         {showWelcome && (
           <Welcome
-            icon={agent.icon}
+            agentId={agent.id}
             avatarGrad={avatarGrad}
             displayName={welcome.realName}
             chips={chips}
@@ -510,7 +513,6 @@ export function AgentChat({
                 key={m.id}
                 content={m.content}
                 avatarGrad={avatarGrad}
-                icon={agent.icon}
                 agentId={agent.id}
                 hotelProfile={hotelProfile ?? undefined}
               />
@@ -522,13 +524,12 @@ export function AgentChat({
             content={streamingMessage}
             streaming
             avatarGrad={avatarGrad}
-            icon={agent.icon}
             agentId={agent.id}
             hotelProfile={hotelProfile ?? undefined}
           />
         )}
         {isStreaming && !streamingMessage && (
-          <TypingIndicator avatarGrad={avatarGrad} icon={agent.icon} />
+          <TypingIndicator avatarGrad={avatarGrad} agentId={agent.id} />
         )}
       </div>
 
@@ -596,7 +597,7 @@ export function AgentChat({
         </div>
         {isStreaming && (
           <p className="text-[10px] text-mhsp-muted mt-1.5 px-1">
-            {agent.name} is responding…
+            {agent.realName} is responding…
           </p>
         )}
       </div>
@@ -624,7 +625,7 @@ export function AgentChat({
                 <div>
                   <p className="eyebrow">Skill Definition</p>
                   <h3 className="font-display text-lg text-mhsp-navy mt-0.5">
-                    {agent.name}
+                    {agent.realName}
                   </h3>
                 </div>
                 <button
@@ -649,24 +650,25 @@ export function AgentChat({
 }
 
 function Welcome({
-  icon,
+  agentId,
   avatarGrad,
   displayName,
   chips,
   onChip,
 }: {
-  icon: string;
+  agentId: string;
   avatarGrad: string;
   displayName: string;
   chips: string[];
   onChip: (text: string) => void;
 }) {
+  const Icon = iconForAgent(agentId);
   return (
     <div className="text-center py-10">
       <div
-        className={`mx-auto w-16 h-16 rounded-full bg-gradient-to-br ${avatarGrad} flex items-center justify-center text-3xl shadow-md mb-4`}
+        className={`mx-auto w-16 h-16 rounded-full bg-gradient-to-br ${avatarGrad} flex items-center justify-center shadow-md mb-4`}
       >
-        {icon}
+        <Icon className="h-8 w-8 text-white" />
       </div>
       <h3 className="font-display text-xl text-mhsp-navy">
         Start the conversation
@@ -702,18 +704,17 @@ function UserBubble({ content }: { content: string }) {
 function AssistantBubble({
   content,
   avatarGrad,
-  icon,
   streaming = false,
   agentId,
   hotelProfile,
 }: {
   content: string;
   avatarGrad: string;
-  icon: string;
   streaming?: boolean;
   agentId?: string;
   hotelProfile?: string;
 }) {
+  const Icon = iconForAgent(agentId ?? "");
   return (
     <motion.div
       initial={{ opacity: 0, y: 6 }}
@@ -722,9 +723,9 @@ function AssistantBubble({
       className="flex items-start gap-2.5"
     >
       <div
-        className={`shrink-0 w-8 h-8 rounded-full bg-gradient-to-br ${avatarGrad} flex items-center justify-center text-base shadow-sm`}
+        className={`shrink-0 w-8 h-8 rounded-full bg-gradient-to-br ${avatarGrad} flex items-center justify-center shadow-sm`}
       >
-        {icon}
+        <Icon className="h-4 w-4 text-white" />
       </div>
       <div className="max-w-[80%] rounded-2xl rounded-tl-sm bg-white border border-mhsp-line text-mhsp-text px-4 py-3 text-[14px] leading-relaxed shadow-[0_2px_8px_-2px_rgba(11,36,71,0.08)]">
         <div className="prose prose-sm max-w-none prose-p:my-2 prose-p:leading-relaxed prose-ul:my-2 prose-ol:my-2 prose-li:my-0.5 prose-headings:font-display prose-headings:text-mhsp-navy prose-h1:text-base prose-h2:text-base prose-h3:text-sm prose-strong:text-mhsp-navy prose-table:text-[12px] prose-th:bg-mhsp-navy prose-th:text-white prose-th:p-2 prose-td:p-2 prose-td:border prose-td:border-mhsp-line prose-th:border prose-th:border-mhsp-navy prose-code:bg-mhsp-cream-warm prose-code:text-mhsp-navy prose-code:rounded prose-code:px-1 prose-code:before:content-[''] prose-code:after:content-['']">
@@ -747,17 +748,18 @@ function AssistantBubble({
 
 function TypingIndicator({
   avatarGrad,
-  icon,
+  agentId,
 }: {
   avatarGrad: string;
-  icon: string;
+  agentId: string;
 }) {
+  const Icon = iconForAgent(agentId);
   return (
     <div className="flex items-start gap-2.5">
       <div
-        className={`shrink-0 w-8 h-8 rounded-full bg-gradient-to-br ${avatarGrad} flex items-center justify-center text-base shadow-sm`}
+        className={`shrink-0 w-8 h-8 rounded-full bg-gradient-to-br ${avatarGrad} flex items-center justify-center shadow-sm`}
       >
-        {icon}
+        <Icon className="h-4 w-4 text-white" />
       </div>
       <div className="rounded-2xl rounded-tl-sm bg-white border border-mhsp-line px-4 py-3 shadow-sm">
         <div className="flex items-center gap-1">

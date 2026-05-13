@@ -231,7 +231,7 @@ export default function ActivityPage() {
               <option value="all">By agent: All</option>
               {AGENTS.map((a) => (
                 <option key={a.id} value={a.id}>
-                  {a.name}
+                  {a.realName}
                 </option>
               ))}
             </select>
@@ -345,7 +345,7 @@ function EntryRow({ entry, index }: { entry: ActivityEntry; index: number }) {
         : "bg-gradient-to-br from-[#2F8FCC] to-[#0F4C81]";
 
   const title = isRun
-    ? agent?.name ?? "Agent run"
+    ? agent?.realName ?? "Agent run"
     : `Email queued — ${entry.subject}`;
 
   return (

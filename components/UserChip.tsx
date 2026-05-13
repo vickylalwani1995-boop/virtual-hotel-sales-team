@@ -7,7 +7,7 @@ import { useAuth, signOut } from "@/lib/auth";
 import { resetOnboarding } from "@/lib/onboarding";
 import { toast } from "sonner";
 
-export function UserChip() {
+export function UserChip({ mobile }: { mobile?: boolean } = {}) {
   const { user, hydrated } = useAuth();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -36,22 +36,26 @@ export function UserChip() {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="inline-flex items-center gap-2 rounded-full border border-mhsp-line bg-white hover:border-mhsp-gold/40 hover:bg-mhsp-cream-warm/50 pl-1 pr-2.5 py-1 text-sm font-medium text-mhsp-navy transition-colors"
+        className={`inline-flex items-center gap-2 rounded-full border border-mhsp-line bg-white hover:border-mhsp-gold/40 hover:bg-mhsp-cream-warm/50 text-sm font-medium text-mhsp-navy transition-colors ${
+          mobile ? "w-full pl-1 pr-3 py-1.5" : "pl-1 pr-2.5 py-1"
+        }`}
       >
-        <span className="inline-flex w-7 h-7 rounded-full bg-mhsp-navy text-white items-center justify-center text-sm font-bold">
+        <span className="inline-flex w-7 h-7 rounded-full bg-mhsp-navy text-white items-center justify-center text-xs font-bold shrink-0">
           {initial}
         </span>
-        <span className="hidden sm:inline max-w-[100px] truncate">
+        <span className={mobile ? "flex-1 text-left truncate" : "hidden sm:inline max-w-[100px] truncate"}>
           {user.username}
         </span>
         <ChevronDown
-          className={`h-3.5 w-3.5 text-mhsp-muted transition-transform ${
+          className={`h-3.5 w-3.5 text-mhsp-muted transition-transform shrink-0 ${
             open ? "rotate-180" : ""
           }`}
         />
       </button>
       {open && (
-        <div className="absolute right-0 top-full mt-2 w-56 rounded-xl border border-mhsp-line bg-white shadow-[0_12px_30px_-12px_rgba(15,76,129,0.25)] overflow-hidden z-50">
+        <div className={`absolute w-56 rounded-xl border border-mhsp-line bg-white shadow-[0_12px_30px_-12px_rgba(15,76,129,0.25)] overflow-hidden z-50 ${
+          mobile ? "bottom-full mb-2 left-0" : "right-0 top-full mt-2"
+        }`}>
           <div className="px-4 py-3 border-b border-mhsp-line bg-mhsp-cream-warm/30">
             <div className="flex items-center gap-2">
               <UserIcon className="h-3.5 w-3.5 text-mhsp-muted" />

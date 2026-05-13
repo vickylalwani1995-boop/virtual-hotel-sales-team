@@ -63,7 +63,7 @@ export function Concierge() {
       const agent = getAgent(agentMatch[1]);
       if (agent) {
         ctx.agentId = agent.id;
-        ctx.agentName = agent.name;
+        ctx.agentName = agent.realName;
       }
     }
     return ctx;

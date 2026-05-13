@@ -451,13 +451,13 @@ export const STATUS_LABEL: Record<LeadStatus, { label: string; color: string }> 
   };
 
 export const SOURCE_LABEL: Record<LeadSource, string> = {
-  apollo: "🎯 Apollo",
-  vibe: "⚡ Vibe",
-  agent: "🤖 Agent",
-  manual: "✍️ Manual",
+  apollo: "Apollo",
+  vibe: "Vibe",
+  agent: "Agent",
+  manual: "Manual",
 };
 
 export const FUNNEL_LABEL: Record<LeadFunnel, string> = {
-  calculated: "🎯 Calculated",
-  hustle: "⚡ Hustle",
+  calculated: "Calculated",
+  hustle: "Hustle",
 };

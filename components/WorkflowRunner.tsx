@@ -1,9 +1,10 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Loader2, Sparkles, CheckCircle2, XCircle, Clock } from "lucide-react";
 import { AGENTS, getAgent } from "@/lib/agents";
+import { iconForAgent } from "@/lib/agent-icons";
 import { AgentOutput } from "@/components/AgentOutput";
 import { logActivity } from "@/lib/activity-log";
 import { useDemoMode } from "@/lib/demo-mode";
@@ -16,8 +17,8 @@ type Step = {
   error?: string;
 };
 
-const PARALLEL_AGENTS = ["01_lead_generation", "02_outbound_sales", "08_after_sales"];
-const DIRECTOR_ID = "00_director_of_sales";
+const PARALLEL_AGENTS = ["02_lead_gen", "03_outbound", "05_retention"];
+const DIRECTOR_ID = "01_director";
 const ALL_IDS = [DIRECTOR_ID, ...PARALLEL_AGENTS];
 
 async function callAgentLive(agentId: string, hotelProfile: string) {
@@ -80,7 +81,7 @@ export function WorkflowRunner({ profile }: { profile: string }) {
       logActivity({
         type: "agent_run",
         agentId: dir.id,
-        agentName: dir.name,
+        agentName: dir.realName,
         preview: out.slice(0, 100),
         isSample: demoMode,
       });
@@ -103,7 +104,7 @@ export function WorkflowRunner({ profile }: { profile: string }) {
           logActivity({
             type: "agent_run",
             agentId: a.id,
-            agentName: a.name,
+            agentName: a.realName,
             preview: out.slice(0, 100),
             isSample: demoMode,
           });
@@ -191,11 +192,11 @@ export function WorkflowRunner({ profile }: { profile: string }) {
                   }`}
                 >
                   <div className="flex items-center gap-2">
-                    <span className="text-2xl">{a?.icon}</span>
+                    {(() => { const Icon = iconForAgent(s.agentId); return <Icon className="h-6 w-6 text-mhsp-navy" />; })()}
                     <StatusIcon status={s.status} />
                   </div>
                   <p className="mt-2 text-sm font-semibold text-mhsp-navy leading-snug">
-                    {a?.name}
+                    {a?.realName}
                   </p>
                   <p className="mt-0.5 text-[14px] uppercase tracking-wider font-medium text-mhsp-muted">
                     {labelFor(s.status)}
@@ -228,8 +229,8 @@ export function WorkflowRunner({ profile }: { profile: string }) {
                         : "text-mhsp-muted/50 cursor-not-allowed"
                   }`}
                 >
-                  <span className="text-base">{a?.icon}</span>
-                  <span className="hidden sm:inline">{a?.name}</span>
+                  {(() => { const Icon = iconForAgent(s.agentId); return <Icon className="h-4 w-4" />; })()}
+                  <span className="hidden sm:inline">{a?.realName}</span>
                   {s.status === "running" && (
                     <Loader2 className="h-3 w-3 animate-spin text-mhsp-gold" />
                   )}
@@ -258,13 +259,13 @@ export function WorkflowRunner({ profile }: { profile: string }) {
                       transition={{ duration: 0.2 }}
                     >
                       <div className="flex items-center gap-3 mb-5 pb-5 border-b border-mhsp-line">
-                        <span className="text-3xl">{a?.icon}</span>
+                        {(() => { const Icon = iconForAgent(s.agentId); return <Icon className="h-8 w-8 text-mhsp-navy" />; })()}
                         <div>
                           <p className="text-[14px] font-semibold tracking-[0.18em] uppercase text-mhsp-gold">
-                            {a?.name.replace(/\s+Agent$/i, "").toUpperCase()}
+                            {a?.realName.toUpperCase()}
                           </p>
                           <h3 className="font-display text-xl text-mhsp-navy leading-tight">
-                            {a?.name}
+                            {a?.realName}
                           </h3>
                         </div>
                       </div>
@@ -299,7 +300,7 @@ function StatusIcon({ status }: { status: Status }) {
 }
 
 function labelFor(status: Status) {
-  if (status === "done") return "✓ Done";
+  if (status === "done") return "Done";
   if (status === "running") return "Running…";
   if (status === "error") return "Failed";
   return "Queued";

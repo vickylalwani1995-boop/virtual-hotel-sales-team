@@ -206,7 +206,7 @@ export default function OpenGraphImage() {
               fontWeight: 600,
             }}
           >
-            📞 888-909-1678
+            888-909-1678
           </div>
         </div>
       </div>

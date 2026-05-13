@@ -5,23 +5,17 @@ const KEY = "vhst-welcome-team";
 export type WelcomeAgentProfile = {
   id: string;
   realName: string;
-  jobTitle: string;
-  mhspRole: string;
+  designation: string;
   photo: string;
 };
 
 export const DEFAULT_AGENT_PHOTOS: Record<string, string> = {
-  "00_director_of_sales": "https://randomuser.me/api/portraits/women/44.jpg",
-  "01_lead_generation": "https://randomuser.me/api/portraits/men/32.jpg",
-  "02_outbound_sales": "https://randomuser.me/api/portraits/women/26.jpg",
-  "03_account_manager": "https://randomuser.me/api/portraits/men/56.jpg",
-  "04_rfp_closing": "https://randomuser.me/api/portraits/women/67.jpg",
-  "05_lnr_closing": "https://randomuser.me/api/portraits/men/41.jpg",
-  "06_group_sales": "https://randomuser.me/api/portraits/men/12.jpg",
-  "07_meeting_catering": "https://randomuser.me/api/portraits/women/68.jpg",
-  "08_after_sales": "https://randomuser.me/api/portraits/men/75.jpg",
-  "09_retention": "https://randomuser.me/api/portraits/women/22.jpg",
-  "10_revenue_leadership": "https://randomuser.me/api/portraits/women/11.jpg",
+  "01_director": "https://randomuser.me/api/portraits/women/44.jpg",
+  "02_lead_gen": "https://randomuser.me/api/portraits/men/32.jpg",
+  "03_outbound": "https://randomuser.me/api/portraits/women/26.jpg",
+  "04_rfp_group": "https://randomuser.me/api/portraits/women/67.jpg",
+  "05_retention": "https://randomuser.me/api/portraits/men/75.jpg",
+  "06_revenue": "https://randomuser.me/api/portraits/women/11.jpg",
 };
 
 export function getDefaultPhoto(id: string): string {
@@ -33,8 +27,7 @@ export function saveWelcomeTeam(agents: readonly Agent[]): void {
   const payload: WelcomeAgentProfile[] = agents.map((agent) => ({
     id: agent.id,
     realName: agent.realName,
-    jobTitle: agent.jobTitle,
-    mhspRole: agent.mhspRole,
+    designation: agent.designation,
     photo: getDefaultPhoto(agent.id),
   }));
   window.localStorage.setItem(KEY, JSON.stringify(payload));
@@ -62,8 +55,7 @@ export function getWelcomeAgent(agent: Agent): WelcomeAgentProfile {
   return {
     id: agent.id,
     realName: fromWelcome?.realName || agent.realName,
-    jobTitle: fromWelcome?.jobTitle || agent.jobTitle,
-    mhspRole: fromWelcome?.mhspRole || agent.mhspRole,
+    designation: fromWelcome?.designation || agent.designation,
     photo: fromWelcome?.photo || getDefaultPhoto(agent.id),
   };
 }

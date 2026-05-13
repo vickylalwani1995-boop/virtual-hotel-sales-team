@@ -636,10 +636,10 @@ const DEMO_EMAILS: WorkspaceEmail[] = [
 ];
 
 const DEMO_ACTIVITY: WorkspaceActivity[] = [
-  { id: "da01", agentId: "01_lead_generation", agentName: "Marcus Reed", action: "found 10 medical + healthcare leads via Apollo in Dallas", summary: "found 10 medical + healthcare leads via Apollo in Dallas", timestamp: new Date($now - 7200000).toISOString() },
-  { id: "da02", agentId: "01_lead_generation", agentName: "Marcus Reed", action: "added 5 corporate leads (construction, defense, finance)", summary: "added 5 corporate leads (construction, defense, finance)", timestamp: new Date($now - 5400000).toISOString() },
-  { id: "da03", agentId: "02_outbound_sales", agentName: "Sarah Chen", action: "drafted 3 personalized cold emails for top medical leads", summary: "drafted 3 personalized cold emails for top medical leads", timestamp: new Date($now - 3600000).toISOString() },
-  { id: "da04", agentId: "00_director_of_sales", agentName: "Donna Marie", action: "generated weekly plan focused on Sun–Tue corporate occupancy", summary: "generated weekly plan focused on Sun–Tue corporate occupancy", timestamp: new Date($now - 1800000).toISOString() },
+  { id: "da01", agentId: "02_lead_gen", agentName: "Marcus Reed", action: "found 10 medical + healthcare leads via Apollo in Dallas", summary: "found 10 medical + healthcare leads via Apollo in Dallas", timestamp: new Date($now - 7200000).toISOString() },
+  { id: "da02", agentId: "02_lead_gen", agentName: "Marcus Reed", action: "added 5 corporate leads (construction, defense, finance)", summary: "added 5 corporate leads (construction, defense, finance)", timestamp: new Date($now - 5400000).toISOString() },
+  { id: "da03", agentId: "03_outbound", agentName: "Sarah Chen", action: "drafted 3 personalized cold emails for top medical leads", summary: "drafted 3 personalized cold emails for top medical leads", timestamp: new Date($now - 3600000).toISOString() },
+  { id: "da04", agentId: "01_director", agentName: "Donna Marie", action: "generated weekly plan focused on Sun–Tue corporate occupancy", summary: "generated weekly plan focused on Sun–Tue corporate occupancy", timestamp: new Date($now - 1800000).toISOString() },
 ];
 
 export function seedDemoWorkspace(): void {

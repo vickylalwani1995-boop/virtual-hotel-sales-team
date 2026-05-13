@@ -559,7 +559,7 @@ export default function LeadsPage() {
                       { value: "all", label: "All agents" },
                       ...AGENTS.map((a) => ({
                         value: a.id,
-                        label: a.name,
+                        label: a.realName,
                       })),
                     ]}
                   />
@@ -1131,7 +1131,7 @@ function AddLeadsButton({ onAddDemo, onPullApollo, onPullVibe }: { onAddDemo: ()
           }}
         />
         <Link
-          href="/agent/01_lead_generation"
+          href="/agent/02_lead_gen"
           onClick={() => setOpen(false)}
           className="w-full flex items-center gap-2.5 px-3 py-2 text-sm font-semibold rounded-lg text-left text-mhsp-navy hover:bg-[#F4F8FC] transition-colors"
         >
@@ -1293,7 +1293,7 @@ function EmptyState({ onAddDemo }: { onAddDemo: () => void }) {
       </p>
       <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
         <Link
-          href="/agent/01_lead_generation"
+          href="/agent/02_lead_gen"
           className="group inline-flex items-center justify-center gap-2 rounded-xl bg-[#1B6EB7] hover:bg-[#0F4C81] text-white px-6 py-3 text-sm font-bold uppercase tracking-[0.14em] shadow-[0_10px_24px_-10px_rgba(27,110,183,0.5)] hover:-translate-y-0.5 transition-all"
         >
           Generate via Lead Gen Agent
@@ -1401,34 +1401,61 @@ function LeadDrawer({
             role="dialog"
             aria-modal="true"
             aria-label={`Lead detail for ${lead.prospectFullName}`}
-            className="fixed inset-y-0 right-0 z-50 w-full sm:w-[520px] bg-white shadow-[-20px_0_60px_-20px_rgba(15,76,129,0.25)] flex flex-col"
+            className="fixed inset-y-0 right-0 z-50 w-full sm:w-[520px] bg-[#F8FAFC] shadow-[-20px_0_60px_-20px_rgba(15,76,129,0.25)] flex flex-col"
           >
             {/* Header */}
-            <header className="px-5 sm:px-6 py-5 border-b border-[#E5ECF4] flex items-start gap-3">
-              <div className="shrink-0 h-12 w-12 rounded-xl bg-gradient-to-br from-[#1E5896] to-[#0F4C81] text-white flex items-center justify-center shadow-[0_8px_22px_-8px_rgba(15,76,129,0.55)]">
-                <Briefcase className="h-5 w-5" strokeWidth={2.25} />
+            <header className="relative px-5 sm:px-6 pt-5 pb-6 bg-gradient-to-br from-[#0F4C81] to-[#1B6EB7] overflow-hidden">
+              {/* Subtle pattern */}
+              <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: "radial-gradient(circle at 20% 50%, white 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
+              <div className="relative flex items-start gap-3">
+                <div className="shrink-0 h-14 w-14 rounded-2xl bg-white/15 backdrop-blur-sm text-white flex items-center justify-center ring-1 ring-white/20">
+                  <Briefcase className="h-6 w-6" strokeWidth={2} />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <h2 className="font-heading text-[22px] font-bold text-white leading-tight truncate">
+                    {lead.prospectFullName || "Unnamed lead"}
+                  </h2>
+                  <p className="text-[13px] text-white/70 mt-1 truncate font-medium">
+                    {lead.prospectJobTitle || "—"} · {lead.prospectCompanyName || "—"}
+                  </p>
+                  <div className="mt-2.5 flex items-center gap-2 flex-wrap">
+                    <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-bold tracking-[0.1em] uppercase border ${STATUS_TONE[lead.status]}`}>
+                      {STATUS_LABELS[lead.status]}
+                    </span>
+                    <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-bold tracking-[0.1em] uppercase bg-white/15 text-white/90 border border-white/20">
+                      {FUNNEL_LABELS[lead.funnel]}
+                    </span>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={onClose}
+                  aria-label="Close"
+                  className="shrink-0 h-9 w-9 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center text-white/80 hover:text-white transition-colors"
+                >
+                  <X className="h-5 w-5" />
+                </button>
               </div>
-              <div className="min-w-0 flex-1">
-                <h2 className="font-heading text-xl font-bold text-mhsp-navy leading-tight truncate">
-                  {lead.prospectFullName || "Unnamed lead"}
-                </h2>
-                <p className="text-sm text-mhsp-muted mt-0.5 truncate">
-                  {lead.prospectJobTitle || "—"} ·{" "}
-                  {lead.prospectCompanyName || "—"}
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={onClose}
-                aria-label="Close"
-                className="shrink-0 h-9 w-9 rounded-lg hover:bg-[#F4F8FC] flex items-center justify-center text-mhsp-muted hover:text-mhsp-navy transition-colors"
-              >
-                <X className="h-5 w-5" />
-              </button>
             </header>
 
             {/* Body */}
-            <div className="flex-1 overflow-y-auto px-5 sm:px-6 py-5 space-y-6">
+            <div className="flex-1 overflow-y-auto px-4 sm:px-5 py-5 space-y-4">
+
+              {/* Quick info bar */}
+              <div className="flex items-center gap-3 rounded-xl bg-white border border-[#E5ECF4] px-4 py-3 shadow-sm">
+                <div className="flex items-center gap-2 flex-1 min-w-0">
+                  <Building2 className="h-4 w-4 text-[#1B6EB7] shrink-0" />
+                  <span className="text-sm font-semibold text-mhsp-navy truncate">{lead.prospectCompanyName || "—"}</span>
+                </div>
+                <span className="text-[#DCE5EF]">|</span>
+                <div className="flex items-center gap-2 min-w-0">
+                  <MapPin className="h-4 w-4 text-[#1B6EB7] shrink-0" />
+                  <span className="text-sm text-mhsp-muted truncate">
+                    {[lead.prospectCity, lead.prospectRegionName].filter(Boolean).join(", ") || "—"}
+                  </span>
+                </div>
+              </div>
+
               <Section title="Personal">
                 <Field label="Full name" value={lead.prospectFullName} />
                 <Field
@@ -1460,10 +1487,12 @@ function LeadDrawer({
               </Section>
 
               <Section title="Contact">
-                <div className="flex items-start gap-2">
-                  <Mail className="h-4 w-4 text-[#1B6EB7] mt-1 shrink-0" />
+                <div className="flex items-start gap-2.5">
+                  <div className="shrink-0 h-7 w-7 rounded-lg bg-[#EAF2FA] flex items-center justify-center mt-0.5">
+                    <Mail className="h-3.5 w-3.5 text-[#1B6EB7]" />
+                  </div>
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm text-mhsp-muted">Email</p>
+                    <p className="text-[11px] font-semibold tracking-[0.1em] uppercase text-mhsp-muted/70">Email</p>
                     {lead.contactProfessionalEmail ? (
                       <p className="text-sm text-mhsp-text font-semibold flex items-center gap-2 flex-wrap break-all">
                         {lead.contactProfessionalEmail}
@@ -1482,10 +1511,12 @@ function LeadDrawer({
                     value={lead.contactEmails.join(", ")}
                   />
                 )}
-                <div className="flex items-start gap-2">
-                  <Phone className="h-4 w-4 text-[#1B6EB7] mt-1 shrink-0" />
+                <div className="flex items-start gap-2.5">
+                  <div className="shrink-0 h-7 w-7 rounded-lg bg-[#EAF2FA] flex items-center justify-center mt-0.5">
+                    <Phone className="h-3.5 w-3.5 text-[#1B6EB7]" />
+                  </div>
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm text-mhsp-muted">Mobile</p>
+                    <p className="text-[11px] font-semibold tracking-[0.1em] uppercase text-mhsp-muted/70">Mobile</p>
                     <p className="text-sm text-mhsp-text font-semibold">
                       {lead.contactMobilePhone || "—"}
                     </p>
@@ -1522,10 +1553,12 @@ function LeadDrawer({
                       : "—"
                   }
                 />
-                <div className="flex items-start gap-2">
-                  <MapPin className="h-4 w-4 text-[#1B6EB7] mt-1 shrink-0" />
+                <div className="flex items-start gap-2.5">
+                  <div className="shrink-0 h-7 w-7 rounded-lg bg-[#EAF2FA] flex items-center justify-center mt-0.5">
+                    <MapPin className="h-3.5 w-3.5 text-[#1B6EB7]" />
+                  </div>
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm text-mhsp-muted">Location</p>
+                    <p className="text-[11px] font-semibold tracking-[0.1em] uppercase text-mhsp-muted/70">Location</p>
                     <p className="text-sm text-mhsp-text font-semibold">
                       {[
                         lead.prospectCity,
@@ -1540,22 +1573,24 @@ function LeadDrawer({
               </Section>
 
               <Section title="Activity">
-                <Field
-                  label="Source"
-                  value={SOURCE_LABELS[lead.source]}
-                />
-                <Field
-                  label="Funnel"
-                  value={FUNNEL_LABELS[lead.funnel]}
-                />
-                <Field
-                  label="Captured by"
-                  value={lead.agentId || "—"}
-                />
-                <Field
-                  label="Added"
-                  value={new Date(lead.createdAt).toLocaleString()}
-                />
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="rounded-lg bg-white border border-[#E5ECF4] px-3 py-2.5">
+                    <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-mhsp-muted/60">Source</p>
+                    <p className="text-sm font-semibold text-mhsp-navy mt-0.5">{SOURCE_LABELS[lead.source]}</p>
+                  </div>
+                  <div className="rounded-lg bg-white border border-[#E5ECF4] px-3 py-2.5">
+                    <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-mhsp-muted/60">Funnel</p>
+                    <p className="text-sm font-semibold text-mhsp-navy mt-0.5">{FUNNEL_LABELS[lead.funnel]}</p>
+                  </div>
+                  <div className="rounded-lg bg-white border border-[#E5ECF4] px-3 py-2.5">
+                    <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-mhsp-muted/60">Agent</p>
+                    <p className="text-sm font-semibold text-mhsp-navy mt-0.5 truncate">{lead.agentId || "—"}</p>
+                  </div>
+                  <div className="rounded-lg bg-white border border-[#E5ECF4] px-3 py-2.5">
+                    <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-mhsp-muted/60">Added</p>
+                    <p className="text-sm font-semibold text-mhsp-navy mt-0.5">{new Date(lead.createdAt).toLocaleDateString()}</p>
+                  </div>
+                </div>
               </Section>
 
               <Section title="Notes">
@@ -1564,25 +1599,24 @@ function LeadDrawer({
                   onChange={(e) => setNote(e.target.value)}
                   onBlur={persistNote}
                   placeholder="Add a note about this lead…"
-                  className="w-full min-h-[80px] resize-none rounded-lg border border-[#DCE5EF] bg-[#FAFCFE] text-sm leading-relaxed text-mhsp-text placeholder:text-mhsp-muted/70 focus:outline-none focus:ring-4 focus:ring-[#1B6EB7]/15 focus:border-[#1B6EB7]/50 transition-all px-3 py-2"
+                  className="w-full min-h-[80px] resize-none rounded-xl border border-[#DCE5EF] bg-white text-sm leading-relaxed text-mhsp-text placeholder:text-mhsp-muted/50 focus:outline-none focus:ring-4 focus:ring-[#1B6EB7]/15 focus:border-[#1B6EB7]/50 transition-all px-4 py-3"
                 />
-                <p className="text-sm text-mhsp-muted mt-1.5 flex items-center gap-1.5">
-                  <StickyNote className="h-3 w-3" /> Saved automatically on
-                  blur.
+                <p className="text-[11px] text-mhsp-muted/60 mt-1.5 flex items-center gap-1.5 font-medium">
+                  <StickyNote className="h-3 w-3" /> Saved automatically on blur
                 </p>
               </Section>
             </div>
 
             {/* Footer actions */}
-            <footer className="border-t border-[#E5ECF4] px-5 sm:px-6 py-4 bg-[#FBFCFE] space-y-3">
+            <footer className="border-t border-[#E5ECF4] px-4 sm:px-5 py-4 bg-white space-y-3">
               <div className="flex items-center gap-3">
-                <span className="text-sm font-bold tracking-[0.14em] uppercase text-mhsp-muted">
+                <span className="text-[11px] font-bold tracking-[0.16em] uppercase text-mhsp-muted/70">
                   Status
                 </span>
                 <select
                   value={status}
                   onChange={(e) => persistStatus(e.target.value as LeadStatus)}
-                  className="flex-1 appearance-none pl-3 pr-9 py-2 rounded-lg border border-[#DCE5EF] bg-white text-sm font-semibold text-mhsp-navy focus:outline-none focus:ring-4 focus:ring-[#1B6EB7]/15 focus:border-[#1B6EB7]/50 transition-all"
+                  className="flex-1 appearance-none pl-3 pr-9 py-2 rounded-xl border border-[#DCE5EF] bg-[#F8FAFC] text-sm font-semibold text-mhsp-navy focus:outline-none focus:ring-4 focus:ring-[#1B6EB7]/15 focus:border-[#1B6EB7]/50 transition-all"
                   style={{
                     backgroundImage:
                       "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235A6B82' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E\")",
@@ -1598,32 +1632,32 @@ function LeadDrawer({
                   ))}
                 </select>
               </div>
-              <div className="flex flex-col sm:flex-row gap-2">
+              <div className="grid grid-cols-2 gap-2">
                 {lead.contactProfessionalEmail && onEmail && (
                   <button
                     type="button"
                     onClick={() => onEmail(lead)}
-                    className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 text-sm font-bold uppercase tracking-[0.1em] transition-all"
+                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 text-[12px] font-bold uppercase tracking-[0.1em] transition-all shadow-sm"
                   >
-                    <Mail className="h-4 w-4" /> Send email
+                    <Mail className="h-4 w-4" /> Email
                   </button>
                 )}
                 <Link
-                  href={`/call/02_outbound_sales?lead=${encodeURIComponent(lead.id)}`}
-                  className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg border border-[#DCE5EF] bg-white hover:bg-[#F4F8FC] text-mhsp-navy px-4 py-2.5 text-sm font-bold uppercase tracking-[0.1em] transition-all"
+                  href={`/call/03_outbound?lead=${encodeURIComponent(lead.id)}`}
+                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#DCE5EF] bg-white hover:bg-[#F4F8FC] text-mhsp-navy px-4 py-2.5 text-[12px] font-bold uppercase tracking-[0.1em] transition-all"
                 >
-                  <Phone className="h-4 w-4" /> Call lead
+                  <Phone className="h-4 w-4" /> Call
                 </Link>
                 <Link
-                  href={`/agent/02_outbound_sales?lead=${encodeURIComponent(lead.id)}`}
-                  className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg bg-[#1B6EB7] hover:bg-[#0F4C81] text-white px-4 py-2.5 text-sm font-bold uppercase tracking-[0.1em] transition-all"
+                  href={`/agent/03_outbound?lead=${encodeURIComponent(lead.id)}`}
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#1B6EB7] hover:bg-[#0F4C81] text-white px-4 py-2.5 text-[12px] font-bold uppercase tracking-[0.1em] transition-all shadow-sm"
                 >
-                  <Sparkles className="h-4 w-4" /> Generate outreach
+                  <Sparkles className="h-4 w-4" /> Outreach
                 </Link>
                 <button
                   type="button"
                   onClick={() => setConfirmDeleteOpen(true)}
-                  className="inline-flex items-center justify-center gap-2 rounded-lg border border-[#FECACA] bg-white hover:bg-[#FEF2F2] text-[#B91C1C] px-4 py-2.5 text-sm font-semibold transition-colors"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#FECACA] bg-white hover:bg-[#FEF2F2] text-[#B91C1C] px-4 py-2.5 text-[12px] font-bold uppercase tracking-[0.1em] transition-colors"
                 >
                   <Trash2 className="h-4 w-4" /> Delete
                 </button>
@@ -1653,20 +1687,22 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section className="space-y-3">
-      <h3 className="text-sm font-bold tracking-[0.16em] uppercase text-mhsp-gold">
-        {title}
-      </h3>
-      <div className="space-y-3">{children}</div>
+    <section className="rounded-xl bg-white border border-[#E5ECF4] shadow-sm overflow-hidden">
+      <div className="px-4 py-2.5 bg-[#F4F8FC] border-b border-[#E5ECF4]">
+        <h3 className="text-[10px] font-bold tracking-[0.2em] uppercase text-[#1B6EB7]">
+          {title}
+        </h3>
+      </div>
+      <div className="px-4 py-3 space-y-3">{children}</div>
     </section>
   );
 }
 
 function Field({ label, value }: { label: string; value: string }) {
   return (
-    <div>
-      <p className="text-sm text-mhsp-muted">{label}</p>
-      <p className="text-sm text-mhsp-text font-semibold break-words">
+    <div className="flex items-baseline justify-between gap-3">
+      <p className="text-[11px] font-semibold tracking-[0.08em] uppercase text-mhsp-muted/70 shrink-0">{label}</p>
+      <p className="text-sm text-mhsp-text font-semibold break-words text-right min-w-0">
         {value || "—"}
       </p>
     </div>

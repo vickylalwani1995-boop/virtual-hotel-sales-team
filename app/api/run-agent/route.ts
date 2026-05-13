@@ -71,7 +71,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       success: true,
       output: text,
-      agentName: agent.name,
+      agentName: agent.realName,
       agentId: agent.id,
     });
   } catch (err: unknown) {

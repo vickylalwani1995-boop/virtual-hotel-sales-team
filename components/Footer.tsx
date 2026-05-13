@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Phone } from "lucide-react";
+import { Phone, Sparkles } from "lucide-react";
 import { MhspLogo } from "@/components/MhspLogo";
 
 const SERVICES = [
@@ -44,7 +44,7 @@ export function Footer() {
                   }
                 >
                   {s.name}
-                  {s.highlight && <span className="ml-1">✨</span>}
+                  {s.highlight && <Sparkles className="ml-1 inline h-3 w-3 text-mhsp-gold" />}
                 </span>
                 {i < SERVICES.length - 1 && (
                   <span className="text-mhsp-muted/40 mx-2 select-none">·</span>

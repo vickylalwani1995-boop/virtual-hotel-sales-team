@@ -390,7 +390,7 @@ function EmptyState({ unreadOnly }: { unreadOnly: boolean }) {
         <Sparkles className="h-5 w-5" strokeWidth={2.25} />
       </motion.div>
       <p className="mt-3 font-heading text-base font-bold text-mhsp-navy">
-        All caught up! 🎉
+        All caught up!
       </p>
       <p className="mt-1 text-sm text-mhsp-muted">
         {unreadOnly

@@ -122,7 +122,7 @@ export function LeadDetailDrawer({
             <div className="flex-1 overflow-y-auto p-5 space-y-5">
               {/* Why they fit */}
               {lead.whyTheyFit && (
-                <Section title="🎯 Why they fit">
+                <Section title="Why they fit">
                   <p className="text-sm text-mhsp-text leading-relaxed">
                     {lead.whyTheyFit}
                   </p>

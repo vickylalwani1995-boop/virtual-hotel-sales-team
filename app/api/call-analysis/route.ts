@@ -50,13 +50,13 @@ export async function POST(req: NextRequest) {
 
     const agent = AGENTS.find((a) => a.id === agentId);
     const transcriptText = transcript
-      .map((t) => `${t.role === "user" ? "USER" : (agent?.name ?? "AGENT")}: ${t.text}`)
+      .map((t) => `${t.role === "user" ? "USER" : (agent?.realName ?? "AGENT")}: ${t.text}`)
       .join("\n");
 
-    const userPrompt = `Call duration: ${Math.round(duration)}s. Agent: ${agent?.name ?? agentId} (id: ${agentId}).
+    const userPrompt = `Call duration: ${Math.round(duration)}s. Agent: ${agent?.realName ?? agentId} (id: ${agentId}).
 
 Available agent IDs (use one for recommendedNextAgent):
-${AGENTS.map((a) => `- ${a.id} (${a.name})`).join("\n")}
+${AGENTS.map((a) => `- ${a.id} (${a.realName})`).join("\n")}
 
 Transcript:
 ${transcriptText}`;

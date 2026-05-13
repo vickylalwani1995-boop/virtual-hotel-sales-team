@@ -13,6 +13,7 @@ import {
   Menu,
   X,
   Activity as ActivityIcon,
+  BookOpen,
 } from "lucide-react";
 import { MhspLogo } from "@/components/MhspLogo";
 import { UserChip } from "@/components/UserChip";
@@ -74,6 +75,7 @@ export function Nav() {
   }
 
   return (
+    <>
     <header className="sticky top-0 z-40 backdrop-blur-md bg-mhsp-cream/85 border-b border-mhsp-line">
       <div className="max-w-7xl mx-auto px-3 sm:px-5 lg:px-6 h-16 sm:h-20 flex items-center gap-2 sm:gap-4 lg:gap-6">
         {/* Logo block */}
@@ -118,6 +120,15 @@ export function Nav() {
                 {leadCount > 99 ? "99+" : leadCount}
               </span>
             )}
+          </Link>
+
+          <Link
+            href="/playbooks"
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-mhsp-navy hover:text-[#1B6EB7] transition-colors shrink-0"
+            aria-label="Playbooks"
+          >
+            <BookOpen className="h-4 w-4" />
+            <span className="hidden md:inline">Playbooks</span>
           </Link>
 
           <a
@@ -167,8 +178,9 @@ export function Nav() {
           </button>
         </div>
       </div>
+    </header>
 
-      {/* MOBILE DRAWER */}
+      {/* MOBILE DRAWER — rendered outside header to avoid stacking context issues */}
       <AnimatePresence>
         {drawerOpen && (
           <>
@@ -205,14 +217,15 @@ export function Nav() {
               </div>
 
               {/* Drawer body */}
-              <div className="flex-1 overflow-y-auto px-3 py-4">
-                <p className="px-3 text-sm font-bold tracking-[0.16em] uppercase text-mhsp-muted mb-2">
+              <div className="flex-1 overflow-y-auto px-4 py-5">
+                <p className="px-3 text-[11px] font-bold tracking-[0.16em] uppercase text-mhsp-muted mb-3">
                   Workspace
                 </p>
                 <DrawerLink
                   href="/dashboard"
                   Icon={BarChart3}
                   label="Dashboard"
+                  active={pathname === "/dashboard"}
                   onClick={() => setDrawerOpen(false)}
                 />
                 <DrawerLink
@@ -220,22 +233,33 @@ export function Nav() {
                   Icon={Users}
                   label="Leads"
                   badge={leadCount > 0 ? leadCount : undefined}
+                  active={pathname === "/leads"}
                   onClick={() => setDrawerOpen(false)}
                 />
                 <DrawerLink
                   href="/agents"
                   Icon={Sparkles}
                   label="Sales team"
+                  active={pathname === "/agents" || pathname?.startsWith("/agent/")}
+                  onClick={() => setDrawerOpen(false)}
+                />
+                <DrawerLink
+                  href="/playbooks"
+                  Icon={BookOpen}
+                  label="Playbooks"
+                  active={pathname === "/playbooks" || pathname?.startsWith("/playbooks/")}
                   onClick={() => setDrawerOpen(false)}
                 />
                 <DrawerLink
                   href="/activity"
                   Icon={ActivityIcon}
                   label="Activity"
+                  active={pathname === "/activity"}
                   onClick={() => setDrawerOpen(false)}
                 />
 
-                <p className="mt-5 px-3 text-sm font-bold tracking-[0.16em] uppercase text-mhsp-muted mb-2">
+                <div className="my-4 mx-3 border-t border-[#E5ECF4]" />
+                <p className="px-3 text-[11px] font-bold tracking-[0.16em] uppercase text-mhsp-muted mb-3">
                   Options
                 </p>
                 <button
@@ -244,14 +268,14 @@ export function Nav() {
                     toggleDemo();
                     setDrawerOpen(false);
                   }}
-                  className="w-full flex items-center justify-between gap-3 rounded-lg px-3 py-3 text-sm font-semibold text-mhsp-navy hover:bg-[#F4F8FC] transition-colors"
+                  className="w-full flex items-center justify-between gap-3 rounded-xl px-3 py-3 text-[14px] font-semibold text-mhsp-navy hover:bg-[#F4F8FC] transition-colors"
                 >
                   <span className="inline-flex items-center gap-3">
-                    <Sparkles className="h-4 w-4" />
+                    <Sparkles className="h-[18px] w-[18px] shrink-0" />
                     Demo Mode
                   </span>
                   <span
-                    className={`inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-sm font-bold ${
+                    className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-bold ${
                       demo
                         ? "bg-mhsp-success/10 text-mhsp-success"
                         : "bg-[#F3F4F6] text-mhsp-muted"
@@ -269,23 +293,23 @@ export function Nav() {
                 </button>
                 <a
                   href="tel:8889091678"
-                  className="w-full flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-semibold text-mhsp-navy hover:bg-[#F4F8FC] transition-colors"
+                  className="w-full flex items-center gap-3 rounded-xl px-3 py-3 text-[14px] font-semibold text-mhsp-navy hover:bg-[#F4F8FC] transition-colors"
                   onClick={() => setDrawerOpen(false)}
                 >
-                  <Phone className="h-4 w-4" />
+                  <Phone className="h-[18px] w-[18px] shrink-0" />
                   888-909-1678
                 </a>
               </div>
 
               {/* Drawer footer — user chip */}
-              <div className="border-t border-[#E5ECF4] px-3 py-3">
-                <UserChip />
+              <div className="border-t border-[#E5ECF4] px-4 py-4">
+                <UserChip mobile />
               </div>
             </motion.aside>
           </>
         )}
       </AnimatePresence>
-    </header>
+    </>
   );
 }
 
@@ -294,24 +318,30 @@ function DrawerLink({
   Icon,
   label,
   badge,
+  active,
   onClick,
 }: {
   href: string;
   Icon: React.ComponentType<{ className?: string }>;
   label: string;
   badge?: number;
+  active?: boolean;
   onClick: () => void;
 }) {
   return (
     <Link
       href={href}
       onClick={onClick}
-      className="w-full flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-semibold text-mhsp-navy hover:bg-[#F4F8FC] transition-colors"
+      className={`w-full flex items-center gap-3 rounded-xl px-3 py-3 text-[14px] font-semibold transition-colors ${
+        active
+          ? "bg-[#EAF2FA] text-[#1B6EB7]"
+          : "text-mhsp-navy hover:bg-[#F4F8FC]"
+      }`}
     >
-      <Icon className="h-4 w-4" />
+      <Icon className="h-[18px] w-[18px] shrink-0" />
       <span className="flex-1">{label}</span>
       {typeof badge === "number" && (
-        <span className="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full bg-[#1B6EB7] text-white text-sm font-bold font-numeric leading-none">
+        <span className="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full bg-[#1B6EB7] text-white text-xs font-bold font-numeric leading-none">
           {badge > 99 ? "99+" : badge}
         </span>
       )}

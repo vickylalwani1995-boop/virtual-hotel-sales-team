@@ -618,13 +618,13 @@ export function CallSimulator({
       return;
     }
     const summary = transcript
-      .map((t) => `${t.role === "user" ? "You" : agent.name}: ${t.text}`)
+      .map((t) => `${t.role === "user" ? "You" : agent.realName}: ${t.text}`)
       .join(" ")
       .slice(0, 120);
     logActivity({
       type: "agent_run",
       agentId: agent.id,
-      agentName: `${agent.name} (call)`,
+      agentName: `${agent.realName} (call)`,
       preview: summary,
     });
     toast.success("Call saved to Activity log.");
@@ -634,12 +634,12 @@ export function CallSimulator({
     const ctx = encodeURIComponent(
       transcript
         .map(
-          (t) => `${t.role === "user" ? "Caller" : agent.name}: ${t.text}`,
+          (t) => `${t.role === "user" ? "Caller" : agent.realName}: ${t.text}`,
         )
         .join("\n"),
     );
     const profile = encodeURIComponent(hotelProfile || "");
-    router.push(`/agent/02_outbound_sales?profile=${profile}&call=${ctx}`);
+    router.push(`/agent/03_outbound?profile=${profile}&call=${ctx}`);
   }
 
   const Icon = iconForAgent(agent.id);
@@ -736,10 +736,10 @@ export function CallSimulator({
           transition={{ duration: 0.4, delay: 0.2 }}
           className="font-heading mt-7 text-2xl sm:text-[34px] font-bold text-white"
         >
-          {agent.name}
+          {agent.realName}
         </motion.h1>
         <p className="mt-1 text-sm text-white/55 font-semibold tracking-[0.18em] uppercase">
-          {agent.roleTitle}
+          {agent.designation}
         </p>
         {lead && (
           <p className="mt-2 text-sm text-white/60">
@@ -836,7 +836,7 @@ export function CallSimulator({
                     }`}
                   >
                     <span className="block text-sm font-bold tracking-wider uppercase opacity-70">
-                      {t.role === "user" ? "You" : agent.name}
+                      {t.role === "user" ? "You" : agent.realName}
                     </span>
                     <span className="block mt-0.5">{t.text || "…"}</span>
                   </div>
@@ -1002,7 +1002,7 @@ function PostCall({
             className="inline-flex items-center gap-1.5 text-sm font-semibold text-mhsp-muted hover:text-mhsp-navy transition-colors mb-6"
           >
             <ArrowLeft className="h-4 w-4" />
-            Back to {agent.name}
+            Back to {agent.realName}
           </button>
 
           <div className="flex items-start gap-4 sm:gap-5">
@@ -1015,10 +1015,10 @@ function PostCall({
                 Call complete
               </span>
               <h1 className="font-heading mt-3 text-[28px] sm:text-[36px] font-bold leading-tight text-mhsp-navy">
-                {agent.name}
+                {agent.realName}
               </h1>
               <p className="text-sm text-mhsp-muted mt-1">
-                {agent.roleTitle}
+                {agent.designation}
               </p>
             </div>
           </div>
@@ -1072,7 +1072,7 @@ function PostCall({
                         : "text-mhsp-navy"
                     }`}
                   >
-                    {t.role === "user" ? "You" : agent.name}
+                    {t.role === "user" ? "You" : agent.realName}
                   </p>
                   <p className="mt-1 text-sm text-mhsp-text leading-relaxed whitespace-pre-wrap">
                     {t.text}
@@ -1141,7 +1141,7 @@ function PostCall({
                         className="inline-flex items-center gap-2 rounded-lg border border-[#DCE5EF] bg-[#F4F8FC] hover:bg-white text-mhsp-navy px-3 py-2 text-sm font-semibold transition-colors"
                       >
                         <Sparkles className="h-3.5 w-3.5 text-[#1B6EB7]" />
-                        {recommendedAgent.name}
+                        {recommendedAgent.realName}
                         <ArrowRight className="h-3.5 w-3.5" />
                       </Link>
                     </Section>
@@ -1189,7 +1189,7 @@ function PostCall({
               className="w-full inline-flex items-center justify-center gap-2 rounded-xl text-mhsp-muted hover:text-mhsp-navy px-4 py-2.5 text-sm font-semibold transition-colors"
             >
               <ArrowLeft className="h-4 w-4" />
-              Back to {agent.name}
+              Back to {agent.realName}
             </button>
           </div>
         </div>

@@ -12,17 +12,12 @@ import { iconForAgent } from "@/lib/agent-icons";
 import { getWelcomeAgent } from "@/lib/welcome-team";
 
 const SPECIALTIES: Record<string, string[]> = {
-  "00_director_of_sales": ["Strategy", "Reporting", "Coordination"],
-  "01_lead_generation": ["Backyard", "Prospecting", "Lists"],
-  "02_outbound_sales": ["Cold Email", "Scripts", "LinkedIn"],
-  "03_account_manager": ["Top Accounts", "Retention", "QBRs"],
-  "04_rfp_closing": ["RFPs", "Pricing", "Big Revenue"],
-  "05_lnr_closing": ["LNR", "Tiered Rates", "Corporate"],
-  "06_group_sales": ["Group Blocks", "Inquiries", "Contracts"],
-  "07_meeting_catering": ["Meetings", "Catering", "Quotes"],
-  "08_after_sales": ["Follow-up", "Reviews", "Repeat"],
-  "09_retention": ["Win-back", "Loyalty", "Backyard"],
-  "10_revenue_leadership": ["Dashboards", "KPIs", "Reports"],
+  "01_director": ["Strategy", "Planning", "Coordination"],
+  "02_lead_gen": ["Prospecting", "Local Market", "Lead Scoring"],
+  "03_outbound": ["Cold Email", "Scripts", "LinkedIn"],
+  "04_rfp_group": ["RFPs", "Group Blocks", "LNR Rates"],
+  "05_retention": ["Follow-up", "Win-back", "Reviews"],
+  "06_revenue": ["Dashboards", "KPIs", "Reports"],
 };
 
 export function AgentCard({
@@ -38,17 +33,12 @@ export function AgentCard({
   const Icon = iconForAgent(agent.id);
   const tags = SPECIALTIES[agent.id] ?? [];
   const welcome = getWelcomeAgent(agent);
-  const isLive = agent.tier === 1;
   const isCalculated = agent.funnel === "calculated";
-  const cleanName = welcome.realName || agent.name.replace(/\s+Agent$/i, "");
+  const cleanName = welcome.realName;
 
   const iconTile = isCalculated
     ? "bg-gradient-to-br from-[#1E5896] to-[#0F4C81]"
     : "bg-gradient-to-br from-[#2F8FCC] to-[#1B6EB7]";
-
-  const stripGradient = isCalculated
-    ? "from-[#0F4C81] via-[#1B6EB7] to-[#0F4C81]"
-    : "from-[#2F8FCC] via-[#1B6EB7] to-[#2F8FCC]";
 
   const FunnelIcon = isCalculated ? Crosshair : Zap;
 
@@ -62,104 +52,88 @@ export function AgentCard({
         href={href}
         className="group block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1B6EB7] focus-visible:ring-offset-2 rounded-2xl"
       >
-        <article className="relative h-full bg-white rounded-2xl border border-[#E5ECF4] overflow-hidden shadow-[0_8px_28px_-14px_rgba(15,76,129,0.14),0_2px_8px_-4px_rgba(15,76,129,0.06)] hover:-translate-y-1 hover:shadow-[0_24px_50px_-20px_rgba(15,76,129,0.25),0_8px_18px_-8px_rgba(15,76,129,0.12)] hover:border-[#1B6EB7]/30 transition-all duration-300">
-          {/* Top accent strip */}
-          <div
-            className={`h-1 w-full bg-gradient-to-r ${stripGradient}`}
-          />
+        <article className="relative h-full bg-white rounded-2xl border border-[#E5ECF4] overflow-hidden hover:-translate-y-1 hover:shadow-[0_24px_50px_-20px_rgba(15,76,129,0.22)] hover:border-[#1B6EB7]/30 transition-all duration-300">
 
-          {/* Decorative corner glow */}
-          <span
-            className="absolute -top-8 -right-8 h-32 w-32 rounded-full opacity-[0.07] pointer-events-none"
-            style={{
-              background: isCalculated
-                ? "radial-gradient(closest-side, #0F4C81, transparent)"
-                : "radial-gradient(closest-side, #2F8FCC, transparent)",
-            }}
-          />
-
-          <div className="relative p-5 sm:p-6">
-            {/* Header — icon tile + status pill */}
-            <div className="flex items-start justify-between gap-3">
-              <div
-                className={`shrink-0 h-12 w-12 rounded-xl flex items-center justify-center text-white shadow-[0_6px_18px_-8px_rgba(15,76,129,0.5)] ${iconTile}`}
-              >
-                <Icon className="h-[22px] w-[22px]" strokeWidth={2.25} />
-              </div>
-              <span
-                className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-bold uppercase tracking-wider border ${
-                  isLive
-                    ? "bg-mhsp-success/10 text-mhsp-success border-mhsp-success/30"
-                    : "bg-mhsp-gold/10 text-mhsp-gold border-mhsp-gold/30"
-                }`}
-              >
-                <span
-                  className={`h-1.5 w-1.5 rounded-full ${
-                    isLive ? "bg-mhsp-success animate-pulse" : "bg-mhsp-gold"
-                  }`}
-                />
-                {isLive ? "Live" : "Ready"}
-              </span>
-            </div>
-
-            {/* Role title eyebrow */}
-            <p className="mt-5 text-sm font-bold tracking-[0.16em] uppercase text-mhsp-gold">
-              {welcome.mhspRole || agent.roleTitle}
-            </p>
-
-            {/* Name */}
-            <h3 className="font-heading mt-1.5 text-[22px] font-bold leading-tight text-mhsp-navy">
-              {cleanName}
-            </h3>
-
+          {/* Header with photo + icon */}
+          <div className="relative px-5 pt-5 pb-4 flex items-start gap-3.5">
+            {/* Photo circle */}
             {welcome.photo && (
-              <div className="mt-3 flex items-center gap-2 text-sm text-mhsp-muted">
-                <div className="h-7 w-7 rounded-full overflow-hidden ring-2 ring-[#E2E8F0]">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={welcome.photo}
-                    alt={welcome.realName}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <span className="font-semibold text-mhsp-navy">{welcome.jobTitle}</span>
+              <div className="shrink-0 h-14 w-14 rounded-full overflow-hidden ring-2 ring-[#E5ECF4] group-hover:ring-[#1B6EB7]/25 transition-all">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={welcome.photo}
+                  alt={welcome.realName}
+                  className="h-full w-full object-cover"
+                />
+              </div>
+            )}
+            {!welcome.photo && (
+              <div
+                className={`shrink-0 h-14 w-14 rounded-full flex items-center justify-center text-white ${iconTile}`}
+              >
+                <Icon className="h-6 w-6" strokeWidth={2} />
               </div>
             )}
 
-            {/* Description */}
-            <p className="mt-2 text-sm text-mhsp-muted leading-relaxed line-clamp-2">
+            <div className="min-w-0 flex-1">
+              {/* Name */}
+              <h3 className="font-heading text-[18px] font-bold leading-tight text-mhsp-navy truncate">
+                {cleanName}
+              </h3>
+              {/* Job title */}
+              <p className="text-[13px] font-semibold text-[#1B6EB7] mt-0.5 truncate">
+                {welcome.designation}
+              </p>
+            </div>
+
+            {/* Captain badge or status dot */}
+            {agent.isCaptain ? (
+              <span className="shrink-0 mt-1 text-[9px] font-bold tracking-[0.16em] uppercase bg-amber-100 text-amber-700 border border-amber-300 px-2 py-0.5 rounded-full">
+                Captain
+              </span>
+            ) : (
+              <span
+                className="shrink-0 mt-1.5 h-2.5 w-2.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_0_3px_rgba(52,211,153,0.2)]"
+                title="Online"
+              />
+            )}
+          </div>
+
+          {/* Description */}
+          <div className="px-5 pt-2.5 pb-4">
+            <p className="text-sm text-mhsp-muted leading-relaxed line-clamp-2">
               {agent.description}
             </p>
+          </div>
 
-            {/* Specialty chips */}
-            {tags.length > 0 && (
-              <div className="mt-4 flex flex-wrap gap-1.5">
-                {tags.map((t) => (
-                  <span
-                    key={t}
-                    className="text-sm font-semibold rounded-full bg-[#F4F8FC] border border-[#DCE5EF] text-mhsp-navy/80 px-2.5 py-0.5"
-                  >
-                    {t}
-                  </span>
-                ))}
-              </div>
-            )}
-
-            {/* Footer — funnel + arrow */}
-            <div className="mt-5 pt-5 border-t border-[#E5ECF4] flex items-center justify-between">
-              <span
-                className={`inline-flex items-center gap-1.5 text-sm font-bold tracking-[0.14em] uppercase ${
-                  isCalculated ? "text-mhsp-navy" : "text-mhsp-teal"
-                }`}
-              >
-                <FunnelIcon className="h-3.5 w-3.5" strokeWidth={2.5} />
-                {isCalculated ? "Calculated" : "Hustle"}
-              </span>
-              <span className="inline-flex items-center gap-1.5 rounded-lg bg-[#EDF4FB] group-hover:bg-[#1B6EB7] border border-[#C9DAEB] group-hover:border-[#1B6EB7] text-[#1B6EB7] group-hover:text-white px-3 py-1.5 text-sm font-bold uppercase tracking-[0.12em] transition-all duration-200">
-                Open
-                <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-              </span>
+          {/* Specialty chips */}
+          {tags.length > 0 && (
+            <div className="px-5 pb-4 flex flex-wrap gap-1.5">
+              {tags.map((t) => (
+                <span
+                  key={t}
+                  className="text-[11px] font-semibold rounded-full bg-[#F4F8FC] border border-[#E5ECF4] text-mhsp-navy/70 px-2.5 py-0.5"
+                >
+                  {t}
+                </span>
+              ))}
             </div>
+          )}
+
+          {/* Footer — funnel + arrow */}
+          <div className="px-5 py-3.5 border-t border-[#F0F4F8] bg-[#FAFCFE] flex items-center justify-between">
+            <span
+              className={`inline-flex items-center gap-1.5 text-[11px] font-bold tracking-[0.14em] uppercase ${
+                isCalculated ? "text-mhsp-navy/55" : "text-[#2F8FCC]/80"
+              }`}
+            >
+              <FunnelIcon className="h-3 w-3" strokeWidth={2.5} />
+              {isCalculated ? "Calculated" : "Hustle"}
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-lg bg-[#EDF4FB] group-hover:bg-[#1B6EB7] border border-[#DCE5EF] group-hover:border-[#1B6EB7] text-[#1B6EB7] group-hover:text-white px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.12em] transition-all duration-200">
+              Chat
+              <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
+            </span>
           </div>
         </article>
       </Link>

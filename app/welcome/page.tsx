@@ -1,9 +1,9 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { ArrowRight, Building2, Sparkles, Target, Zap } from "lucide-react";
+import { ArrowRight, Building2, Sparkles, Target, Zap, User } from "lucide-react";
 import { consumeWelcomeFlag, getUser, isLoggedIn } from "@/lib/auth";
 import { AGENTS, type Agent } from "@/lib/agents";
 import { MhspLogo } from "@/components/MhspLogo";
@@ -111,7 +111,7 @@ export default function WelcomePage() {
           transition={{ duration: 0.35, delay: 0.25 }}
           className="mt-3 text-[#6B7B8F] text-sm sm:text-base font-medium"
         >
-          11 agents online&nbsp;&nbsp;·&nbsp;&nbsp;2 funnels active
+          6 agents online&nbsp;&nbsp;·&nbsp;&nbsp;2 funnels active
         </motion.p>
 
         <motion.p
@@ -279,21 +279,20 @@ function CaptainCard({ agent, num }: { agent: (typeof AGENTS)[number]; num: numb
         {/* ── MOBILE layout (< md): photo + titles stacked ── */}
         <div className="md:hidden">
           <div className="flex items-center gap-4 mb-4">
-            {photo && (
-              <div className="shrink-0 h-16 w-16 rounded-full overflow-hidden ring-2 ring-[#1B6EB7]/12">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={photo} alt={profile.realName} className="h-full w-full object-cover" />
+            <div className="shrink-0 h-16 w-16 rounded-full overflow-hidden ring-2 ring-[#1B6EB7]/12 relative">
+              <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#C5D8EE] to-[#E2E8F0]">
+                <User className="h-8 w-8 text-[#0F4C81]/25" strokeWidth={1.5} />
               </div>
-            )}
+            </div>
             <div className="min-w-0">
               <h3 className="font-heading font-bold text-[#0F2547] text-[22px] sm:text-[26px] leading-tight">
-                {profile.realName}
+                <span className="inline-block blur-[6px] select-none" aria-hidden="true">{profile.realName}</span>
               </h3>
-              <p className="mt-1 text-[13px] sm:text-[14px] font-semibold text-[#1B6EB7] leading-tight">
-                {profile.jobTitle}
+              <p className="mt-1 text-[15px] sm:text-[17px] font-semibold text-[#1B6EB7] leading-tight">
+                {profile.designation}
               </p>
-              <p className="mt-1 text-[10px] font-bold tracking-[0.2em] uppercase text-[#0F4C81]/45">
-                {profile.mhspRole}
+              <p className="mt-1 text-[10px] font-bold tracking-[0.2em] uppercase text-[#0F4C81]/45 opacity-0">
+                {profile.designation}
               </p>
             </div>
           </div>
@@ -312,24 +311,23 @@ function CaptainCard({ agent, num }: { agent: (typeof AGENTS)[number]; num: numb
           {/* Name / titles */}
           <div className="shrink-0 w-[200px] lg:w-[240px] xl:w-[260px]">
             <h3 className="font-heading font-bold text-[#0F2547] text-[26px] lg:text-[30px] leading-tight">
-              {profile.realName}
+              <span className="inline-block blur-[6px] select-none" aria-hidden="true">{profile.realName}</span>
             </h3>
-            <p className="mt-1.5 text-[14px] lg:text-[15px] font-semibold text-[#1B6EB7] leading-tight">
-              {profile.jobTitle}
+            <p className="mt-1.5 text-[16px] lg:text-[18px] font-semibold text-[#1B6EB7] leading-tight">
+              {profile.designation}
             </p>
-            <p className="mt-2 text-[10px] font-bold tracking-[0.22em] uppercase text-[#0F4C81]/45">
-              {profile.mhspRole}
+            <p className="mt-2 text-[10px] font-bold tracking-[0.22em] uppercase text-[#0F4C81]/45 opacity-0">
+              {profile.designation}
             </p>
           </div>
 
           {/* Photo */}
-          {photo && (
-            <div className="shrink-0 h-[84px] w-[84px] lg:h-[96px] lg:w-[96px]
-                            rounded-full overflow-hidden ring-2 ring-[#1B6EB7]/15">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={photo} alt={profile.realName} className="h-full w-full object-cover" />
+          <div className="shrink-0 h-[84px] w-[84px] lg:h-[96px] lg:w-[96px]
+                          rounded-full overflow-hidden ring-2 ring-[#1B6EB7]/15 relative">
+            <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#C5D8EE] to-[#E2E8F0]">
+              <User className="h-10 w-10 text-[#0F4C81]/25" strokeWidth={1.5} />
             </div>
-          )}
+          </div>
 
           {/* Description + footnote */}
           <div className="flex-1 min-w-0">
@@ -368,33 +366,32 @@ function AgentCard({ agent, num }: { agent: (typeof AGENTS)[number]; num: number
         <span className="font-mono text-[11px] font-bold text-[#1B6EB7]/40 leading-none pt-0.5">
           {seqNum(num)}
         </span>
-        {photo && (
-          <div className="shrink-0 h-[52px] w-[52px] sm:h-[58px] sm:w-[58px]
-                          rounded-full overflow-hidden
-                          ring-2 ring-[#E2E8F0]
-                          group-hover:ring-[#1B6EB7]/20
-                          transition-all">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={photo} alt={profile.realName} className="h-full w-full object-cover" />
+        <div className="shrink-0 h-[52px] w-[52px] sm:h-[58px] sm:w-[58px]
+                        rounded-full overflow-hidden
+                        ring-2 ring-[#E2E8F0]
+                        group-hover:ring-[#1B6EB7]/20
+                        transition-all relative">
+          <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#C5D8EE] to-[#E2E8F0]">
+            <User className="h-6 w-6 text-[#0F4C81]/25" strokeWidth={1.5} />
           </div>
-        )}
+        </div>
       </div>
 
       {/* Name */}
       <h3 className="font-heading font-bold text-[#0F2547]
                      text-[18px] sm:text-[19px]
                      leading-tight">
-        {profile.realName}
+        <span className="inline-block blur-[6px] select-none" aria-hidden="true">{profile.realName}</span>
       </h3>
 
       {/* Job title */}
-      <p className="mt-1 text-[12px] sm:text-[13px] font-semibold text-[#1B6EB7] leading-tight">
-        {profile.jobTitle}
+      <p className="mt-1 text-[14px] sm:text-[16px] font-semibold text-[#1B6EB7] leading-tight">
+        {profile.designation}
       </p>
 
       {/* MHSP role */}
-      <p className="mt-1.5 text-[9px] sm:text-[10px] font-bold tracking-[0.2em] uppercase text-[#0F4C81]/38">
-        {profile.mhspRole}
+      <p className="mt-1.5 text-[9px] sm:text-[10px] font-bold tracking-[0.2em] uppercase text-[#0F4C81]/38 opacity-0">
+        {profile.designation}
       </p>
 
       {/* Divider line */}
