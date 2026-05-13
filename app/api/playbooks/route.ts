@@ -9,6 +9,11 @@ export async function GET(req: NextRequest) {
   const raw = searchParams.get("raw");
 
   if (id) {
+    // Prevent path traversal
+    if (id.includes("..") || id.startsWith("/")) {
+      return NextResponse.json({ error: "Invalid id" }, { status: 400 });
+    }
+
     if (raw === "true") {
       const content = await loadPlaybookRaw(id);
       if (!content) {

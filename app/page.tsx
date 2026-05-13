@@ -266,6 +266,13 @@ export default function Home() {
             6 AI specialists working your calculated funnel AND your backyard
             market &mdash; every single day. Trained on the MHSP method.
           </p>
+
+          <Link
+            href="/playbooks"
+            className="inline-flex items-center gap-1.5 mt-5 text-sm font-semibold text-[#1B6EB7] hover:text-[#0F4C81] transition-colors"
+          >
+            📖 Manage Playbooks &rarr;
+          </Link>
         </motion.div>
       </section>
 
