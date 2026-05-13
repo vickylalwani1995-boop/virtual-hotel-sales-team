@@ -1,9 +1,7 @@
 from dotenv import load_dotenv
 import logging, json
-from livekit.agents import (
-    AgentServer, AgentSession, Agent, JobContext, cli, WorkerOptions
-)
-from livekit.agents.beta import EndCallTool
+from livekit.agents import AgentSession, Agent, JobContext, cli, WorkerOptions
+from livekit.agents.voice import EndCallTool
 from livekit.plugins import silero
 from livekit.plugins.openai import LLM, TTS
 from livekit.plugins.deepgram import STT
@@ -54,11 +52,8 @@ class MarcusReedAgent(Agent):
             )
 
 
-server = AgentServer()
-
-
-@server.rtc_session(agent_name=AGENT_NAME)
 async def marcus_session(ctx: JobContext):
+    await ctx.connect()
     data = json.loads(ctx.job.metadata or "{}")
     direction = data.get("callDirection", "outbound")
     session = AgentSession(
