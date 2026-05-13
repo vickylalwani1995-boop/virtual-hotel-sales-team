@@ -36,7 +36,6 @@ async def capture_lead(
     except Exception as e:
         return str(e)
 
-@function_tool
 async def send_lead_email():
     try:
         sender = os.getenv("EMAIL_USER")

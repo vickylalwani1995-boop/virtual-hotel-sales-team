@@ -17,7 +17,17 @@ AGENT_MAP = {
 }
 
 
+def to_e164(number: str) -> str:
+    digits = ''.join(filter(str.isdigit, number))
+    if number.strip().startswith('+'):
+        return '+' + digits
+    if len(digits) == 10:
+        return '+91' + digits  # Indian 10-digit mobile
+    return '+' + digits  # assume country code already present
+
+
 async def make_call(phone_number, lead_name, hotel_data, lead_meta, agent_id="03_sarah"):
+    phone_number = to_e164(phone_number)
     clean = ''.join(filter(str.isdigit, phone_number))
     livekit_agent = AGENT_MAP.get(agent_id, "agent_sarah")
     room = f"hospitality-{agent_id}-{clean}"

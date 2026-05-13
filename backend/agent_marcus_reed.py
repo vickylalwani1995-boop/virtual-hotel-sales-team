@@ -1,7 +1,13 @@
 from dotenv import load_dotenv
 import logging, json
 from livekit.agents import AgentSession, Agent, JobContext, cli, WorkerOptions
-from livekit.agents.voice import EndCallTool
+try:
+    from livekit.agents.voice import EndCallTool
+except ImportError:
+    try:
+        from livekit.agents.beta import EndCallTool
+    except ImportError:
+        EndCallTool = None
 from livekit.plugins import silero
 from livekit.plugins.openai import LLM, TTS
 from livekit.plugins.deepgram import STT
@@ -35,10 +41,8 @@ class MarcusReedAgent(Agent):
             COMPANY_NAME=(lead_meta or {}).get("companyName", "your company"),
         )
         prompt += f"\n\nCALL_DIRECTION: {call_direction.upper()}."
-        super().__init__(
-            instructions=prompt,
-            tools=[EndCallTool(), capture_lead, route_to_agent],
-        )
+        _tools = ([EndCallTool()] if EndCallTool else []) + [capture_lead, route_to_agent]
+        super().__init__(instructions=prompt, tools=_tools)
 
     async def on_enter(self):
         hotel_name = self.hotel.get("hotelName", "our hotel")
@@ -61,7 +65,6 @@ async def marcus_session(ctx: JobContext):
         stt=STT(),
         llm=LLM(model="gpt-4o-mini"),
         tts=TTS(voice=TTS_VOICE),
-        allow_interruptions=True,
     )
     await session.start(
         room=ctx.room,
