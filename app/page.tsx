@@ -9,6 +9,7 @@ import {
   BookOpen,
   Building2,
   Clock,
+  Download,
   Hotel,
   Lock,
   MapPin,
@@ -416,6 +417,25 @@ export default function Home() {
                 <p className="text-[10px] text-[#6B7B8F]/70 mt-1">
                   PDF, DOCX, XLSX, TXT (max 5 MB)
                 </p>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    const blob = new Blob([DEFAULT_PROFILE], { type: "text/plain" });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = "hotel-brief-sample.txt";
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                  }}
+                  className="mt-3 inline-flex items-center gap-1.5 rounded-lg border border-[#1B6EB7]/25 bg-white px-3 py-1.5 text-xs font-semibold text-[#1B6EB7] hover:bg-[#EAF0F9] transition-colors shadow-sm"
+                >
+                  <Download className="h-3.5 w-3.5" />
+                  Download Sample File
+                </button>
               </div>
             </div>
 
