@@ -305,6 +305,33 @@ export function AgentChat({
           agent.realName,
           `responded in ${agent.designation} chat`
         );
+        // Trigger real outbound call if agent output CALL_ACTION with a phone number
+        const callMatch = aMsg.content.match(/\[CALL_ACTION:\s*([^|]+)\|([^|]+)\|([^\]]+)\]/);
+        if (callMatch) {
+          const leadName = callMatch[1].trim();
+          const companyName = callMatch[2].trim();
+          const phoneNumber = callMatch[3].trim().replace(/\s/g, "");
+          if (phoneNumber.match(/^\+?\d{7,}/)) {
+            fetch("/api/call-realtime", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                contacts: [{ leadName, phoneNumber, leadTitle: "", companyName }],
+                hotelData: {
+                  hotelName: "The Westmore Hotel Dallas",
+                  location: "Downtown Dallas, TX",
+                  rooms: 220, adr: 189, targetBusiness: "corporate",
+                  weakDays: "Sunday through Tuesday", meetingSpace: "4 banquet halls", occupancy: "62",
+                },
+                agentId: agent.id,
+              }),
+            }).then(() => {
+              toast.success(`Calling ${leadName} at ${phoneNumber}…`);
+            }).catch(() => {
+              toast.error("Call failed — check backend connection.");
+            });
+          }
+        }
       }
 
       async function playStreamSimulated(text: string) {
@@ -763,7 +790,7 @@ function AssistantBubble({
   const cleanContent = content.replace(
     /[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1FA00}-\u{1FAFF}\u{FE00}-\u{FE0F}\u{200D}\u{20E3}\u{E0020}-\u{E007F}]/gu,
     ""
-  ).replace(/\s{2,}/g, " ").replace(/^ /gm, "");
+  ).replace(/[^\S\n]{2,}/g, " ").replace(/^ /gm, "");
 
   return (
     <motion.div

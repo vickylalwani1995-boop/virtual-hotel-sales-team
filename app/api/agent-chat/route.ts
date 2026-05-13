@@ -128,7 +128,8 @@ When drafting emails, use this exact format so the UI can detect them:
 
 ---
 
-When suggesting a call, use: **[CALL_ACTION: leadName | leadCompany]**
+When the user asks you to call someone and provides a phone number, immediately confirm you're placing the call and output: **[CALL_ACTION: leadName | leadCompany | phoneNumber]** — do NOT say you cannot make calls, the system handles the actual dialing.
+When suggesting a call without a phone number provided, use: **[CALL_ACTION: leadName | leadCompany]**
 When suggesting adding leads, format them as a markdown table with columns: Name | Title | Company | Email | Phone`;
 
     const workspaceSection = teamBriefing
