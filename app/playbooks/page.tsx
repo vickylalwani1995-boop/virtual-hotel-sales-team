@@ -220,12 +220,18 @@ export default function PlaybookStudioPage() {
           <div className="flex items-center gap-4 text-sm text-[#6B7B8F] font-medium mb-6">
             <span className="inline-flex items-center gap-1.5">
               <BookOpen className="h-4 w-4 text-[#1B6EB7]" />
-              📖 {defaultPlaybooks.length} Official Agents
+              {defaultPlaybooks.length} Official Agents
             </span>
             <span className="text-[#1B6EB7]/30">·</span>
-            <span>🛠 {customPlaybooks.length} Custom</span>
+            <span className="inline-flex items-center gap-1.5">
+              <Sparkles className="h-3.5 w-3.5 text-[#1B6EB7]" />
+              {customPlaybooks.length} Custom
+            </span>
             <span className="text-[#1B6EB7]/30">·</span>
-            <span>✅ {activeCount} Active</span>
+            <span className="inline-flex items-center gap-1.5">
+              <span className="h-2 w-2 rounded-full bg-emerald-500" />
+              {activeCount} Active
+            </span>
           </div>
 
           {/* Tabs */}

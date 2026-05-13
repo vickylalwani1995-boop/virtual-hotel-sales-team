@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
+  BookOpen,
   Building2,
   Clock,
   Hotel,
@@ -271,7 +272,7 @@ export default function Home() {
             href="/playbooks"
             className="inline-flex items-center gap-1.5 mt-5 text-sm font-semibold text-[#1B6EB7] hover:text-[#0F4C81] transition-colors"
           >
-            📖 Manage Playbooks &rarr;
+            <BookOpen className="h-4 w-4" /> Manage Playbooks &rarr;
           </Link>
         </motion.div>
       </section>
