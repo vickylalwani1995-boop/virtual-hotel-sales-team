@@ -218,7 +218,7 @@ export function SequenceBuilder({
                       type="text"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      className="w-full px-3 py-2.5 rounded-lg border border-[#DCE5EF] bg-white text-sm text-mhsp-text focus:outline-none focus:ring-4 focus:ring-[#1B6EB7]/15 focus:border-[#1B6EB7]/50 transition-all"
+                      className="rounded-xl"
                     />
                   </div>
                   <div>
@@ -228,7 +228,7 @@ export function SequenceBuilder({
                     <select
                       onChange={(e) => handleApplyTemplate(e.target.value)}
                       defaultValue=""
-                      className="w-full appearance-none px-3 py-2.5 rounded-lg border border-[#DCE5EF] bg-white text-sm font-semibold text-mhsp-navy focus:outline-none focus:ring-4 focus:ring-[#1B6EB7]/15 focus:border-[#1B6EB7]/50 transition-all"
+                      className="rounded-xl"
                     >
                       <option value="" disabled>
                         Apply template…

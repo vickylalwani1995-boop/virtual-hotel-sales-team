@@ -456,23 +456,38 @@ export function PlaybookEditor({ playbook: initial, isNew }: Props) {
       <style jsx>{`
         .input-field {
           width: 100%;
-          border-radius: 0.5rem;
-          border: 1px solid #e2e8f0;
-          padding: 0.625rem 0.75rem;
+          border-radius: 0.75rem;
+          border: 1.5px solid var(--color-mhsp-line, #DCE5EF);
+          padding: 0.625rem 0.875rem;
           font-size: 0.875rem;
           color: #0f2547;
           background: white;
-          transition: border-color 0.15s;
+          transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+        }
+        .input-field:hover {
+          border-color: #B0C8E0;
         }
         .input-field:focus {
           outline: none;
           border-color: #1b6eb7;
-          box-shadow: 0 0 0 2px rgba(27, 110, 183, 0.1);
+          box-shadow: 0 0 0 3px rgba(27, 110, 183, 0.12), 0 1px 2px rgba(15, 76, 129, 0.06);
+          background-color: #FAFCFF;
         }
         .input-field:disabled {
-          opacity: 0.7;
-          background: #f9fafb;
+          opacity: 0.6;
+          background: #F4F6F9;
           cursor: not-allowed;
+        }
+        select.input-field {
+          appearance: none;
+          -webkit-appearance: none;
+          padding-right: 2.75rem;
+          font-weight: 600;
+          color: var(--color-mhsp-navy, #0F4C81);
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235A6B82' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+          background-repeat: no-repeat;
+          background-position: right 0.875rem center;
+          background-size: 1rem;
         }
       `}</style>
     </div>

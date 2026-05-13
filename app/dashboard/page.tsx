@@ -28,7 +28,6 @@ import {
   Zap,
   Sparkles,
   ArrowRight,
-  ChevronDown,
 } from "lucide-react";
 import { AGENTS, getAgent } from "@/lib/agents";
 import { getActivity, type ActivityEntry } from "@/lib/activity-log";
@@ -248,7 +247,7 @@ export default function DashboardPage() {
                 value={range}
                 onChange={(e) => setRange(e.target.value as Range)}
                 aria-label="Date range"
-                className="appearance-none pl-4 pr-10 py-2.5 rounded-xl border border-[#DCE5EF] bg-white text-sm font-bold uppercase tracking-[0.12em] text-mhsp-navy hover:border-[#1B6EB7]/40 focus:outline-none focus:ring-4 focus:ring-[#1B6EB7]/15 focus:border-[#1B6EB7]/50 transition-all"
+                className="pl-4 py-2.5 rounded-xl text-sm font-bold uppercase tracking-[0.12em]"
               >
                 {(Object.keys(RANGE_LABELS) as Range[]).map((r) => (
                   <option key={r} value={r}>
@@ -256,7 +255,6 @@ export default function DashboardPage() {
                   </option>
                 ))}
               </select>
-              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-mhsp-muted" />
             </div>
           </div>
         </div>

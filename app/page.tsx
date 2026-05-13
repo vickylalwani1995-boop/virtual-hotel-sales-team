@@ -299,11 +299,12 @@ export default function Home() {
               <div className="p-5 sm:p-7">
                 <div className="relative">
                   <textarea
+                    data-chat-input
                     data-tour="hotel-input"
                     value={profile}
                     onChange={(e) => setProfile(e.target.value)}
                     placeholder={"Hotel Name: ...\nLocation: ...\nRooms: ...\nTarget Business: ...\nSlow Days: ...\nMain Need: ..."}
-                    className="w-full min-h-[340px] sm:min-h-[380px] resize-none font-mono text-sm leading-relaxed bg-[#FAFCFE] border border-[#E2E8F0] rounded-xl px-4 py-3.5 pb-9 text-[#0F2547] placeholder:text-[#6B7B8F]/50 focus:outline-none focus:ring-4 focus:ring-[#1B6EB7]/15 focus:border-[#1B6EB7]/50 focus:bg-white transition-all"
+                    className="w-full min-h-[340px] sm:min-h-[380px] resize-none font-mono text-sm leading-relaxed bg-[#FAFCFE] border-[1.5px] border-[#DCE5EF] rounded-xl px-4 py-3.5 pb-9 text-[#0F2547] placeholder:text-[#6B7B8F]/50 focus:outline-none focus:border-[#1B6EB7] focus:shadow-[0_0_0_3px_rgba(27,110,183,0.12)] focus:bg-white transition-all hover:border-[#B0C8E0]"
                   />
                   <span className="absolute bottom-2.5 right-3 text-xs text-[#6B7B8F]/60 font-mono pointer-events-none select-none bg-gradient-to-l from-[#FAFCFE] via-[#FAFCFE] to-transparent pl-6">
                     {lineCount} {lineCount === 1 ? "line" : "lines"} &middot; {charCount} chars

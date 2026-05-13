@@ -46,6 +46,7 @@ export function ConciergeInput({
     <div className="border-t border-mhsp-line bg-white px-4 py-3">
       <div className="flex items-center gap-2 rounded-xl border border-mhsp-line bg-white focus-within:border-mhsp-gold focus-within:ring-2 focus-within:ring-mhsp-gold/20 transition-all px-3 py-2 min-h-[44px]">
         <textarea
+          data-chat-input
           ref={ref}
           value={value}
           onChange={(e) => setValue(e.target.value)}

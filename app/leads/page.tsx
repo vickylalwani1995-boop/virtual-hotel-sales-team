@@ -445,8 +445,8 @@ export default function LeadsPage() {
           <>
             {/* PIPELINE TOOLBAR — premium card grouping the action bar
                 with a section heading. */}
-            <div className="mb-5 rounded-2xl border border-[#E5ECF4] bg-white shadow-[0_8px_24px_-14px_rgba(15,76,129,0.12),0_2px_8px_-4px_rgba(15,76,129,0.05)] overflow-hidden">
-              <div className="h-1 w-full bg-gradient-to-r from-[#2F8FCC] via-[#1B6EB7] to-[#0F4C81]" />
+            <div className="mb-5 rounded-2xl border border-[#E5ECF4] bg-white shadow-[0_8px_24px_-14px_rgba(15,76,129,0.12),0_2px_8px_-4px_rgba(15,76,129,0.05)]">
+              <div className="h-1 w-full bg-gradient-to-r from-[#2F8FCC] via-[#1B6EB7] to-[#0F4C81] rounded-t-2xl" />
               <div className="p-4 sm:p-5">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
                   <div>
@@ -505,13 +505,13 @@ export default function LeadsPage() {
             <div className="mb-5 flex flex-col gap-3 rounded-2xl border border-[#E5ECF4] bg-white p-4">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
                 <div className="lg:col-span-2 relative">
-                  <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-mhsp-muted" />
+                  <Search className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-mhsp-muted" />
                   <input
                     type="text"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     placeholder="Search name, company, email, city…"
-                    className="w-full pl-9 pr-3 py-2 rounded-lg border border-[#DCE5EF] bg-white text-sm text-mhsp-text placeholder:text-mhsp-muted/70 focus:outline-none focus:ring-4 focus:ring-[#1B6EB7]/15 focus:border-[#1B6EB7]/50 transition-all"
+                    className="pl-10 rounded-xl"
                   />
                 </div>
                 <Select
@@ -822,20 +822,17 @@ function Select({
   options: { value: string; label: string }[];
 }) {
   return (
-    <div className="relative">
-      <select
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="w-full appearance-none pl-3 pr-9 py-2 rounded-lg border border-[#DCE5EF] bg-white text-sm font-semibold text-mhsp-navy hover:border-[#1B6EB7]/40 focus:outline-none focus:ring-4 focus:ring-[#1B6EB7]/15 focus:border-[#1B6EB7]/50 transition-all"
-      >
-        {options.map((o) => (
-          <option key={o.value} value={o.value}>
-            {o.label}
-          </option>
-        ))}
-      </select>
-      <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-mhsp-muted" />
-    </div>
+    <select
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      className="w-full rounded-xl py-2.5 text-sm"
+    >
+      {options.map((o) => (
+        <option key={o.value} value={o.value}>
+          {o.label}
+        </option>
+      ))}
+    </select>
   );
 }
 
@@ -1616,14 +1613,7 @@ function LeadDrawer({
                 <select
                   value={status}
                   onChange={(e) => persistStatus(e.target.value as LeadStatus)}
-                  className="flex-1 appearance-none pl-3 pr-9 py-2 rounded-xl border border-[#DCE5EF] bg-[#F8FAFC] text-sm font-semibold text-mhsp-navy focus:outline-none focus:ring-4 focus:ring-[#1B6EB7]/15 focus:border-[#1B6EB7]/50 transition-all"
-                  style={{
-                    backgroundImage:
-                      "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235A6B82' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E\")",
-                    backgroundRepeat: "no-repeat",
-                    backgroundPosition: "right 10px center",
-                    backgroundSize: "14px",
-                  }}
+                  className="flex-1 rounded-xl bg-[#F8FAFC]"
                 >
                   {(Object.keys(STATUS_LABELS) as LeadStatus[]).map((s) => (
                     <option key={s} value={s}>

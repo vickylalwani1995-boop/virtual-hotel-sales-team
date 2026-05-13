@@ -19,7 +19,6 @@ import {
   Filter,
   ArrowRight,
   AlertTriangle,
-  ChevronDown,
 } from "lucide-react";
 import { AGENTS, getAgent } from "@/lib/agents";
 import { iconForAgent } from "@/lib/agent-icons";
@@ -226,7 +225,7 @@ export default function ActivityPage() {
             <select
               value={agentFilter}
               onChange={(e) => setAgentFilter(e.target.value)}
-              className="appearance-none w-full lg:w-auto text-sm font-semibold rounded-xl pl-3.5 pr-11 py-2 border border-[#DCE5EF] bg-white text-mhsp-navy hover:border-[#1B6EB7]/50 focus:outline-none focus:ring-4 focus:ring-[#1B6EB7]/15 transition-all"
+              className="w-full lg:w-auto text-sm font-semibold rounded-xl py-2.5"
             >
               <option value="all">By agent: All</option>
               {AGENTS.map((a) => (
@@ -235,10 +234,6 @@ export default function ActivityPage() {
                 </option>
               ))}
             </select>
-            <ChevronDown
-              className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-mhsp-muted"
-              strokeWidth={2.25}
-            />
           </div>
         </div>
 

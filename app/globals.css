@@ -223,6 +223,118 @@ select:disabled {
   }
 }
 
+/* ──────────────────────────────────────────────────────────────────────────────
+   FORM ELEMENTS – Global beautiful input system
+   Placed in @layer base so Tailwind utilities (border, rounded, px, py etc)
+   always win when applied inline.
+   ────────────────────────────────────────────────────────────────────────────── */
+
+@layer base {
+  /* Base input / textarea / select styling */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="search"],
+  input[type="url"],
+  input[type="tel"],
+  input[type="number"],
+  input[type="date"],
+  input[type="datetime-local"],
+  input[type="time"],
+  textarea:not([data-chat-input]),
+  select {
+    width: 100%;
+    padding: 0.625rem 0.875rem;
+    border-radius: 0.75rem;
+    border: 1.5px solid var(--color-mhsp-line);
+    background-color: #FFFFFF;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--color-mhsp-text);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  }
+
+  input[type="text"]::placeholder,
+  input[type="email"]::placeholder,
+  input[type="password"]::placeholder,
+  input[type="search"]::placeholder,
+  input[type="url"]::placeholder,
+  input[type="tel"]::placeholder,
+  input[type="number"]::placeholder,
+  textarea:not([data-chat-input])::placeholder {
+    color: var(--color-mhsp-muted);
+    opacity: 0.6;
+  }
+
+  input[type="text"]:hover,
+  input[type="email"]:hover,
+  input[type="password"]:hover,
+  input[type="search"]:hover,
+  input[type="url"]:hover,
+  input[type="tel"]:hover,
+  input[type="number"]:hover,
+  input[type="date"]:hover,
+  input[type="datetime-local"]:hover,
+  input[type="time"]:hover,
+  textarea:not([data-chat-input]):hover,
+  select:hover {
+    border-color: #B0C8E0;
+  }
+
+  input[type="text"]:focus,
+  input[type="email"]:focus,
+  input[type="password"]:focus,
+  input[type="search"]:focus,
+  input[type="url"]:focus,
+  input[type="tel"]:focus,
+  input[type="number"]:focus,
+  input[type="date"]:focus,
+  input[type="datetime-local"]:focus,
+  input[type="time"]:focus,
+  textarea:not([data-chat-input]):focus,
+  select:focus {
+    outline: none;
+    border-color: var(--color-mhsp-gold);
+    box-shadow: 0 0 0 3px rgba(27, 110, 183, 0.12), 0 1px 2px rgba(15, 76, 129, 0.06);
+    background-color: #FAFCFF;
+  }
+
+  input:disabled,
+  textarea:disabled,
+  select:disabled {
+    opacity: 0.6;
+    background-color: #F4F6F9;
+    cursor: not-allowed;
+  }
+
+  /* Select – proper arrow spacing and custom chevron */
+  select {
+    appearance: none;
+    -webkit-appearance: none;
+    padding-right: 2.75rem;
+    font-weight: 600;
+    color: var(--color-mhsp-navy);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235A6B82' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.875rem center;
+    background-size: 1rem;
+  }
+
+  /* Checkbox + Radio – consistent styling */
+  input[type="checkbox"],
+  input[type="radio"] {
+    width: 1.125rem;
+    height: 1.125rem;
+    border-radius: 0.25rem;
+    border: 1.5px solid var(--color-mhsp-line);
+    accent-color: var(--color-mhsp-gold);
+    cursor: pointer;
+  }
+  input[type="radio"] {
+    border-radius: 50%;
+  }
+}
+
 /* ============================================================
    Responsive scaling - 16 breakpoints
    Container rule (per latest spec):

@@ -265,7 +265,7 @@ export function EmailComposer({
                       onChange={(e) => setTo(e.target.value)}
                       disabled={isBusy}
                       placeholder="recipient@company.com"
-                      className="w-full pl-9 pr-3 py-2.5 rounded-lg border border-[#DCE5EF] bg-white text-sm text-mhsp-text placeholder:text-mhsp-muted/70 focus:outline-none focus:ring-4 focus:ring-[#1B6EB7]/15 focus:border-[#1B6EB7]/50 disabled:opacity-60 transition-all"
+                      className="pl-10 rounded-xl"
                     />
                   </div>
                   {lead && (
@@ -286,7 +286,7 @@ export function EmailComposer({
                     onChange={(e) => setSubject(e.target.value)}
                     disabled={isBusy}
                     placeholder="Email subject line"
-                    className="w-full px-3 py-2.5 rounded-lg border border-[#DCE5EF] bg-white text-sm text-mhsp-text placeholder:text-mhsp-muted/70 focus:outline-none focus:ring-4 focus:ring-[#1B6EB7]/15 focus:border-[#1B6EB7]/50 disabled:opacity-60 transition-all"
+                    className="rounded-xl"
                   />
                 </div>
 
@@ -302,7 +302,7 @@ export function EmailComposer({
                     disabled={isBusy}
                     rows={10}
                     placeholder="Write your email here…"
-                    className="w-full px-3 py-2.5 rounded-lg border border-[#DCE5EF] bg-white text-sm text-mhsp-text leading-relaxed placeholder:text-mhsp-muted/70 focus:outline-none focus:ring-4 focus:ring-[#1B6EB7]/15 focus:border-[#1B6EB7]/50 disabled:opacity-60 resize-none transition-all"
+                    className="rounded-xl leading-relaxed resize-none"
                   />
                 </div>
 
@@ -325,7 +325,7 @@ export function EmailComposer({
                       value={scheduleDate}
                       onChange={(e) => setScheduleDate(e.target.value)}
                       disabled={isBusy}
-                      className="flex-1 px-3 py-2 rounded-lg border border-[#DCE5EF] bg-white text-sm text-mhsp-text focus:outline-none focus:ring-4 focus:ring-[#1B6EB7]/15 focus:border-[#1B6EB7]/50 disabled:opacity-60 transition-all"
+                      className="flex-1 rounded-xl"
                     />
                   )}
                 </div>

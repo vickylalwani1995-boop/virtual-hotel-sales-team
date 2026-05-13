@@ -79,7 +79,7 @@ export default function LoginPage() {
                   placeholder="Username"
                   autoFocus
                   autoComplete="username"
-                  className="w-full pl-10 pr-3 py-2.5 rounded-lg border border-mhsp-line text-mhsp-text placeholder:text-mhsp-muted/70 focus:outline-none focus:ring-2 focus:ring-mhsp-gold/30 focus:border-mhsp-gold/50 transition-all"
+                  className="pl-10 rounded-xl"
                 />
               </div>
             </div>
@@ -96,7 +96,7 @@ export default function LoginPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Password"
                   autoComplete="current-password"
-                  className="w-full pl-10 pr-3 py-2.5 rounded-lg border border-mhsp-line text-mhsp-text placeholder:text-mhsp-muted/70 focus:outline-none focus:ring-2 focus:ring-mhsp-gold/30 focus:border-mhsp-gold/50 transition-all"
+                  className="pl-10 rounded-xl"
                 />
               </div>
             </div>

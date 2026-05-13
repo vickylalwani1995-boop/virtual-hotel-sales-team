@@ -180,7 +180,7 @@ export function PullLeadsDialog({
                     <select
                       value={industry}
                       onChange={(e) => setIndustry(e.target.value)}
-                      className="w-full appearance-none px-3 py-2 rounded-lg border border-[#DCE5EF] bg-white text-sm font-semibold text-mhsp-navy focus:outline-none focus:ring-4 focus:ring-[#1B6EB7]/15 transition-all"
+                      className="rounded-xl"
                     >
                       <option>Healthcare</option>
                       <option>Technology</option>
@@ -203,7 +203,7 @@ export function PullLeadsDialog({
                         type="text"
                         value={location}
                         onChange={(e) => setLocation(e.target.value)}
-                        className="w-full pl-8 pr-3 py-2 rounded-lg border border-[#DCE5EF] bg-white text-sm text-mhsp-text focus:outline-none focus:ring-4 focus:ring-[#1B6EB7]/15 transition-all"
+                        className="pl-8 rounded-xl"
                       />
                     </div>
                   </div>
@@ -214,7 +214,7 @@ export function PullLeadsDialog({
                     <select
                       value={seniority}
                       onChange={(e) => setSeniority(e.target.value)}
-                      className="w-full appearance-none px-3 py-2 rounded-lg border border-[#DCE5EF] bg-white text-sm font-semibold text-mhsp-navy focus:outline-none focus:ring-4 focus:ring-[#1B6EB7]/15 transition-all"
+                      className="rounded-xl"
                     >
                       <option>Any</option>
                       <option>Manager+</option>

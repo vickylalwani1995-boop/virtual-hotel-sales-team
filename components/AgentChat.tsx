@@ -562,6 +562,7 @@ export function AgentChat({
           />
           <div className="flex-1 flex items-end gap-2 rounded-xl border border-mhsp-line bg-white focus-within:border-mhsp-gold focus-within:ring-2 focus-within:ring-mhsp-gold/20 transition-all px-3 py-2 min-h-[40px]">
             <textarea
+              data-chat-input
               ref={textareaRef}
               value={input}
               onChange={(e) => {
