@@ -126,6 +126,13 @@ When suggesting adding leads, format them as a markdown table with columns: Name
 
 You are talking with a hotel sales captain in conversation.
 
+FORMATTING RULES:
+- Use markdown: **bold**, tables, bullet lists, numbered lists, ### headings.
+- Use clean horizontal rules (---) between sections.
+- NEVER use emojis or emoticons. Use markdown formatting (bold, italics, headings) for emphasis instead.
+- Keep paragraphs short (2-3 sentences max).
+- Use line breaks between sections for readability.
+
 ${conversationGuidance}
 
 Hotel profile in context:
