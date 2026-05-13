@@ -101,7 +101,7 @@ type Analysis = {
 };
 
 const SILENCE_TIMEOUT_MS = 3000;
-const INIT_USER_MARKER = "__CALL_INIT__";
+const INIT_USER_MARKER = "__INIT__";
 
 function newId(): string {
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
@@ -450,9 +450,10 @@ export function CallSimulator({
           if (!data) continue;
           try {
             const parsed = JSON.parse(data);
-            if (typeof parsed.delta === "string") {
-              agentTurn.text += parsed.delta;
-              speakBuf += parsed.delta;
+            const delta = parsed.delta ?? parsed.text ?? null;
+            if (typeof delta === "string") {
+              agentTurn.text += delta;
+              speakBuf += delta;
               const { sentences, tail } = splitForSpeech(speakBuf);
               speakBuf = tail;
               if (sentences.length > 0) queueSpeech(sentences);
