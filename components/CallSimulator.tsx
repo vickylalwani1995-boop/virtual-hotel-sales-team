@@ -100,7 +100,7 @@ type Analysis = {
   opportunityScore: number;
 };
 
-const SILENCE_TIMEOUT_MS = 2200;
+const SILENCE_TIMEOUT_MS = 3000;
 const INIT_USER_MARKER = "__CALL_INIT__";
 
 function newId(): string {
@@ -251,6 +251,16 @@ export function CallSimulator({
     }
     if (muted || !isCallingRef.current) return;
 
+    // Abort any existing recognition instance before creating a new one
+    if (recognitionRef.current) {
+      try {
+        recognitionRef.current.abort();
+      } catch {
+        // ignore
+      }
+      recognitionRef.current = null;
+    }
+
     accumulatedSpeechRef.current = "";
     setInterim("");
     setState("listening");
@@ -258,7 +268,7 @@ export function CallSimulator({
 
     const r = new Ctor();
     r.lang = "en-US";
-    r.continuous = false;
+    r.continuous = true;
     r.interimResults = true;
     if (typeof r.maxAlternatives === "number") r.maxAlternatives = 1;
 

@@ -21,6 +21,7 @@ import {
   FileText,
   X,
   ChevronDown,
+  Calendar,
 } from "lucide-react";
 import type { Agent } from "@/lib/agents";
 import { iconForAgent } from "@/lib/agent-icons";
@@ -758,11 +759,14 @@ function AssistantBubble({
           <span className="inline-block w-1 h-3.5 align-middle bg-mhsp-gold animate-pulse rounded-sm ml-0.5" />
         )}
         {!streaming && agentId && (
-          <LeadCaptureBar
-            content={content}
-            agentId={agentId}
-            hotelProfile={hotelProfile}
-          />
+          <>
+            <LeadCaptureBar
+              content={content}
+              agentId={agentId}
+              hotelProfile={hotelProfile}
+            />
+            <SequenceDetector content={content} />
+          </>
         )}
       </div>
     </motion.div>
@@ -793,6 +797,55 @@ function TypingIndicator({
       </div>
     </div>
   );
+}
+
+// ─── Sequence Detector ───────────────────────────────────────────────────────
+
+const SEQUENCE_PATTERNS = [
+  /##\s*\d+-step/i,
+  /##\s*outreach sequence/i,
+  /##\s*drip campaign/i,
+  /##\s*follow-up sequence/i,
+  /day\s*1[\s\S]*day\s*\d/i,
+  /step\s*1[\s\S]*step\s*\d/i,
+];
+
+function SequenceDetector({ content }: { content: string }) {
+  const [open, setOpen] = useState(false);
+  const hasSequence = SEQUENCE_PATTERNS.some((p) => p.test(content));
+  if (!hasSequence) return null;
+
+  return (
+    <>
+      <button
+        onClick={() => setOpen(true)}
+        className="mt-2 inline-flex items-center gap-1.5 rounded-lg border border-[#C9DAEB] bg-[#EAF2FA] px-3 py-1.5 text-xs font-bold text-[#1B6EB7] hover:bg-[#D6E3F0] transition-colors"
+      >
+        <Calendar className="h-3.5 w-3.5" /> Build Campaign
+      </button>
+      {open && (
+        <SequenceBuilderInline onClose={() => setOpen(false)} />
+      )}
+    </>
+  );
+}
+
+function SequenceBuilderInline({ onClose }: { onClose: () => void }) {
+  // Lazy-load the dialog by rendering it open
+  const [SequenceBuilder, setModule] = useState<React.ComponentType<{
+    open: boolean;
+    onClose: () => void;
+    agentName: string;
+  }> | null>(null);
+
+  useEffect(() => {
+    import("@/components/SequenceBuilder").then((mod) => {
+      setModule(() => mod.SequenceBuilder);
+    });
+  }, []);
+
+  if (!SequenceBuilder) return null;
+  return <SequenceBuilder open onClose={onClose} agentName="Sales Team" />;
 }
 
 // ─── Workspace Panel ─────────────────────────────────────────────────────────

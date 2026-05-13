@@ -57,6 +57,7 @@ import { AGENTS } from "@/lib/agents";
 import { PullLeadsDialog } from "@/components/PullLeadsDialog";
 import { EmailComposer } from "@/components/EmailComposer";
 import { SequenceBuilder } from "@/components/SequenceBuilder";
+import { ExportLeadsDialog } from "@/components/ExportLeadsDialog";
 
 /** Inline LinkedIn glyph — lucide-react removed brand icons. */
 function LinkedinIcon({ className = "" }: { className?: string }) {
@@ -132,6 +133,7 @@ export default function LeadsPage() {
   const [emailComposerOpen, setEmailComposerOpen] = useState(false);
   const [emailComposerLead, setEmailComposerLead] = useState<Lead | null>(null);
   const [sequenceOpen, setSequenceOpen] = useState(false);
+  const [exportDialogOpen, setExportDialogOpen] = useState(false);
 
   // load + subscribe to leads changes
   useEffect(() => {
@@ -476,6 +478,7 @@ export default function LeadsPage() {
                     onCSV={(s) => handleExportCSV(s)}
                     onExcel={(s) => handleExportExcel(s)}
                     selectedCount={selected.size}
+                    onOpenDialog={() => setExportDialogOpen(true)}
                   />
                   <BulkActionsButton
                     disabled={selected.size === 0}
@@ -755,6 +758,14 @@ export default function LeadsPage() {
         onClose={() => setSequenceOpen(false)}
         preSelectedLeadIds={selected.size > 0 ? [...selected] : undefined}
         agentName="Sales Team"
+      />
+
+      {/* EXPORT DIALOG */}
+      <ExportLeadsDialog
+        open={exportDialogOpen}
+        onClose={() => setExportDialogOpen(false)}
+        leads={filtered}
+        selectedIds={selected.size > 0 ? selected : undefined}
       />
     </main>
   );
@@ -1147,10 +1158,12 @@ function ExportButton({
   onCSV,
   onExcel,
   selectedCount,
+  onOpenDialog,
 }: {
   onCSV: (scope: "selected" | "all") => void;
   onExcel: (scope: "selected" | "all") => void;
   selectedCount: number;
+  onOpenDialog: () => void;
 }) {
   const [open, setOpen] = useState(false);
   const ref = useClickOutside<HTMLDivElement>(() => setOpen(false));
@@ -1183,10 +1196,10 @@ function ExportButton({
         />
         <MenuItem
           Icon={Cloud}
-          label="Push to Google Sheet (coming soon)"
+          label="More destinations (CRM, Sheets, Marketing)"
           onClick={() => {
             setOpen(false);
-            toast.info("Google Sheets push is coming — Vicky's wiring it.");
+            onOpenDialog();
           }}
         />
       </Menu>
