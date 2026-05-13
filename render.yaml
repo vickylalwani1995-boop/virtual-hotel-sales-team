@@ -1,0 +1,38 @@
+services:
+  - type: web
+    name: virtual-hotel-voice-backend
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: LIVEKIT_URL
+        value: wss://sales-team-q8kc5nom.livekit.cloud
+      - key: HOTEL_NAME
+        value: The Westmore Hotel Dallas
+      - key: HOTEL_LOCATION
+        value: Downtown Dallas, TX
+      - key: HOTEL_ROOMS
+        value: "220"
+      - key: HOTEL_ADR
+        value: "189"
+      - key: HOTEL_OCCUPANCY
+        value: "62"
+      - key: HOTEL_TARGET
+        value: corporate travel
+      - key: HOTEL_WEAK_DAYS
+        value: Sunday through Tuesday
+      - key: HOTEL_MEETING
+        value: 4 banquet halls
+      - key: LIVEKIT_API_KEY
+        sync: false
+      - key: LIVEKIT_API_SECRET
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: DEEPGRAM_API_KEY
+        sync: false
+      - key: VOICE_API_SECRET
+        sync: false
+    healthCheckPath: /api/health
+    plan: free
