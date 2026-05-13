@@ -125,7 +125,13 @@ export function HowItWorks() {
             6 specialists ready to assemble
           </p>
           <p className="mt-1 text-xs text-[#6B7B8F]">
-            Brief a hotel above to unlock your team &rarr;
+            <button
+              type="button"
+              onClick={() => document.getElementById("brief-section")?.scrollIntoView({ behavior: "smooth" })}
+              className="hover:text-[#1B6EB7] transition-colors cursor-pointer"
+            >
+              Brief a hotel above to unlock your team &rarr;
+            </button>
           </p>
         </div>
       </div>

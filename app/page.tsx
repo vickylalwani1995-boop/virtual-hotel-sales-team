@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
@@ -12,11 +12,11 @@ import {
   Lock,
   MapPin,
   MoreVertical,
-  Paperclip,
   Plus,
   RotateCcw,
   ShieldCheck,
   Sparkles,
+  Upload,
   User,
   Zap,
 } from "lucide-react";
@@ -114,6 +114,27 @@ function relativeTime(iso: string): string {
   return `${Math.floor(diff / 86400)} days ago`;
 }
 
+function saveHotelHistory(hotels: HotelHistoryEntry[]) {
+  if (typeof window !== "undefined") {
+    window.localStorage.setItem(HOTEL_HISTORY_KEY, JSON.stringify(hotels));
+  }
+}
+
+function deleteHotel(id: string): HotelHistoryEntry[] {
+  const hotels = getHotelHistory().filter((h) => h.id !== id);
+  saveHotelHistory(hotels);
+  return hotels;
+}
+
+function readFileAsText(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = () => reject(new Error("Failed to read file"));
+    reader.readAsText(file);
+  });
+}
+
 /* --- Page --- */
 
 export default function Home() {
@@ -121,6 +142,9 @@ export default function Home() {
   const [hotels, setHotels] = useState<HotelHistoryEntry[]>([]);
   const [profile, setProfile] = useState(DEFAULT_PROFILE);
   const [mounted, setMounted] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [dragOver, setDragOver] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setHotels(getHotelHistory());
@@ -141,6 +165,72 @@ export default function Home() {
 
   function scrollToBrief() {
     document.getElementById("brief-section")?.scrollIntoView({ behavior: "smooth" });
+  }
+
+  /* Hotel management */
+  function handleDeleteHotel(id: string) {
+    if (!confirm("Delete this hotel? This cannot be undone.")) return;
+    setHotels(deleteHotel(id));
+  }
+
+  function handleReBrief(hotel: HotelHistoryEntry) {
+    setProfile(hotel.profile);
+    scrollToBrief();
+  }
+
+  function handleEditHotel(hotel: HotelHistoryEntry) {
+    setProfile(hotel.profile);
+    scrollToBrief();
+  }
+
+  function handleArchiveHotel(id: string) {
+    const updated = hotels.filter((h) => h.id !== id);
+    saveHotelHistory(updated);
+    setHotels(updated);
+  }
+
+  /* File upload */
+  const handleFileUpload = useCallback(async (file: File) => {
+    const MAX_SIZE = 5 * 1024 * 1024;
+    const ALLOWED_EXT = [".pdf", ".docx", ".xlsx", ".txt", ".csv", ".doc"];
+    const ext = "." + file.name.split(".").pop()?.toLowerCase();
+
+    if (!ALLOWED_EXT.includes(ext)) {
+      alert("Unsupported file type. Please upload PDF, DOCX, XLSX, or TXT files.");
+      return;
+    }
+    if (file.size > MAX_SIZE) {
+      alert("File too large. Maximum size is 5 MB.");
+      return;
+    }
+
+    setUploading(true);
+    try {
+      const text = await readFileAsText(file);
+      if (text.trim().length > 10) {
+        setProfile(text.trim());
+        scrollToBrief();
+      } else {
+        alert("Could not extract text from this file. Try a .txt file or paste the content directly.");
+      }
+    } catch {
+      alert("Failed to read file. Please try again or paste the content directly.");
+    } finally {
+      setUploading(false);
+    }
+  }, []);
+
+  function handleDrop(e: React.DragEvent) {
+    e.preventDefault();
+    setDragOver(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file) handleFileUpload(file);
+  }
+
+  function handleFileInputChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (file) handleFileUpload(file);
+    e.target.value = "";
   }
 
   return (
@@ -208,7 +298,13 @@ export default function Home() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.25, delay: i * 0.1 }}
                 >
-                  <HotelCard hotel={hotel} />
+                  <HotelCard
+                    hotel={hotel}
+                    onReBrief={() => handleReBrief(hotel)}
+                    onEdit={() => handleEditHotel(hotel)}
+                    onArchive={() => handleArchiveHotel(hotel.id)}
+                    onDelete={() => handleDeleteHotel(hotel.id)}
+                  />
                 </motion.div>
               ))}
               {hotels.length > 5 && (
@@ -277,10 +373,33 @@ export default function Home() {
               </div>
 
               {/* Upload zone */}
-              <div className="mt-6 rounded-xl border border-dashed border-[#C7D9EC] bg-[#F4F6FA] p-5">
+              <div
+                onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+                onDragLeave={() => setDragOver(false)}
+                onDrop={handleDrop}
+                onClick={() => fileInputRef.current?.click()}
+                className={`mt-6 rounded-xl border border-dashed p-5 cursor-pointer transition-colors ${
+                  dragOver
+                    ? "border-[#1B6EB7] bg-[#EAF0F9]"
+                    : "border-[#C7D9EC] bg-[#F4F6FA] hover:border-[#1B6EB7]/60 hover:bg-[#EAF0F9]/50"
+                }`}
+              >
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".pdf,.docx,.xlsx,.txt,.csv,.doc"
+                  onChange={handleFileInputChange}
+                  className="hidden"
+                />
                 <div className="flex items-center gap-2 text-[#1B6EB7] mb-1">
-                  <Paperclip className="h-4 w-4" />
-                  <span className="text-sm font-semibold">Or upload your hotel info</span>
+                  {uploading ? (
+                    <span className="h-4 w-4 border-2 border-[#1B6EB7] border-t-transparent rounded-full animate-spin" />
+                  ) : (
+                    <Upload className="h-4 w-4" />
+                  )}
+                  <span className="text-sm font-semibold">
+                    {uploading ? "Reading file…" : "Or upload your hotel info"}
+                  </span>
                 </div>
                 <p className="text-xs text-[#6B7B8F] leading-relaxed">
                   Drop a fact sheet, rate card, STR report, or contract &mdash;
@@ -374,7 +493,19 @@ export default function Home() {
 
 /* --- Sub-components --- */
 
-function HotelCard({ hotel }: { hotel: HotelHistoryEntry }) {
+function HotelCard({
+  hotel,
+  onReBrief,
+  onEdit,
+  onArchive,
+  onDelete,
+}: {
+  hotel: HotelHistoryEntry;
+  onReBrief: () => void;
+  onEdit: () => void;
+  onArchive: () => void;
+  onDelete: () => void;
+}) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
@@ -418,6 +549,7 @@ function HotelCard({ hotel }: { hotel: HotelHistoryEntry }) {
             <ArrowRight className="h-3.5 w-3.5" />
           </Link>
           <button
+            onClick={onReBrief}
             className="text-sm font-semibold text-[#1B6EB7] hover:text-[#0F4C81] transition-colors hidden sm:block"
           >
             Re-brief
@@ -431,9 +563,10 @@ function HotelCard({ hotel }: { hotel: HotelHistoryEntry }) {
             </button>
             {menuOpen && (
               <div className="absolute right-0 top-full mt-1 w-36 rounded-lg border border-[#E2E8F0] bg-white shadow-lg z-20 py-1">
-                <button className="w-full text-left px-3 py-2 text-sm text-[#0F2547] hover:bg-[#F4F6FA]">Edit</button>
-                <button className="w-full text-left px-3 py-2 text-sm text-[#0F2547] hover:bg-[#F4F6FA]">Archive</button>
-                <button className="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50">Delete</button>
+                <button onClick={() => { setMenuOpen(false); onReBrief(); }} className="w-full text-left px-3 py-2 text-sm text-[#0F2547] hover:bg-[#F4F6FA] sm:hidden">Re-brief</button>
+                <button onClick={() => { setMenuOpen(false); onEdit(); }} className="w-full text-left px-3 py-2 text-sm text-[#0F2547] hover:bg-[#F4F6FA]">Edit</button>
+                <button onClick={() => { setMenuOpen(false); onArchive(); }} className="w-full text-left px-3 py-2 text-sm text-[#0F2547] hover:bg-[#F4F6FA]">Archive</button>
+                <button onClick={() => { setMenuOpen(false); onDelete(); }} className="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50">Delete</button>
               </div>
             )}
           </div>

@@ -92,24 +92,24 @@ export function Footer() {
               </Link>
             </li>
             <li>
-              <a
-                href="https://myhospitalitysalespro.com/services"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-mhsp-muted hover:text-mhsp-navy transition-colors"
-              >
-                Services
-              </a>
+              <Link href="/dashboard" className="text-mhsp-muted hover:text-mhsp-navy transition-colors">
+                Dashboard
+              </Link>
             </li>
             <li>
-              <a
-                href="https://myhospitalitysalespro.com/about"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-mhsp-muted hover:text-mhsp-navy transition-colors"
-              >
-                About
-              </a>
+              <Link href="/leads" className="text-mhsp-muted hover:text-mhsp-navy transition-colors">
+                Leads
+              </Link>
+            </li>
+            <li>
+              <Link href="/playbooks" className="text-mhsp-muted hover:text-mhsp-navy transition-colors">
+                Playbooks
+              </Link>
+            </li>
+            <li>
+              <Link href="/activity" className="text-mhsp-muted hover:text-mhsp-navy transition-colors">
+                Activity
+              </Link>
             </li>
           </ul>
         </div>
