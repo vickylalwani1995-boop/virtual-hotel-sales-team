@@ -465,3 +465,229 @@ select:disabled {
 @media (max-width: 575px) {
   html, body { overflow-x: hidden; }
 }
+
+/* ──────────────────────────────────────────────────────────────────────────────
+   CHAT / MODAL MARKDOWN PROSE STYLES
+   Explicit margins and line-heights for rendered markdown content
+   ────────────────────────────────────────────────────────────────────────────── */
+
+.agent-chat-prose h1,
+.agent-chat-prose h2,
+.agent-chat-prose h3,
+.agent-chat-prose h4 {
+  font-family: var(--font-heading);
+  color: var(--color-mhsp-navy);
+  line-height: 1.3;
+}
+.agent-chat-prose h1 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 1rem 0 0.5rem;
+}
+.agent-chat-prose h2 {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  margin: 1rem 0 0.4rem;
+}
+.agent-chat-prose h3 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin: 0.75rem 0 0.35rem;
+}
+.agent-chat-prose h4 {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  margin: 0.5rem 0 0.25rem;
+}
+.agent-chat-prose p {
+  margin-bottom: 0.625rem;
+  line-height: 1.7;
+  color: var(--color-mhsp-text);
+}
+.agent-chat-prose p:last-child {
+  margin-bottom: 0;
+}
+.agent-chat-prose ul,
+.agent-chat-prose ol {
+  margin: 0.5rem 0 0.75rem;
+  padding-left: 1.25rem;
+}
+.agent-chat-prose li {
+  margin-bottom: 0.25rem;
+  line-height: 1.65;
+  color: var(--color-mhsp-text);
+}
+.agent-chat-prose strong {
+  font-weight: 600;
+  color: var(--color-mhsp-navy);
+}
+.agent-chat-prose code {
+  background: var(--color-mhsp-cream-warm);
+  color: var(--color-mhsp-navy);
+  border-radius: 0.25rem;
+  padding: 0.125rem 0.375rem;
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+}
+.agent-chat-prose code::before,
+.agent-chat-prose code::after {
+  content: "";
+}
+.agent-chat-prose hr {
+  margin: 1rem 0;
+  border-color: var(--color-mhsp-line);
+  opacity: 0.6;
+}
+.agent-chat-prose table {
+  width: 100%;
+  margin: 0.75rem 0;
+  font-size: 0.75rem;
+  border-collapse: collapse;
+}
+.agent-chat-prose th {
+  background: var(--color-mhsp-navy);
+  color: white;
+  padding: 0.5rem 0.625rem;
+  text-align: left;
+  font-weight: 600;
+  border: 1px solid var(--color-mhsp-navy);
+}
+.agent-chat-prose td {
+  padding: 0.5rem 0.625rem;
+  border: 1px solid var(--color-mhsp-line);
+}
+.agent-chat-prose blockquote {
+  margin: 0.5rem 0;
+  padding: 0.5rem 0.75rem;
+  border-left: 3px solid var(--color-mhsp-gold);
+  background: var(--color-mhsp-cream-warm);
+  border-radius: 0 0.375rem 0.375rem 0;
+}
+
+/* Concierge chat already uses component overrides but ensure spacing consistency */
+.concierge-prose p {
+  margin-bottom: 0.5rem;
+  line-height: 1.7;
+}
+.concierge-prose p:last-child {
+  margin-bottom: 0;
+}
+.concierge-prose ul,
+.concierge-prose ol {
+  margin: 0.375rem 0 0.5rem;
+}
+.concierge-prose h3,
+.concierge-prose h4 {
+  margin-top: 0.625rem;
+  margin-bottom: 0.35rem;
+}
+
+/* ──────────────────────────────────────────────────────────────────────────────
+   PLAYBOOK VIEWER MODAL – Rendered markdown content
+   ────────────────────────────────────────────────────────────────────────────── */
+
+.playbook-rendered-content {
+  max-width: none;
+}
+.playbook-rendered-content h1 {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0F2547;
+  margin-top: 0;
+  margin-bottom: 1.25rem;
+  line-height: 1.3;
+}
+.playbook-rendered-content h2 {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.35;
+  color: #0F2547;
+}
+.playbook-rendered-content h3 {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+  color: #0F2547;
+}
+.playbook-rendered-content h4 {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 600;
+  margin-top: 1.25rem;
+  margin-bottom: 0.375rem;
+  line-height: 1.4;
+  color: #0F2547;
+}
+.playbook-rendered-content p {
+  margin-bottom: 1rem;
+  line-height: 1.75;
+  color: #3D4F5F;
+}
+.playbook-rendered-content p:last-child {
+  margin-bottom: 0;
+}
+.playbook-rendered-content ul,
+.playbook-rendered-content ol {
+  margin-top: 0.5rem;
+  margin-bottom: 1.25rem;
+  padding-left: 1.5rem;
+}
+.playbook-rendered-content ul {
+  list-style-type: disc;
+}
+.playbook-rendered-content ol {
+  list-style-type: decimal;
+}
+.playbook-rendered-content li {
+  margin-bottom: 0.4rem;
+  line-height: 1.7;
+  color: #3D4F5F;
+}
+.playbook-rendered-content strong {
+  font-weight: 600;
+  color: #0F2547;
+}
+.playbook-rendered-content code {
+  background: #F0F5FB;
+  color: #0F4C81;
+  border-radius: 0.25rem;
+  padding: 0.125rem 0.375rem;
+  font-size: 0.8125rem;
+  font-family: var(--font-mono);
+}
+.playbook-rendered-content hr {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  border-color: #E2E8F0;
+}
+.playbook-rendered-content blockquote {
+  margin: 1rem 0;
+  padding: 0.75rem 1rem;
+  border-left: 3px solid #1B6EB7;
+  background: #F0F5FB;
+  border-radius: 0 0.375rem 0.375rem 0;
+}
+.playbook-rendered-content table {
+  width: 100%;
+  margin: 1rem 0;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+}
+.playbook-rendered-content th {
+  background: #0F4C81;
+  color: white;
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  font-weight: 600;
+}
+.playbook-rendered-content td {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #E2E8F0;
+}

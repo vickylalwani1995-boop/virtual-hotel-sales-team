@@ -93,17 +93,17 @@ export function PlaybookViewerModal({ playbook, open, onClose }: Props) {
   ];
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6">
       {/* Backdrop */}
       <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
 
       {/* Modal */}
       <div className="relative w-full max-w-4xl max-h-[90vh] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden">
         {/* Header */}
-        <div className="shrink-0 border-b border-[#E2E8F0] px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-full bg-[#F0F5FB] flex items-center justify-center">
+        <div className="shrink-0 border-b border-[#E2E8F0] px-5 sm:px-8 pt-5 sm:pt-6 pb-4 sm:pb-5">
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex items-center gap-3.5">
+              <div className="h-11 w-11 rounded-full bg-[#F0F5FB] flex items-center justify-center shrink-0">
                 {metadata.isCaptain ? (
                   <Crown className="h-5 w-5 text-[#D4A853]" />
                 ) : (
@@ -112,13 +112,13 @@ export function PlaybookViewerModal({ playbook, open, onClose }: Props) {
                   </span>
                 )}
               </div>
-              <div>
-                <h2 className="font-heading text-lg font-bold text-[#0F2547]">
+              <div className="min-w-0">
+                <h2 className="font-heading text-lg font-bold text-[#0F2547] leading-tight">
                   {metadata.realName}
                 </h2>
-                <p className="text-sm text-[#6B7B8F]">
-                  {metadata.designation}
-                  <span className="ml-2 text-xs bg-[#0F4C81]/10 text-[#0F4C81] rounded-full px-2 py-0.5 font-medium">
+                <p className="text-sm text-[#6B7B8F] mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-1">
+                  <span className="truncate">{metadata.designation}</span>
+                  <span className="text-xs bg-[#0F4C81]/10 text-[#0F4C81] rounded-full px-2.5 py-0.5 font-medium whitespace-nowrap">
                     {metadata.isCustom ? "Custom" : "Official"} · v{metadata.version}
                   </span>
                 </p>
@@ -126,20 +126,20 @@ export function PlaybookViewerModal({ playbook, open, onClose }: Props) {
             </div>
             <button
               onClick={onClose}
-              className="h-8 w-8 rounded-lg hover:bg-[#F4F6FA] flex items-center justify-center text-[#6B7B8F] transition-colors"
+              className="h-9 w-9 rounded-lg hover:bg-[#F4F6FA] flex items-center justify-center text-[#6B7B8F] transition-colors shrink-0 -mt-0.5"
             >
               <X className="h-5 w-5" />
             </button>
           </div>
 
           {/* Tab switcher + Actions */}
-          <div className="flex items-center justify-between mt-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-5">
             <div className="flex items-center gap-1 bg-[#F4F6FA] rounded-lg p-1">
               {(["rendered", "markdown", "sections"] as ViewTab[]).map((t) => (
                 <button
                   key={t}
                   onClick={() => setViewTab(t)}
-                  className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-colors capitalize ${
+                  className={`px-3.5 py-1.5 text-xs font-semibold rounded-md transition-colors capitalize ${
                     viewTab === t
                       ? "bg-white text-[#0F4C81] shadow-sm"
                       : "text-[#6B7B8F] hover:text-[#0F4C81]"
@@ -174,7 +174,7 @@ export function PlaybookViewerModal({ playbook, open, onClose }: Props) {
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto px-6 py-5">
+        <div className="flex-1 overflow-y-auto px-5 sm:px-8 py-6 sm:py-8">
           {/* Markdown (raw) Tab */}
           {viewTab === "markdown" && (
             <div className="rounded-xl border border-[#E2E8F0] overflow-hidden">
@@ -183,9 +183,9 @@ export function PlaybookViewerModal({ playbook, open, onClose }: Props) {
                 style={oneLight}
                 customStyle={{
                   margin: 0,
-                  padding: "1.25rem",
+                  padding: "1.5rem",
                   fontSize: "0.8125rem",
-                  lineHeight: "1.7",
+                  lineHeight: "1.8",
                   background: "#FAFCFE",
                 }}
                 wrapLongLines
@@ -197,7 +197,7 @@ export function PlaybookViewerModal({ playbook, open, onClose }: Props) {
 
           {/* Rendered Tab */}
           {viewTab === "rendered" && (
-            <div className="prose prose-sm max-w-none prose-headings:text-[#0F2547] prose-headings:font-heading prose-p:text-[#3D4F5F] prose-li:text-[#3D4F5F] prose-strong:text-[#0F2547] prose-code:bg-[#F0F5FB] prose-code:text-[#0F4C81] prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:font-mono prose-code:text-xs">
+            <div className="playbook-rendered-content">
               <ReactMarkdown remarkPlugins={[remarkGfm]}>
                 {content.replace(/^---[\s\S]*?---\n*/m, "")}
               </ReactMarkdown>
@@ -206,25 +206,25 @@ export function PlaybookViewerModal({ playbook, open, onClose }: Props) {
 
           {/* Sections Tab */}
           {viewTab === "sections" && (
-            <div className="space-y-2">
+            <div className="space-y-3">
               {SECTION_TITLES.map((title, idx) => {
                 const isExpanded = expandedSections.has(idx);
                 const sectionContent = sectionContents[idx];
                 return (
                   <div
                     key={idx}
-                    className="rounded-xl border border-[#E2E8F0] overflow-hidden"
+                    className="rounded-xl border border-[#E2E8F0] overflow-hidden transition-shadow hover:shadow-sm"
                   >
                     <button
                       onClick={() => toggleSection(idx)}
-                      className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-[#F8FAFC] transition-colors"
+                      className="w-full flex items-center gap-3 px-5 py-3.5 text-left hover:bg-[#F8FAFC] transition-colors"
                     >
                       {isExpanded ? (
                         <ChevronDown className="h-4 w-4 text-[#1B6EB7] shrink-0" />
                       ) : (
                         <ChevronRight className="h-4 w-4 text-[#6B7B8F] shrink-0" />
                       )}
-                      <span className="text-xs font-bold text-[#1B6EB7] bg-[#F0F5FB] rounded-full px-2 py-0.5 shrink-0">
+                      <span className="text-xs font-bold text-[#1B6EB7] bg-[#F0F5FB] rounded-full h-6 w-6 flex items-center justify-center shrink-0">
                         {idx + 1}
                       </span>
                       <span className="text-sm font-semibold text-[#0F2547]">
@@ -232,8 +232,8 @@ export function PlaybookViewerModal({ playbook, open, onClose }: Props) {
                       </span>
                     </button>
                     {isExpanded && sectionContent && (
-                      <div className="px-4 pb-4 pt-1 border-t border-[#E2E8F0]">
-                        <div className="prose prose-sm max-w-none prose-p:text-[#3D4F5F] prose-li:text-[#3D4F5F]">
+                      <div className="px-5 pb-5 pt-3 border-t border-[#E2E8F0] bg-[#FAFCFE]">
+                        <div className="prose prose-sm max-w-none prose-p:text-[#3D4F5F] prose-p:leading-relaxed prose-p:mb-3 prose-li:text-[#3D4F5F] prose-li:leading-relaxed prose-ul:my-3 prose-ol:my-3">
                           <ReactMarkdown remarkPlugins={[remarkGfm]}>
                             {typeof sectionContent === "string" && sectionContent.startsWith("- ")
                               ? sectionContent
@@ -250,7 +250,7 @@ export function PlaybookViewerModal({ playbook, open, onClose }: Props) {
         </div>
 
         {/* Footer */}
-        <div className="shrink-0 border-t border-[#E2E8F0] px-6 py-3 flex items-center justify-between bg-[#F8FAFC]">
+        <div className="shrink-0 border-t border-[#E2E8F0] px-5 sm:px-8 py-4 flex items-center justify-between bg-[#F8FAFC]">
           <button
             onClick={handleTestInChat}
             className="inline-flex items-center gap-2 text-sm font-semibold text-[#1B6EB7] hover:text-[#0F4C81] transition-colors"

@@ -774,7 +774,7 @@ function AssistantBubble({
         <Icon className="h-4 w-4 text-white" />
       </div>
       <div className="max-w-[80%] rounded-2xl rounded-tl-sm bg-white border border-mhsp-line text-mhsp-text px-4 py-3 text-[14px] leading-relaxed shadow-[0_2px_8px_-2px_rgba(11,36,71,0.08)]">
-        <div className="prose prose-sm max-w-none prose-p:my-2.5 prose-p:leading-[1.7] prose-ul:my-3 prose-ol:my-3 prose-li:my-1 prose-li:leading-[1.6] prose-headings:font-display prose-headings:text-mhsp-navy prose-headings:mt-4 prose-headings:mb-2 prose-h1:text-base prose-h2:text-[15px] prose-h3:text-sm prose-strong:text-mhsp-navy prose-table:text-[12px] prose-table:my-4 prose-th:bg-mhsp-navy prose-th:text-white prose-th:p-2.5 prose-td:p-2.5 prose-td:border prose-td:border-mhsp-line prose-th:border prose-th:border-mhsp-navy prose-code:bg-mhsp-cream-warm prose-code:text-mhsp-navy prose-code:rounded prose-code:px-1.5 prose-code:py-0.5 prose-code:text-[12px] prose-code:before:content-[''] prose-code:after:content-[''] prose-hr:my-4 prose-hr:border-mhsp-line/60">
+        <div className="agent-chat-prose">
           <ReactMarkdown remarkPlugins={[remarkGfm]}>{cleanContent}</ReactMarkdown>
         </div>
         {streaming && (
