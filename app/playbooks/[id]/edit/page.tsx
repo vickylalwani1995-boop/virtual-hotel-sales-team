@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useParams, useSearchParams } from "next/navigation";
 import { PlaybookEditor } from "@/components/PlaybookEditor";
 import {
@@ -9,9 +9,8 @@ import {
   getCustomPlaybooks,
   parsePlaybook,
 } from "@/lib/playbooks";
-import { AppChrome } from "@/components/AppChrome";
 
-export default function EditPlaybookPage() {
+function EditPlaybookContent() {
   const params = useParams();
   const searchParams = useSearchParams();
   const id = params?.id as string;
@@ -80,5 +79,19 @@ export default function EditPlaybookPage() {
 
   return (
     <PlaybookEditor playbook={playbook} isNew={id === "new" || isTemplate} />
+  );
+}
+
+export default function EditPlaybookPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center bg-[#F4F6FA]">
+          <div className="h-8 w-8 rounded-full border-2 border-[#1B6EB7] border-t-transparent animate-spin" />
+        </div>
+      }
+    >
+      <EditPlaybookContent />
+    </Suspense>
   );
 }

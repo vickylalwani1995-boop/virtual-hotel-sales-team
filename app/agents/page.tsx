@@ -346,7 +346,7 @@ function EmptyState() {
         Add a profile and your AI sales team will be ready in 60 seconds.
       </p>
       <Link
-        href="/#start"
+        href="/#brief-section"
         className="group mt-6 inline-flex items-center gap-2 rounded-xl bg-[#1B6EB7] hover:bg-[#0F4C81] text-white px-6 py-3 text-sm font-bold uppercase tracking-[0.14em] shadow-[0_10px_24px_-10px_rgba(27,110,183,0.5)] hover:-translate-y-0.5 transition-all"
       >
         Add hotel profile

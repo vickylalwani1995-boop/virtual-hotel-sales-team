@@ -60,7 +60,7 @@ export default function LoginPage() {
               Welcome back
             </h1>
             <p className="text-[15px] text-mhsp-muted mt-1.5">
-              Login in to access your AI sales team
+              Log in to access your AI sales team
             </p>
           </div>
 

@@ -150,20 +150,21 @@ function AgentDetail({ id }: { id: string }) {
           {/* Agent header row */}
           <div className="mt-6 flex flex-col lg:flex-row lg:items-start lg:justify-between gap-5">
             <div className="flex items-start gap-3 sm:gap-4 min-w-0">
-              {welcome.photo && (
+              {welcome.photo ? (
                 <div className="shrink-0 h-14 w-14 sm:h-16 sm:w-16 rounded-2xl overflow-hidden ring-2 ring-[#D6E3F0] shadow-[0_10px_24px_-10px_rgba(15,76,129,0.45)]">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={welcome.photo} alt={welcome.realName} className="h-full w-full object-cover" />
                 </div>
+              ) : (
+                <div
+                  className={`shrink-0 h-14 w-14 sm:h-16 sm:w-16 rounded-2xl flex items-center justify-center text-white shadow-[0_10px_24px_-8px_rgba(15,76,129,0.55)] ${iconTile}`}
+                >
+                  <Icon
+                    className="h-7 w-7 sm:h-8 sm:w-8"
+                    strokeWidth={2.25}
+                  />
+                </div>
               )}
-              <div
-                className={`shrink-0 h-14 w-14 sm:h-16 sm:w-16 rounded-2xl flex items-center justify-center text-white shadow-[0_10px_24px_-8px_rgba(15,76,129,0.55)] ${iconTile}`}
-              >
-                <Icon
-                  className="h-7 w-7 sm:h-8 sm:w-8"
-                  strokeWidth={2.25}
-                />
-              </div>
               <div className="min-w-0">
                 <p className="text-sm font-bold tracking-[0.18em] uppercase text-mhsp-gold">
                   {welcome.designation}
@@ -272,7 +273,7 @@ function AgentDetail({ id }: { id: string }) {
                 <p className="text-mhsp-muted text-base">
                   No hotel profile yet.{" "}
                   <Link
-                    href="/#start"
+                    href="/#brief-section"
                     className="underline text-mhsp-navy font-semibold hover:text-[#1B6EB7] transition-colors"
                   >
                     Add one first

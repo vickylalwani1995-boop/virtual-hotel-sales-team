@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, Download, BookOpen, Code, Sparkles } from "lucide-react";
+import { ArrowLeft, Download, BookOpen } from "lucide-react";
 
 const STARTER_TEMPLATE = `---
 agentId: my_agent_v1
