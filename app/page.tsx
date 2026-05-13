@@ -26,6 +26,7 @@ import { HowItWorks } from "@/components/HowItWorks";
 import { TrustBar } from "@/components/TrustBar";
 import { AGENTS, type Agent } from "@/lib/agents";
 import { iconForAgent } from "@/lib/agent-icons";
+import { ConfirmDialog, AlertDialog } from "@/components/ConfirmDialog";
 
 /* --- Constants --- */
 
@@ -147,6 +148,8 @@ export default function Home() {
   const [uploading, setUploading] = useState(false);
   const [dragOver, setDragOver] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [deleteHotelId, setDeleteHotelId] = useState<string | null>(null);
+  const [alertMsg, setAlertMsg] = useState<{ title: string; desc: string } | null>(null);
 
   useEffect(() => {
     setHotels(getHotelHistory());
@@ -171,8 +174,14 @@ export default function Home() {
 
   /* Hotel management */
   function handleDeleteHotel(id: string) {
-    if (!confirm("Delete this hotel? This cannot be undone.")) return;
-    setHotels(deleteHotel(id));
+    setDeleteHotelId(id);
+  }
+
+  function confirmDeleteHotel() {
+    if (deleteHotelId) {
+      setHotels(deleteHotel(deleteHotelId));
+      setDeleteHotelId(null);
+    }
   }
 
   function handleReBrief(hotel: HotelHistoryEntry) {
@@ -198,11 +207,11 @@ export default function Home() {
     const ext = "." + file.name.split(".").pop()?.toLowerCase();
 
     if (!ALLOWED_EXT.includes(ext)) {
-      alert("Unsupported file type. Please upload PDF, DOCX, XLSX, or TXT files.");
+      setAlertMsg({ title: "Unsupported file type", desc: "Please upload PDF, DOCX, XLSX, or TXT files." });
       return;
     }
     if (file.size > MAX_SIZE) {
-      alert("File too large. Maximum size is 5 MB.");
+      setAlertMsg({ title: "File too large", desc: "Maximum file size is 5 MB." });
       return;
     }
 
@@ -213,10 +222,10 @@ export default function Home() {
         setProfile(text.trim());
         scrollToBrief();
       } else {
-        alert("Could not extract text from this file. Try a .txt file or paste the content directly.");
+        setAlertMsg({ title: "Could not extract text", desc: "Try a .txt file or paste the content directly." });
       }
     } catch {
-      alert("Failed to read file. Please try again or paste the content directly.");
+      setAlertMsg({ title: "File read failed", desc: "Please try again or paste the content directly." });
     } finally {
       setUploading(false);
     }
@@ -515,6 +524,25 @@ export default function Home() {
 
       {/* SECTION 6 - TRUST STRIP */}
       <TrustBar />
+
+      {/* Dialogs */}
+      <ConfirmDialog
+        open={deleteHotelId !== null}
+        title="Delete this hotel?"
+        description="This permanently removes the hotel profile and its briefing history. This action can't be undone."
+        confirmLabel="Yes, delete"
+        cancelLabel="No, keep it"
+        variant="danger"
+        onConfirm={confirmDeleteHotel}
+        onCancel={() => setDeleteHotelId(null)}
+      />
+      <AlertDialog
+        open={alertMsg !== null}
+        title={alertMsg?.title ?? ""}
+        description={alertMsg?.desc ?? ""}
+        variant="warning"
+        onClose={() => setAlertMsg(null)}
+      />
     </>
   );
 }

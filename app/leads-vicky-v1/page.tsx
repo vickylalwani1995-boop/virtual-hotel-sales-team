@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { ConfirmDialog } from "@/components/ConfirmDialog";
 import Link from "next/link";
 import {
   Plus,
@@ -129,13 +130,16 @@ export default function LeadsPage() {
     }
   }
 
+  const [confirmBulkDelete, setConfirmBulkDelete] = useState(false);
+
   function handleBulkDelete() {
     if (selected.size === 0) return;
-    if (
-      !confirm(`Delete ${selected.size} lead${selected.size === 1 ? "" : "s"}?`)
-    )
-      return;
+    setConfirmBulkDelete(true);
+  }
+
+  function doBulkDelete() {
     deleteLeads(Array.from(selected));
+    setConfirmBulkDelete(false);
     refresh();
   }
 
@@ -517,6 +521,17 @@ export default function LeadsPage() {
 
       {/* Side drawer */}
       <LeadDetailDrawer lead={activeLead} onClose={() => setActiveLead(null)} />
+
+      <ConfirmDialog
+        open={confirmBulkDelete}
+        title="Delete selected leads?"
+        description={`This will permanently remove ${selected.size} lead${selected.size === 1 ? "" : "s"}.`}
+        confirmLabel="Yes, delete"
+        cancelLabel="Cancel"
+        variant="danger"
+        onConfirm={doBulkDelete}
+        onCancel={() => setConfirmBulkDelete(false)}
+      />
     </main>
   );
 }

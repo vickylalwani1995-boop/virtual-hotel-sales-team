@@ -28,6 +28,7 @@ import {
   VOICE_PRESETS,
   CAPABILITY_REGISTRY,
 } from "@/lib/playbooks";
+import { ConfirmDialog, PromptDialog } from "@/components/ConfirmDialog";
 
 type PreviewTab = "markdown" | "card";
 
@@ -43,6 +44,8 @@ export function PlaybookEditor({ playbook: initial, isNew }: Props) {
   const [previewTab, setPreviewTab] = useState<PreviewTab>("card");
   const [saved, setSaved] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const [capabilityPromptOpen, setCapabilityPromptOpen] = useState(false);
   const readOnly = isDefaultPlaybook(metadata.agentId) && !isNew;
 
   const playbook: Playbook = {
@@ -104,8 +107,12 @@ export function PlaybookEditor({ playbook: initial, isNew }: Props) {
   }
 
   function handleDelete() {
-    if (!confirm("Delete this playbook permanently?")) return;
+    setConfirmDeleteOpen(true);
+  }
+
+  function confirmDelete() {
     deleteCustomPlaybook(metadata.agentId);
+    setConfirmDeleteOpen(false);
     router.push("/playbooks");
   }
 
@@ -118,14 +125,16 @@ export function PlaybookEditor({ playbook: initial, isNew }: Props) {
   }
 
   function addCustomCapability() {
-    const cap = prompt("Enter custom capability name:");
-    if (cap) {
-      const normalized = cap.toLowerCase().replace(/\s+/g, "_");
-      const current = metadata.capabilities || [];
-      if (!current.includes(normalized)) {
-        updateMeta("capabilities", [...current, normalized]);
-      }
+    setCapabilityPromptOpen(true);
+  }
+
+  function handleCapabilityAdded(cap: string) {
+    const normalized = cap.toLowerCase().replace(/\s+/g, "_");
+    const current = metadata.capabilities || [];
+    if (!current.includes(normalized)) {
+      updateMeta("capabilities", [...current, normalized]);
     }
+    setCapabilityPromptOpen(false);
   }
 
   return (
@@ -490,6 +499,27 @@ export function PlaybookEditor({ playbook: initial, isNew }: Props) {
           background-size: 1rem;
         }
       `}</style>
+
+      {/* Dialogs */}
+      <ConfirmDialog
+        open={confirmDeleteOpen}
+        title="Delete this playbook?"
+        description="This permanently removes the playbook and cannot be undone."
+        confirmLabel="Yes, delete"
+        cancelLabel="No, keep it"
+        variant="danger"
+        onConfirm={confirmDelete}
+        onCancel={() => setConfirmDeleteOpen(false)}
+      />
+      <PromptDialog
+        open={capabilityPromptOpen}
+        title="Add custom capability"
+        description="Enter a name for the new capability (e.g. lead_scoring, rfp_analysis)."
+        placeholder="capability_name"
+        confirmLabel="Add"
+        onConfirm={handleCapabilityAdded}
+        onCancel={() => setCapabilityPromptOpen(false)}
+      />
     </div>
   );
 }

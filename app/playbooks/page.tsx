@@ -31,6 +31,7 @@ import {
   PLAYBOOK_TO_AGENT,
 } from "@/lib/playbooks";
 import { PlaybookViewerModal } from "@/components/PlaybookViewerModal";
+import { ConfirmDialog } from "@/components/ConfirmDialog";
 
 // ─── Icon mapping ────────────────────────────────────────────────────────────
 
@@ -81,6 +82,7 @@ export default function PlaybookStudioPage() {
   const [customPlaybooks, setCustomPlaybooks] = useState<Playbook[]>([]);
   const [loading, setLoading] = useState(true);
   const [viewerPlaybook, setViewerPlaybook] = useState<Playbook | null>(null);
+  const [deleteAgentId, setDeleteAgentId] = useState<string | null>(null);
 
   useEffect(() => {
     async function load() {
@@ -110,9 +112,15 @@ export default function PlaybookStudioPage() {
   const activeCount = activePlaybooks.length;
 
   function handleDelete(agentId: string) {
-    if (!confirm("Delete this custom agent? This cannot be undone.")) return;
-    deleteCustomPlaybook(agentId);
-    setCustomPlaybooks(getCustomPlaybooks());
+    setDeleteAgentId(agentId);
+  }
+
+  function confirmDelete() {
+    if (deleteAgentId) {
+      deleteCustomPlaybook(deleteAgentId);
+      setCustomPlaybooks(getCustomPlaybooks());
+      setDeleteAgentId(null);
+    }
   }
 
   function handleImport() {
@@ -409,6 +417,18 @@ export default function PlaybookStudioPage() {
           onClose={() => setViewerPlaybook(null)}
         />
       )}
+
+      {/* Delete confirm dialog */}
+      <ConfirmDialog
+        open={deleteAgentId !== null}
+        title="Delete custom agent?"
+        description="This permanently removes the custom agent and its playbook. This action can't be undone."
+        confirmLabel="Yes, delete"
+        cancelLabel="No, keep it"
+        variant="danger"
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteAgentId(null)}
+      />
     </main>
   );
 }

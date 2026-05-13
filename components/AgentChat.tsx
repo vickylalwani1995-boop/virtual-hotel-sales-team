@@ -35,6 +35,7 @@ import {
 import { quickActionsFor } from "@/lib/quick-actions";
 import { VoiceInput } from "@/components/VoiceInput";
 import { LeadCaptureBar } from "@/components/LeadCaptureBar";
+import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { useDemoMode } from "@/lib/demo-mode";
 import { addNotification } from "@/lib/notifications";
 import {
@@ -90,6 +91,7 @@ export function AgentChat({
   const [menuOpen, setMenuOpen] = useState(false);
   const [skillModalOpen, setSkillModalOpen] = useState(false);
   const [skillContent, setSkillContent] = useState("");
+  const [confirmClearOpen, setConfirmClearOpen] = useState(false);
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -342,14 +344,22 @@ export function AgentChat({
   }
 
   function handleClear() {
-    if (typeof window !== "undefined" && messages.length > 0) {
-      const ok = window.confirm("Clear this conversation?");
-      if (!ok) return;
+    if (messages.length > 0) {
+      setConfirmClearOpen(true);
+      return;
     }
     clearChat(agent.id);
     setMessages([]);
     hasInitRef.current = false;
     setMenuOpen(false);
+  }
+
+  function confirmClear() {
+    clearChat(agent.id);
+    setMessages([]);
+    hasInitRef.current = false;
+    setMenuOpen(false);
+    setConfirmClearOpen(false);
   }
 
   function handleDownload() {
@@ -662,6 +672,18 @@ export function AgentChat({
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Clear conversation confirm dialog */}
+      <ConfirmDialog
+        open={confirmClearOpen}
+        title="Clear conversation?"
+        description={<>This permanently removes <span className="font-semibold text-mhsp-navy">{messages.length} {messages.length === 1 ? "message" : "messages"}</span> from this chat. This action can&apos;t be undone.</>}
+        confirmLabel="Yes, clear"
+        cancelLabel="No, keep it"
+        variant="danger"
+        onConfirm={confirmClear}
+        onCancel={() => setConfirmClearOpen(false)}
+      />
     </div>
   );
 }
