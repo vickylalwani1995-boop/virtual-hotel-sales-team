@@ -68,7 +68,31 @@ function ProfileChips({ profile }: { profile: string }) {
 }
 
 function AgentDetail({ id }: { id: string }) {
-  const agent = getAgent(id);
+  const officialAgent = getAgent(id);
+
+  // Support custom agents from localStorage
+  const agent: typeof officialAgent = officialAgent ?? (() => {
+    if (typeof window === "undefined") return undefined;
+    try {
+      const raw = localStorage.getItem("vhst-custom-playbooks");
+      if (!raw) return undefined;
+      const playbooks = JSON.parse(raw) as { metadata: { agentId: string; realName: string; designation: string; funnel: string; isCaptain?: boolean; capabilities?: string[] }; sections: { problem: string } }[];
+      const pb = playbooks.find((p) => p.metadata.agentId === id);
+      if (!pb) return undefined;
+      return {
+        id: pb.metadata.agentId,
+        realName: pb.metadata.realName,
+        designation: pb.metadata.designation,
+        funnel: (pb.metadata.funnel === "hustle" ? "hustle" : "calculated") as "calculated" | "hustle",
+        isCaptain: pb.metadata.isCaptain ?? false,
+        photo: "",
+        description: pb.sections.problem || pb.metadata.designation,
+        capabilities: pb.metadata.capabilities || [],
+        solvesProblem: pb.sections.problem || "",
+      } as unknown as typeof officialAgent;
+    } catch { return undefined; }
+  })();
+
   const searchParams = useSearchParams();
   const profileParam = searchParams.get("profile") ?? "";
   const profile =

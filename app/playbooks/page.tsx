@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import { toast } from "sonner";
 import {
   Plus,
   Upload,
@@ -127,9 +128,13 @@ export default function PlaybookStudioPage() {
         saveCustomPlaybook(result.playbook);
         setCustomPlaybooks(getCustomPlaybooks());
         setTab("custom");
-        alert(`Imported "${result.playbook.metadata.realName}" successfully!`);
+        toast.success("Imported successfully", {
+          description: `"${result.playbook.metadata.realName}" is now in My Custom Agents.`,
+        });
       } else {
-        alert(`Import failed:\n${result.errors?.join("\n")}`);
+        toast.error("Import failed", {
+          description: result.errors?.join(", ") || "Invalid playbook format",
+        });
       }
     };
     input.click();
@@ -161,7 +166,7 @@ export default function PlaybookStudioPage() {
         agentId: newId,
         realName: `${playbook.metadata.realName} (Fork)`,
         isCustom: true,
-        status: "draft",
+        status: "active",
         createdAt: new Date().toISOString().split("T")[0],
         createdBy: "user",
       },
@@ -172,7 +177,9 @@ export default function PlaybookStudioPage() {
     saveCustomPlaybook(forked);
     setCustomPlaybooks(getCustomPlaybooks());
     setTab("custom");
-    alert(`Forked! "${forked.metadata.realName}" added to My Custom Agents.`);
+    toast.success(`Forked successfully`, {
+      description: `"${forked.metadata.realName}" added to My Custom Agents.`,
+    });
   }, []);
 
   function handleCreateNew() {

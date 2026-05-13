@@ -392,13 +392,7 @@ export default function LeadsPage() {
                 Every prospect your AI sales team has surfaced — searchable,
                 exportable, ready to work.
               </p>
-              <Link
-                href="/leads-vicky-v1"
-                className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-mhsp-muted hover:text-[#1B6EB7] transition-colors"
-              >
-                Also try Vicky&apos;s Phase 1 prototype
-                <ArrowRight className="h-3.5 w-3.5" />
-              </Link>
+
             </div>
           </div>
 

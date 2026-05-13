@@ -215,6 +215,20 @@ export function AgentChat({
       // LIVE: stream from /api/agent-chat
       const ac = new AbortController();
       abortRef.current = ac;
+
+      // For custom agents, include playbook content from localStorage
+      let customPlaybook: string | undefined;
+      if (agent.id.startsWith("custom_") && typeof window !== "undefined") {
+        try {
+          const raw = localStorage.getItem("vhst-custom-playbooks");
+          if (raw) {
+            const playbooks = JSON.parse(raw);
+            const pb = playbooks.find((p: { metadata: { agentId: string } }) => p.metadata.agentId === agent.id);
+            if (pb) customPlaybook = pb.content;
+          }
+        } catch { /* ignore */ }
+      }
+
       try {
         const res = await fetch("/api/agent-chat", {
           method: "POST",
@@ -227,6 +241,7 @@ export function AgentChat({
               role: m.role,
               content: m.content,
             })),
+            ...(customPlaybook ? { customPlaybook } : {}),
           }),
           signal: ac.signal,
         });

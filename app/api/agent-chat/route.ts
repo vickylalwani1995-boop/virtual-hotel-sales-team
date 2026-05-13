@@ -37,12 +37,17 @@ export async function POST(req: NextRequest) {
     }
 
     const agent = getAgent(agentId);
-    if (!agent) {
+    const isCustomAgent = !agent && agentId.startsWith("custom_");
+
+    if (!agent && !isCustomAgent) {
       return new Response(
         JSON.stringify({ error: `Unknown agent: ${agentId}` }),
         { status: 404, headers: { "Content-Type": "application/json" } }
       );
     }
+
+    // For custom agents, use the playbook content sent from client or a generic prompt
+    const customPlaybookContent: string | undefined = body?.customPlaybook;
 
     if (messages.length === 0) {
       return new Response(
@@ -85,6 +90,12 @@ ${s.hardRules}
 
 ## HOW I WORK WITH THE TEAM
 ${s.teamWork}`;
+    } else if (isCustomAgent && customPlaybookContent) {
+      // Custom agent with playbook content from client
+      skill = customPlaybookContent;
+    } else if (isCustomAgent) {
+      // Custom agent without playbook - use generic prompt
+      skill = `You are a custom AI sales specialist. Help the user with hotel sales tasks including lead generation, outreach, proposals, and strategy. Be professional, concise, and action-oriented.`;
     } else {
       // Legacy: read from /skills/ folder
       const skillPath = path.join(process.cwd(), "skills", `${agentId}.md`);
@@ -101,9 +112,12 @@ ${s.teamWork}`;
         ? hotelProfile
         : JSON.stringify(hotelProfile);
 
+    const agentName = agent?.realName ?? "Custom Agent";
+    const agentTitle = agent?.designation ?? "AI Sales Specialist";
+
     const conversationGuidance = isInit
       ? `First message - introduce yourself briefly (2 sentences) and ask one specific question about what the user wants help with. Reference the hotel profile.`
-      : `Engage in natural back-and-forth. Be concise by default, expand when asked. Use markdown for structure (bold, tables, lists). End with a follow-up question OR a suggested next action. Stay in character as ${agent.realName}, ${agent.designation}.
+      : `Engage in natural back-and-forth. Be concise by default, expand when asked. Use markdown for structure (bold, tables, lists). End with a follow-up question OR a suggested next action. Stay in character as ${agentName}, ${agentTitle}.
 
 When drafting emails, use this exact format so the UI can detect them:
 ### Email Draft
