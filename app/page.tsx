@@ -150,10 +150,15 @@ export default function Home() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [deleteHotelId, setDeleteHotelId] = useState<string | null>(null);
   const [alertMsg, setAlertMsg] = useState<{ title: string; desc: string } | null>(null);
+  const [inboundPhone, setInboundPhone] = useState<{ available: boolean; number: string } | null>(null);
 
   useEffect(() => {
     setHotels(getHotelHistory());
     setMounted(true);
+    fetch("/api/call-realtime")
+      .then((r) => r.json())
+      .then((d) => setInboundPhone({ available: d.voiceBackendConfigured, number: d.inboundPhone }))
+      .catch(() => {});
   }, []);
 
   const charCount = profile.length;
@@ -246,6 +251,17 @@ export default function Home() {
 
   return (
     <>
+      {/* INBOUND PHONE BANNER */}
+      {inboundPhone?.available && (
+        <div className="bg-slate-900 text-white py-2 px-4 text-center text-sm">
+          Talk to your sales team live:{" "}
+          <a href={`tel:${inboundPhone.number}`} className="font-semibold underline">
+            {inboundPhone.number}
+          </a>
+          <span className="ml-2 opacity-80">(Donna answers + routes)</span>
+        </div>
+      )}
+
       {/* SECTION 1 - HERO */}
       <section className="relative overflow-hidden">
         <div

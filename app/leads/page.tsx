@@ -128,6 +128,15 @@ export default function LeadsPage() {
   const [sortDir, setSortDir] = useState<SortDir>("desc");
   const [drawerLead, setDrawerLead] = useState<Lead | null>(null);
 
+  // Voice backend availability
+  const [voiceBackendAvailable, setVoiceBackendAvailable] = useState(false);
+  useEffect(() => {
+    fetch("/api/call-realtime")
+      .then((r) => r.json())
+      .then((d) => setVoiceBackendAvailable(!!d.voiceBackendConfigured))
+      .catch(() => {});
+  }, []);
+
   // New feature dialogs
   const [pullSource, setPullSource] = useState<"apollo" | "vibe" | null>(null);
   const [emailComposerOpen, setEmailComposerOpen] = useState(false);
@@ -309,6 +318,70 @@ export default function LeadsPage() {
     toast.success(`Deleted ${n} leads.`);
   }
 
+  async function handleBulkRealCalls() {
+    if (selected.size === 0) return;
+    const callableLeads = leads.filter(
+      (l) => selected.has(l.id) && l.contactMobilePhone,
+    );
+    if (callableLeads.length === 0) {
+      toast.error("No selected leads have a phone number.");
+      return;
+    }
+    const costEst = (callableLeads.length * 0.1).toFixed(2);
+    const confirmed = window.confirm(
+      `Place real outbound calls to ${callableLeads.length} lead(s) via Sarah?\n\nEstimated cost: ~$${costEst}\n\nReal phones will ring.`,
+    );
+    if (!confirmed) return;
+
+    const rawProfile =
+      typeof window !== "undefined"
+        ? (window.localStorage.getItem("vhst-hotel-profile") ?? "")
+        : "";
+
+    function parseField(key: string): string {
+      const m = rawProfile.match(new RegExp(`${key}\\s*:\\s*([^\\n]+)`, "i"));
+      return m ? m[1].replace(/^\$/, "").trim() : "";
+    }
+    const hotelData = {
+      hotelName: parseField("Hotel Name") || "Our Hotel",
+      location: parseField("Location") || "",
+      rooms: parseInt(parseField("Rooms") || "200", 10) || 200,
+      adr: parseFloat(parseField("Average Daily Rate") || parseField("ADR") || "189") || 189,
+      targetBusiness: parseField("Target Business") || "corporate",
+      weakDays: parseField("Slow Days") || "weekdays",
+      meetingSpace: parseField("Meeting Space") || "available",
+      occupancy: parseField("Current Occupancy")?.replace(/%$/, "") || "62",
+    };
+
+    const contacts = callableLeads.map((l) => ({
+      leadName: l.prospectFullName,
+      phoneNumber: l.contactMobilePhone,
+      leadTitle: l.prospectJobTitle,
+      companyName: l.prospectCompanyName,
+    }));
+
+    try {
+      const res = await fetch("/api/call-realtime", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ agentId: "03_sarah_chen", contacts, hotelData }),
+      });
+      const data = await res.json();
+      if (data.mode === "real" && data.success) {
+        toast.success(`Calls placed to ${callableLeads.length} lead(s).`);
+        for (const l of callableLeads) updateLead(l.id, { status: "contacted" });
+        setLeads(getAllLeads());
+        setSelected(new Set());
+      } else if (data.mode === "simulator") {
+        toast.info("Voice backend not configured — use the simulator.");
+      } else {
+        toast.error(data.error || "Calls failed.");
+      }
+    } catch {
+      toast.error("Failed to place calls.");
+    }
+  }
+
   function handleAddDemoLeads() {
     const demo: Partial<Lead>[] = [
       {
@@ -486,6 +559,7 @@ export default function LeadsPage() {
                     onMarkContacted={handleBulkMarkContacted}
                     onDelete={handleBulkDelete}
                     onSendSequence={() => setSequenceOpen(true)}
+                    onRealCalls={handleBulkRealCalls}
                     onQueueCalls={() => {
                       if (selected.size === 0) return;
                       toast.success(`Queued ${selected.size} leads for outbound calls. Use the call simulator to start.`);
@@ -1214,6 +1288,7 @@ function BulkActionsButton({
   onDelete,
   onSendSequence,
   onQueueCalls,
+  onRealCalls,
 }: {
   disabled: boolean;
   count: number;
@@ -1221,6 +1296,7 @@ function BulkActionsButton({
   onDelete: () => void;
   onSendSequence: () => void;
   onQueueCalls: () => void;
+  onRealCalls: () => void;
 }) {
   const [open, setOpen] = useState(false);
   const ref = useClickOutside<HTMLDivElement>(() => setOpen(false));
@@ -1251,7 +1327,15 @@ function BulkActionsButton({
         />
         <MenuItem
           Icon={Phone}
-          label="Queue outbound calls"
+          label="Place real outbound calls (Sarah)"
+          onClick={() => {
+            setOpen(false);
+            onRealCalls();
+          }}
+        />
+        <MenuItem
+          Icon={Phone}
+          label="Queue outbound calls (simulator)"
           onClick={() => {
             setOpen(false);
             onQueueCalls();
@@ -1323,6 +1407,23 @@ function EmptyState({ onAddDemo }: { onAddDemo: () => void }) {
 
 /* -------------------- Lead detail drawer -------------------- */
 
+function parseHotelProfileForVoice(profile: string) {
+  function field(key: string): string {
+    const m = profile.match(new RegExp(`${key}\\s*:\\s*([^\\n]+)`, "i"));
+    return m ? m[1].replace(/^\$/, "").trim() : "";
+  }
+  return {
+    hotelName: field("Hotel Name") || "Our Hotel",
+    location: field("Location") || "",
+    rooms: parseInt(field("Rooms") || "200", 10) || 200,
+    adr: parseFloat(field("Average Daily Rate") || field("ADR") || "189") || 189,
+    targetBusiness: field("Target Business") || "corporate",
+    weakDays: field("Slow Days") || "weekdays",
+    meetingSpace: field("Meeting Space") || "available",
+    occupancy: field("Current Occupancy")?.replace(/%$/, "") || "62",
+  };
+}
+
 function LeadDrawer({
   lead,
   onClose,
@@ -1337,6 +1438,68 @@ function LeadDrawer({
   const [note, setNote] = useState("");
   const [status, setStatus] = useState<LeadStatus>("new");
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const [voiceAvailable, setVoiceAvailable] = useState(false);
+  const [voiceStatus, setVoiceStatus] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch("/api/call-realtime")
+      .then((r) => r.json())
+      .then((d) => setVoiceAvailable(!!d.voiceBackendConfigured))
+      .catch(() => setVoiceAvailable(false));
+  }, []);
+
+  async function handleRealCall() {
+    if (!lead) return;
+    const phone = lead.contactMobilePhone;
+    if (!phone) {
+      toast.error("No phone number for this lead.");
+      return;
+    }
+    const confirmed = window.confirm(
+      `Place a real AI call to ${lead.prospectFullName} at ${phone}?\n\nThis will dial a real phone number.`,
+    );
+    if (!confirmed) return;
+
+    setVoiceStatus("Placing call…");
+    const rawProfile =
+      typeof window !== "undefined"
+        ? (window.localStorage.getItem("vhst-hotel-profile") ?? "")
+        : "";
+    const hotelData = parseHotelProfileForVoice(rawProfile);
+
+    try {
+      const res = await fetch("/api/call-realtime", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          agentId: "03_sarah_chen",
+          contacts: [{
+            leadName: lead.prospectFullName,
+            phoneNumber: phone,
+            leadTitle: lead.prospectJobTitle,
+            companyName: lead.prospectCompanyName,
+          }],
+          hotelData,
+        }),
+      });
+      const data = await res.json();
+      if (data.mode === "real" && data.success) {
+        toast.success(`Call placed to ${lead.prospectFullName}.`);
+        updateLead(lead.id, { status: "contacted" });
+        onChange();
+        setVoiceStatus(null);
+      } else if (data.mode === "simulator") {
+        toast.info("Voice backend not configured — use the browser simulator.");
+        setVoiceStatus(null);
+      } else {
+        toast.error(data.error || "Call failed.");
+        setVoiceStatus(null);
+      }
+    } catch {
+      toast.error("Call request failed.");
+      setVoiceStatus(null);
+    }
+  }
 
   // Sync local state to lead when it changes
   useEffect(() => {
@@ -1643,8 +1806,17 @@ function LeadDrawer({
                   href={`/call/03_outbound?lead=${encodeURIComponent(lead.id)}`}
                   className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#DCE5EF] bg-white hover:bg-[#F4F8FC] text-mhsp-navy px-4 py-2.5 text-[12px] font-bold uppercase tracking-[0.1em] transition-all"
                 >
-                  <Phone className="h-4 w-4" /> Call
+                  <Phone className="h-4 w-4" /> Simulator
                 </Link>
+                <button
+                  type="button"
+                  onClick={handleRealCall}
+                  disabled={!voiceAvailable || !!voiceStatus}
+                  title={voiceAvailable ? "Place a real AI phone call via Sarah" : "Voice backend not configured"}
+                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-emerald-200 bg-white hover:bg-emerald-50 text-emerald-700 px-4 py-2.5 text-[12px] font-bold uppercase tracking-[0.1em] transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  <Phone className="h-4 w-4" /> {voiceStatus || "Real Call"}
+                </button>
                 <Link
                   href={`/agent/03_outbound?lead=${encodeURIComponent(lead.id)}`}
                   className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#1B6EB7] hover:bg-[#0F4C81] text-white px-4 py-2.5 text-[12px] font-bold uppercase tracking-[0.1em] transition-all shadow-sm"

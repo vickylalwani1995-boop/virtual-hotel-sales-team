@@ -84,7 +84,7 @@ export function VoiceInput({
     if (!Ctor) return;
 
     const rec = new Ctor();
-    rec.continuous = false;
+    rec.continuous = true;
     rec.interimResults = true;
     rec.lang = "en-US";
 

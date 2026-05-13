@@ -15,9 +15,10 @@ interface FileUploaderProps {
   agentId: string;
   agentName: string;
   disabled?: boolean;
+  onFileProcessed?: (fileName: string, summary: string, leadCount?: number) => void;
 }
 
-export function FileUploader({ agentId, agentName, disabled }: FileUploaderProps) {
+export function FileUploader({ agentId, agentName, disabled, onFileProcessed }: FileUploaderProps) {
   const [status, setStatus] = useState<"idle" | "reading" | "processing" | "done" | "error">("idle");
   const [processedFile, setProcessedFile] = useState<ProcessedFile | null>(null);
   const [errorMsg, setErrorMsg] = useState("");
@@ -84,8 +85,12 @@ export function FileUploader({ agentId, agentName, disabled }: FileUploaderProps
         `uploaded "${file.name}"${leadCount > 0 ? ` — extracted ${leadCount} leads` : ""} — ${data.summary}`
       );
 
-      setProcessedFile({ name: file.name, summary: data.summary, category: data.category, leadCount: leadCount || undefined });
+      const pf: ProcessedFile = { name: file.name, summary: data.summary, category: data.category, leadCount: leadCount || undefined };
+      setProcessedFile(pf);
       setStatus("done");
+      // Defer so React finishes this render cycle before the parent calls sendMessage,
+      // which triggers addNotification → CustomEvent → NotificationCenter setState.
+      setTimeout(() => onFileProcessed?.(file.name, data.summary, leadCount || undefined), 0);
     } catch (e) {
       setErrorMsg(e instanceof Error ? e.message : "Upload failed");
       setStatus("error");

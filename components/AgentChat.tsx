@@ -576,11 +576,6 @@ export function AgentChat({
         )}
 
         <div className="flex items-end gap-2">
-          <FileUploader
-            agentId={agent.id}
-            agentName={agent.realName}
-            disabled={isStreaming}
-          />
           <VoiceInput
             onTranscript={voiceTranscript}
             onComplete={voiceComplete}
@@ -608,6 +603,15 @@ export function AgentChat({
               className="flex-1 resize-none bg-transparent text-[14px] leading-relaxed text-mhsp-text placeholder:text-mhsp-muted/70 focus:outline-none max-h-[144px] disabled:opacity-60"
             />
           </div>
+          <FileUploader
+            agentId={agent.id}
+            agentName={agent.realName}
+            disabled={isStreaming}
+            onFileProcessed={(fileName, summary, leadCount) => {
+              const msg = `I've uploaded "${fileName}". Here's what it contains: ${summary}${leadCount ? ` (${leadCount} leads extracted)` : ""}. Please review and advise on next steps.`;
+              sendMessage(msg);
+            }}
+          />
           <button
             type="button"
             onClick={() => sendMessage(input)}
