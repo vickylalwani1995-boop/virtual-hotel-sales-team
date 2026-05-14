@@ -325,8 +325,15 @@ export function AgentChat({
                 },
                 agentId: agent.id,
               }),
-            }).then(() => {
-              toast.success(`Calling ${leadName} at ${phoneNumber}…`);
+            }).then(async (res) => {
+              const data = await res.json().catch(() => ({}));
+              if (data.mode === "real") {
+                toast.success(`Calling ${leadName} at ${phoneNumber}…`);
+              } else if (data.mode === "simulator") {
+                toast.info(`Demo mode — no real call placed.`);
+              } else {
+                toast.error(`Call failed: ${data.error || data.message || "Voice backend error"}`);
+              }
             }).catch(() => {
               toast.error("Call failed — check backend connection.");
             });

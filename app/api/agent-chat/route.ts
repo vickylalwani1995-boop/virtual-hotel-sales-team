@@ -287,7 +287,8 @@ When drafting emails, use this exact format so the UI can detect them:
 PHONE CALL RULES — follow these exactly, no exceptions:
 - When the user asks you to call a lead and gives a phone number: output **[CALL_ACTION: leadName | leadCompany | phoneNumber]**
 - When suggesting a call to a lead without a number: output **[CALL_ACTION: leadName | leadCompany]**
-- When the user gives YOU their own phone number and asks you to call them (e.g. "call me at +1...", "here's my number", "ring me"): output **[CALL_ACTION: ${agentName} calling back user | Hotel | phoneNumber]** — the system routes this as a callback to the user
+- When the user gives YOU their own phone number and asks you to call them (e.g. "call me at +91...", "here's my number", "ring me"): output **[CALL_ACTION: ${agentName} calling back user | Hotel | phoneNumber]** — the system routes this as a callback to the user
+- ALWAYS include the full international phone number with + and country code in the CALL_ACTION (e.g. +1 for US, +91 for India). Never strip the country code or the + sign.
 - NEVER say you cannot make calls. NEVER say calls are only for leads. The system handles all dialing — your job is only to output the signal.
 
 When suggesting adding leads, format them as a markdown table with columns: Name | Title | Company | Email | Phone | LinkedIn | Location | Country`;
