@@ -61,6 +61,17 @@ async def health():
     return {"status": "ok"}
 
 
+@app.get("/api/env-check")
+async def env_check():
+    """Diagnostic: confirms which env vars are loaded (values masked)."""
+    keys = ["LIVEKIT_URL", "LIVEKIT_API_KEY", "LIVEKIT_API_SECRET",
+            "SIP_OUTBOUND_TRUNK_ID", "VOICE_API_SECRET", "OPENAI_API_KEY", "DEEPGRAM_API_KEY"]
+    return {
+        k: ("SET ✓" if os.getenv(k) else "MISSING ✗")
+        for k in keys
+    }
+
+
 @app.post("/api/call")
 async def start_outbound_calls(
     payload: OutboundRequest,
