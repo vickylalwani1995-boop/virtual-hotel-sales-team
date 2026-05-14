@@ -317,16 +317,16 @@ function ClearConfirmDialog({
                   type="button"
                   onClick={onCancel}
                   autoFocus
-                  className="inline-flex items-center justify-center rounded-lg border border-[#DCE5EF] bg-white hover:bg-[#F4F8FC] text-mhsp-navy px-5 py-2.5 text-sm font-semibold transition-colors"
+                  className="inline-flex items-center justify-center rounded-lg border border-[#DCE5EF] bg-white hover:bg-[#F4F8FC] text-mhsp-navy px-5 py-2.5 text-sm font-semibold transition-colors whitespace-nowrap"
                 >
                   No, keep it
                 </button>
                 <button
                   type="button"
                   onClick={onConfirm}
-                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#B91C1C] hover:bg-[#991B1B] text-white px-5 py-2.5 text-sm font-bold uppercase tracking-[0.1em] shadow-[0_8px_18px_-8px_rgba(185,28,28,0.55)] hover:shadow-[0_12px_24px_-8px_rgba(153,27,27,0.65)] transition-all"
+                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#B91C1C] hover:bg-[#991B1B] text-white px-5 py-2.5 text-sm font-bold uppercase tracking-[0.1em] shadow-[0_8px_18px_-8px_rgba(185,28,28,0.55)] hover:shadow-[0_12px_24px_-8px_rgba(153,27,27,0.65)] transition-all whitespace-nowrap"
                 >
-                  <Trash2 className="h-4 w-4" />
+                  <Trash2 className="h-4 w-4 shrink-0" />
                   Yes, clear
                 </button>
               </div>

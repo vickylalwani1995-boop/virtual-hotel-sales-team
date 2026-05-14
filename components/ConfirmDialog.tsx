@@ -142,16 +142,16 @@ export function ConfirmDialog({
                   ref={cancelRef}
                   type="button"
                   onClick={onCancel}
-                  className="inline-flex items-center justify-center rounded-lg border border-[#DCE5EF] bg-white hover:bg-[#F4F8FC] text-mhsp-navy px-5 py-2.5 text-sm font-semibold transition-colors"
+                  className="inline-flex items-center justify-center rounded-lg border border-[#DCE5EF] bg-white hover:bg-[#F4F8FC] text-mhsp-navy px-5 py-2.5 text-sm font-semibold transition-colors whitespace-nowrap"
                 >
                   {cancelLabel}
                 </button>
                 <button
                   type="button"
                   onClick={onConfirm}
-                  className={`inline-flex items-center justify-center gap-2 rounded-lg text-white px-5 py-2.5 text-sm font-bold uppercase tracking-[0.1em] transition-all ${style.button}`}
+                  className={`inline-flex items-center justify-center gap-2 rounded-lg text-white px-5 py-2.5 text-sm font-bold uppercase tracking-[0.1em] transition-all whitespace-nowrap ${style.button}`}
                 >
-                  <Icon className="h-4 w-4" />
+                  <Icon className="h-4 w-4 shrink-0" />
                   {confirmLabel}
                 </button>
               </div>
@@ -332,14 +332,14 @@ export function PromptDialog({
                 <button
                   type="button"
                   onClick={onCancel}
-                  className="inline-flex items-center justify-center rounded-lg border border-[#DCE5EF] bg-white hover:bg-[#F4F8FC] text-mhsp-navy px-5 py-2.5 text-sm font-semibold transition-colors"
+                  className="inline-flex items-center justify-center rounded-lg border border-[#DCE5EF] bg-white hover:bg-[#F4F8FC] text-mhsp-navy px-5 py-2.5 text-sm font-semibold transition-colors whitespace-nowrap"
                 >
                   {cancelLabel}
                 </button>
                 <button
                   type="submit"
                   disabled={!value.trim()}
-                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#1B6EB7] hover:bg-[#0F4C81] disabled:opacity-40 disabled:cursor-not-allowed text-white px-5 py-2.5 text-sm font-bold uppercase tracking-[0.1em] shadow-[0_8px_18px_-8px_rgba(27,110,183,0.55)] transition-all"
+                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#1B6EB7] hover:bg-[#0F4C81] disabled:opacity-40 disabled:cursor-not-allowed text-white px-5 py-2.5 text-sm font-bold uppercase tracking-[0.1em] shadow-[0_8px_18px_-8px_rgba(27,110,183,0.55)] transition-all whitespace-nowrap"
                 >
                   {confirmLabel}
                 </button>
