@@ -56,18 +56,175 @@ function filterBySeniority(leads: object[], seniority: string): object[] {
   });
 }
 
+// ============================================================
+// Real Apollo Search API integration
+// ============================================================
+
+const SENIORITY_TO_APOLLO: Record<string, string[]> = {
+  Any: ["manager", "director", "vp", "c_suite", "head", "senior", "owner", "founder"],
+  Manager: ["manager", "senior"],
+  Director: ["director", "head"],
+  VP: ["vp"],
+  "C-Suite": ["c_suite", "owner", "founder"],
+};
+
+const INDUSTRY_TITLE_HINTS: Record<string, string[]> = {
+  Healthcare: ["Travel Manager", "Procurement Manager", "Operations Director", "Chief Medical Officer", "Residency Program", "Conference Services"],
+  Technology: ["Talent Acquisition", "Director of Events", "Program Manager", "VP of Engineering", "Corporate Events"],
+  Construction: ["Project Director", "Site Manager", "VP of Field Operations", "Regional Manager", "HR Director"],
+  Finance: ["Managing Director", "VP Corporate Banking", "Director of Compliance", "CFO"],
+  Defense: ["Government Affairs", "Program Manager", "Training Programs"],
+  Education: ["Conference Services", "Continuing Education", "Student Affairs", "Dean"],
+};
+
+type ApolloPerson = {
+  id?: string;
+  name?: string;
+  first_name?: string;
+  last_name?: string;
+  title?: string;
+  email?: string;
+  email_status?: string;
+  linkedin_url?: string;
+  city?: string;
+  state?: string;
+  country?: string;
+  seniority?: string;
+  organization?: {
+    name?: string;
+    website_url?: string;
+    industry?: string;
+  };
+};
+
+function prettifySeniority(s?: string): string {
+  if (!s) return "";
+  if (s === "c_suite") return "C-Suite";
+  return s
+    .split("_")
+    .map((w) => (w[0] ? w[0].toUpperCase() + w.slice(1) : ""))
+    .join(" ");
+}
+
+function mapApolloToLead(p: ApolloPerson, industryHint: string) {
+  const org = p.organization || {};
+  const fullName =
+    p.name || `${p.first_name || ""} ${p.last_name || ""}`.trim() || "Unknown";
+  const hasUnlockedEmail = p.email && !/email_not_unlocked|locked|unlock/i.test(p.email);
+  return {
+    fullName,
+    firstName: p.first_name || "",
+    lastName: p.last_name || "",
+    jobTitle: p.title || "",
+    jobSeniority: prettifySeniority(p.seniority),
+    companyName: org.name || "",
+    email: hasUnlockedEmail ? (p.email as string) : "",
+    emailStatus: hasUnlockedEmail
+      ? p.email_status === "verified"
+        ? "verified"
+        : "guessed"
+      : "unverified",
+    city: p.city || "",
+    region: p.state || "",
+    country: p.country || "US",
+    industry: org.industry || industryHint,
+    linkedinUrl: p.linkedin_url || "",
+    companyWebsite: org.website_url || "",
+    source: "apollo",
+    funnel: "hustle" as const,
+    status: "new" as const,
+  };
+}
+
+async function callApolloSearch(
+  apiKey: string,
+  params: { industry: string; location: string; seniority: string; perPage: number },
+) {
+  const titles = INDUSTRY_TITLE_HINTS[params.industry] ?? INDUSTRY_TITLE_HINTS.Healthcare;
+  const seniorities = SENIORITY_TO_APOLLO[params.seniority] ?? SENIORITY_TO_APOLLO.Any;
+
+  const apolloBody = {
+    person_titles: titles,
+    person_seniorities: seniorities,
+    person_locations: [params.location],
+    per_page: Math.min(Math.max(params.perPage, 1), 25),
+    page: 1,
+  };
+
+  const res = await fetch("https://api.apollo.io/api/v1/mixed_people/search", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Cache-Control": "no-cache",
+      "X-Api-Key": apiKey,
+    },
+    body: JSON.stringify(apolloBody),
+    // Apollo can be slow; allow up to 20s
+    signal: AbortSignal.timeout(20_000),
+  });
+
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(`Apollo ${res.status}: ${text.slice(0, 200)}`);
+  }
+  return (await res.json()) as { people?: ApolloPerson[] };
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { industry = "Healthcare", location, seniority } = body;
+    const {
+      industry = "Healthcare",
+      location = "Dallas, Texas, United States",
+      seniority = "Any",
+      perPage = 10,
+    } = body;
 
-    await new Promise((r) => setTimeout(r, 1500));
+    const apiKey = process.env.APOLLO_API_KEY;
 
+    // Live Apollo path
+    if (apiKey) {
+      try {
+        const data = await callApolloSearch(apiKey, {
+          industry,
+          location,
+          seniority,
+          perPage,
+        });
+        const people = data.people ?? [];
+        if (people.length > 0) {
+          const leads = people.map((p) => mapApolloToLead(p, industry));
+          return Response.json({
+            leads,
+            total: leads.length,
+            source: "apollo",
+            live: true,
+          });
+        }
+        // Empty live results — fall through to sample fallback below
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : "Apollo live API failed";
+        console.error("[apollo-search] live failed, using fallback:", msg);
+        // Fall through to sample fallback
+      }
+    }
+
+    // Sample fallback (no key, empty results, or live API error)
+    await new Promise((r) => setTimeout(r, 1000));
     const base = SAMPLE_LEADS[industry] ?? SAMPLE_LEADS.Healthcare;
     const filtered = filterBySeniority(base, seniority as string);
-    const leads = filtered.map((l) => ({ ...l, source: "apollo", funnel: "hustle", status: "new" }));
-
-    return Response.json({ leads, total: leads.length, source: "apollo" });
+    const leads = filtered.map((l) => ({
+      ...l,
+      source: "apollo",
+      funnel: "hustle",
+      status: "new",
+    }));
+    return Response.json({
+      leads,
+      total: leads.length,
+      source: "apollo",
+      live: false,
+    });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Apollo search failed";
     return Response.json({ error: message }, { status: 500 });
