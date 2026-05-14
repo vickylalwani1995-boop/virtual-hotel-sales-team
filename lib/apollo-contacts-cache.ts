@@ -242,9 +242,18 @@ const SENIORITY_RANK: Record<string, number> = {
   "C-Suite": 4,
 };
 
+function shuffle<T>(arr: T[]): T[] {
+  const out = [...arr];
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
+}
+
 export function filterLeads(
   leads: MappedLead[],
-  opts: { seniority?: string; count?: number },
+  opts: { seniority?: string; count?: number; randomize?: boolean },
 ): MappedLead[] {
   let filtered = leads;
   if (opts.seniority && opts.seniority !== "Any") {
@@ -256,6 +265,7 @@ export function filterLeads(
       return exclusive ? rank === minRank : rank >= minRank;
     });
   }
+  if (opts.randomize !== false) filtered = shuffle(filtered);
   if (opts.count && opts.count > 0) filtered = filtered.slice(0, opts.count);
   return filtered;
 }
