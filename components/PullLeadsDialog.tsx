@@ -12,6 +12,7 @@ import {
   MapPin,
   Building2,
   Download,
+  RefreshCw,
 } from "lucide-react";
 import { addLeads as addWorkspaceLeads, type WorkspaceLead } from "@/lib/workspace";
 import { addLeads as addLeadsToTable } from "@/lib/leads";
@@ -56,14 +57,37 @@ export function PullLeadsDialog({
   const [seniority, setSeniority] = useState("Director+");
   const [results, setResults] = useState<Partial<WorkspaceLead>[]>([]);
   const [selected, setSelected] = useState<Set<number>>(new Set());
+  const [syncStatus, setSyncStatus] = useState<{ totalContacts: number; generatedAt: string | null } | null>(null);
+  const [syncing, setSyncing] = useState(false);
 
   useEffect(() => {
     if (open) {
       setSearchState("idle");
       setResults([]);
       setSelected(new Set());
+      if (source === "apollo") {
+        fetch("/api/apollo-sync")
+          .then((r) => r.json())
+          .then((d) => setSyncStatus({ totalContacts: d.totalContacts ?? 0, generatedAt: d.generatedAt ?? null }))
+          .catch(() => null);
+      }
     }
-  }, [open]);
+  }, [open, source]);
+
+  const handleSync = useCallback(async () => {
+    setSyncing(true);
+    try {
+      const res = await fetch("/api/apollo-sync", { method: "POST" });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Sync failed");
+      setSyncStatus({ totalContacts: data.totalContacts, generatedAt: data.generatedAt });
+      toast.success(`Synced ${data.totalContacts} contacts from Apollo CRM`);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Sync failed");
+    } finally {
+      setSyncing(false);
+    }
+  }, []);
 
   useEffect(() => {
     if (!open) return;
@@ -287,6 +311,25 @@ export function PullLeadsDialog({
                   )}
                   {searchState === "searching" ? "Searching…" : `Search ${config.name}`}
                 </button>
+
+                {source === "apollo" && (
+                  <div className="mt-2 flex items-center justify-between gap-2">
+                    <p className="text-[11px] text-mhsp-muted">
+                      {syncStatus?.totalContacts
+                        ? `${syncStatus.totalContacts} contacts synced${syncStatus.generatedAt ? ` · ${new Date(syncStatus.generatedAt).toLocaleDateString()}` : ""}`
+                        : "No contacts synced yet — click Sync to load all Apollo CRM contacts"}
+                    </p>
+                    <button
+                      type="button"
+                      onClick={handleSync}
+                      disabled={syncing}
+                      className="shrink-0 inline-flex items-center gap-1.5 rounded-lg border border-[#C9DAEB] bg-white px-3 py-1.5 text-[11px] font-bold text-[#0F4C81] hover:bg-[#EAF2FA] disabled:opacity-60 transition-colors"
+                    >
+                      {syncing ? <Loader2 className="h-3 w-3 animate-spin" /> : <RefreshCw className="h-3 w-3" />}
+                      {syncing ? "Syncing…" : "Sync All Contacts"}
+                    </button>
+                  </div>
+                )}
               </div>
 
               {/* Results */}

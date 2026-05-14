@@ -105,7 +105,7 @@ export function OnboardingTour() {
                 <strong className="text-mhsp-navy">Westmore Hotel Dallas</strong>{" "}
                 demo profile, or enter your own hotel?
               </p>
-              <div className="mt-6 flex flex-col sm:flex-row gap-2.5">
+              <div className="mt-6 flex flex-col gap-2.5">
                 <button
                   type="button"
                   onClick={handleUseWestmore}

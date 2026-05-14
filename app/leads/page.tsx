@@ -509,7 +509,11 @@ export default function LeadsPage() {
             <div className="h-7 w-7 rounded-full border-2 border-[#1B6EB7] border-t-transparent animate-spin" />
           </div>
         ) : leads.length === 0 ? (
-          <EmptyState onAddDemo={handleAddDemoLeads} />
+          <EmptyState
+            onAddDemo={handleAddDemoLeads}
+            onPullApollo={() => setPullSource("apollo")}
+            onPullVibe={() => setPullSource("vibe")}
+          />
         ) : (
           <>
             {/* PIPELINE TOOLBAR — premium card grouping the action bar
@@ -1079,7 +1083,7 @@ function Row({
       <Td>
         {lead.prospectLinkedin ? (
           <a
-            href={lead.prospectLinkedin}
+            href={/^https?:\/\//i.test(lead.prospectLinkedin) ? lead.prospectLinkedin : `https://${lead.prospectLinkedin}`}
             target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
@@ -1366,7 +1370,15 @@ function BulkActionsButton({
 
 /* -------------------- EmptyState -------------------- */
 
-function EmptyState({ onAddDemo }: { onAddDemo: () => void }) {
+function EmptyState({
+  onAddDemo,
+  onPullApollo,
+  onPullVibe,
+}: {
+  onAddDemo: () => void;
+  onPullApollo: () => void;
+  onPullVibe: () => void;
+}) {
   return (
     <div className="space-y-6">
       {/* Hero card */}
@@ -1419,18 +1431,20 @@ function EmptyState({ onAddDemo }: { onAddDemo: () => void }) {
             Import prospects directly from Apollo or Vibe with one click.
           </p>
           <div className="mt-4 flex flex-col gap-2">
-            <Link
-              href="/leads?pull=apollo"
+            <button
+              type="button"
+              onClick={onPullApollo}
               className="inline-flex items-center gap-2 text-sm font-semibold text-[#1B6EB7] hover:text-[#0F4C81] transition-colors"
             >
               <ArrowRight className="h-3.5 w-3.5" /> Pull from Apollo
-            </Link>
-            <Link
-              href="/leads?pull=vibe"
+            </button>
+            <button
+              type="button"
+              onClick={onPullVibe}
               className="inline-flex items-center gap-2 text-sm font-semibold text-[#1B6EB7] hover:text-[#0F4C81] transition-colors"
             >
               <ArrowRight className="h-3.5 w-3.5" /> Pull from Vibe
-            </Link>
+            </button>
           </div>
         </div>
 

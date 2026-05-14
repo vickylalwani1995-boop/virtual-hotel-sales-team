@@ -43,6 +43,9 @@ export function signOut() {
   if (typeof window === "undefined") return;
   window.localStorage.removeItem(KEY);
   window.localStorage.removeItem(WELCOME_FLAG);
+  window.localStorage.removeItem("vhst-hotel-profile");
+  window.localStorage.removeItem("vhst-hotel-history");
+  window.localStorage.removeItem("vhst-workspace");
   window.dispatchEvent(new CustomEvent(EVT));
 }
 
