@@ -1368,38 +1368,106 @@ function BulkActionsButton({
 
 function EmptyState({ onAddDemo }: { onAddDemo: () => void }) {
   return (
-    <div className="relative bg-white rounded-2xl border border-[#E5ECF4] border-dashed px-6 py-14 text-center max-w-3xl mx-auto">
-      <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-[#2F8FCC] to-[#0F4C81] text-white shadow-[0_8px_24px_-8px_rgba(27,110,183,0.5)] mb-4">
-        <Users className="h-6 w-6" strokeWidth={2.25} />
+    <div className="space-y-6">
+      {/* Hero card */}
+      <div className="relative overflow-hidden rounded-2xl border border-[#D0E3F4] bg-gradient-to-br from-[#0F4C81] via-[#1B6EB7] to-[#2F8FCC] px-6 sm:px-10 py-12 text-center shadow-[0_20px_60px_-20px_rgba(15,76,129,0.45)]">
+        {/* Subtle dot grid */}
+        <div
+          className="absolute inset-0 opacity-[0.08] pointer-events-none"
+          style={{
+            backgroundImage: "radial-gradient(rgba(255,255,255,0.8) 1px, transparent 1px)",
+            backgroundSize: "22px 22px",
+          }}
+        />
+        {/* Glow orb */}
+        <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-72 h-72 bg-white/10 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="relative">
+          <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-white/15 backdrop-blur-sm ring-1 ring-white/25 text-white shadow-[0_8px_24px_-8px_rgba(0,0,0,0.3)] mb-5">
+            <Users className="h-8 w-8" strokeWidth={1.75} />
+          </div>
+          <h3 className="font-heading text-2xl sm:text-3xl font-bold text-white">
+            Your pipeline is empty — let&apos;s fill it.
+          </h3>
+          <p className="mt-3 text-white/70 text-base leading-relaxed max-w-lg mx-auto">
+            Generate targeted hotel prospects with the Lead Gen Agent, pull from Apollo or Vibe, or add demo leads to explore the table.
+          </p>
+
+          {/* Primary CTA */}
+          <div className="mt-7">
+            <Link
+              href="/agent/02_lead_gen"
+              className="group inline-flex items-center gap-2.5 rounded-xl bg-white text-[#0F4C81] px-7 py-3.5 text-sm font-bold uppercase tracking-[0.14em] shadow-[0_12px_28px_-10px_rgba(0,0,0,0.3)] hover:bg-[#F4F8FC] hover:-translate-y-0.5 transition-all"
+            >
+              <Sparkles className="h-4 w-4 text-[#1B6EB7]" />
+              Generate via Lead Gen Agent
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </Link>
+          </div>
+        </div>
       </div>
-      <h3 className="font-heading text-xl sm:text-2xl font-bold text-mhsp-navy">
-        No leads yet.
-      </h3>
-      <p className="mt-2 text-mhsp-muted text-base leading-relaxed max-w-md mx-auto">
-        Generate leads with the Lead Gen Agent, pull them from a CRM, or drop
-        in a sample set to see the table in action.
-      </p>
-      <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
-        <Link
-          href="/agent/02_lead_gen"
-          className="group inline-flex items-center justify-center gap-2 rounded-xl bg-[#1B6EB7] hover:bg-[#0F4C81] text-white px-6 py-3 text-sm font-bold uppercase tracking-[0.14em] shadow-[0_10px_24px_-10px_rgba(27,110,183,0.5)] hover:-translate-y-0.5 transition-all"
-        >
-          Generate via Lead Gen Agent
-          <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-        </Link>
-        <button
-          type="button"
-          onClick={onAddDemo}
-          className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#DCE5EF] bg-white hover:bg-[#F4F8FC] text-mhsp-navy px-6 py-3 text-sm font-semibold transition-colors"
-        >
-          <Plus className="h-4 w-4" /> Add 3 demo leads
-        </button>
-        <Link
-          href="/agents"
-          className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#DCE5EF] bg-white hover:bg-[#F4F8FC] text-mhsp-navy px-6 py-3 text-sm font-semibold transition-colors"
-        >
-          Browse agents
-        </Link>
+
+      {/* Three option cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        {/* Pull from CRM */}
+        <div className="group rounded-2xl border border-[#E5ECF4] bg-white p-6 shadow-[0_2px_10px_-4px_rgba(15,76,129,0.07)] hover:shadow-[0_8px_24px_-8px_rgba(15,76,129,0.14)] hover:-translate-y-0.5 transition-all">
+          <div className="h-11 w-11 rounded-xl bg-gradient-to-br from-[#EAF2FA] to-[#D5E8F5] flex items-center justify-center mb-4">
+            <Cloud className="h-5 w-5 text-[#1B6EB7]" strokeWidth={2} />
+          </div>
+          <h4 className="font-heading text-base font-bold text-mhsp-navy">Pull from a CRM</h4>
+          <p className="mt-1.5 text-sm text-mhsp-muted leading-relaxed">
+            Import prospects directly from Apollo or Vibe with one click.
+          </p>
+          <div className="mt-4 flex flex-col gap-2">
+            <Link
+              href="/leads?pull=apollo"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-[#1B6EB7] hover:text-[#0F4C81] transition-colors"
+            >
+              <ArrowRight className="h-3.5 w-3.5" /> Pull from Apollo
+            </Link>
+            <Link
+              href="/leads?pull=vibe"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-[#1B6EB7] hover:text-[#0F4C81] transition-colors"
+            >
+              <ArrowRight className="h-3.5 w-3.5" /> Pull from Vibe
+            </Link>
+          </div>
+        </div>
+
+        {/* Demo leads */}
+        <div className="group rounded-2xl border border-[#E5ECF4] bg-white p-6 shadow-[0_2px_10px_-4px_rgba(15,76,129,0.07)] hover:shadow-[0_8px_24px_-8px_rgba(15,76,129,0.14)] hover:-translate-y-0.5 transition-all">
+          <div className="h-11 w-11 rounded-xl bg-gradient-to-br from-[#EAF2FA] to-[#D5E8F5] flex items-center justify-center mb-4">
+            <Plus className="h-5 w-5 text-[#1B6EB7]" strokeWidth={2} />
+          </div>
+          <h4 className="font-heading text-base font-bold text-mhsp-navy">Try with demo data</h4>
+          <p className="mt-1.5 text-sm text-mhsp-muted leading-relaxed">
+            Add 3 sample leads instantly to explore the pipeline, filters, and bulk actions.
+          </p>
+          <button
+            type="button"
+            onClick={onAddDemo}
+            className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-[#1B6EB7] hover:text-[#0F4C81] transition-colors"
+          >
+            <ArrowRight className="h-3.5 w-3.5" /> Add 3 demo leads
+          </button>
+        </div>
+
+        {/* Browse agents */}
+        <div className="group rounded-2xl border border-[#E5ECF4] bg-white p-6 shadow-[0_2px_10px_-4px_rgba(15,76,129,0.07)] hover:shadow-[0_8px_24px_-8px_rgba(15,76,129,0.14)] hover:-translate-y-0.5 transition-all">
+          <div className="h-11 w-11 rounded-xl bg-gradient-to-br from-[#EAF2FA] to-[#D5E8F5] flex items-center justify-center mb-4">
+            <Sparkles className="h-5 w-5 text-[#1B6EB7]" strokeWidth={2} />
+          </div>
+          <h4 className="font-heading text-base font-bold text-mhsp-navy">Meet your agents</h4>
+          <p className="mt-1.5 text-sm text-mhsp-muted leading-relaxed">
+            Six AI specialists ready to prospect, pitch, and close — each with their own playbook.
+          </p>
+          <Link
+            href="/agents"
+            className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-[#1B6EB7] hover:text-[#0F4C81] transition-colors"
+          >
+            <ArrowRight className="h-3.5 w-3.5" /> Browse agents
+          </Link>
+        </div>
       </div>
     </div>
   );

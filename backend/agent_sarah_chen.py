@@ -13,6 +13,7 @@ from livekit.plugins.openai import LLM, TTS
 from livekit.plugins.deepgram import STT
 from prompt import SYSTEM_PROMPT_SARAH_CHEN
 from functions import capture_lead, send_lead_email, route_to_agent
+from text_utils import before_tts_cb, clean_for_tts
 
 load_dotenv(".env")
 logging.basicConfig(level=logging.INFO)
@@ -48,11 +49,11 @@ class SarahChenAgent(Agent):
         hotel_name = self.hotel.get("hotelName", "our hotel")
         if self.call_direction == "outbound":
             self.session.say(
-                text=f"Hi {self.lead_name}, this is Sarah from {hotel_name}. Do you have 30 seconds?"
+                text=clean_for_tts(f"Hi {self.lead_name}, this is Sarah from {hotel_name}. Do you have 30 seconds?")
             )
         else:
             self.session.say(
-                text=f"Thank you for calling {hotel_name}, this is Sarah. How can I help?"
+                text=clean_for_tts(f"Thank you for calling {hotel_name}, this is Sarah. How can I help?")
             )
 
 
@@ -65,6 +66,11 @@ async def sarah_session(ctx: JobContext):
         stt=STT(),
         llm=LLM(model="gpt-4o-mini"),
         tts=TTS(voice=TTS_VOICE),
+        before_tts_cb=before_tts_cb,
+        allow_interruptions=True,
+        interrupt_speech_duration=0.5,
+        interrupt_min_words=0,
+        min_endpointing_delay=0.4,
     )
     await session.start(
         room=ctx.room,

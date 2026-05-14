@@ -804,9 +804,20 @@ function AssistantBubble({
       >
         <Icon className="h-4 w-4 text-white" />
       </div>
-      <div className="max-w-[80%] rounded-2xl rounded-tl-sm bg-white border border-mhsp-line text-mhsp-text px-4 py-3 text-[14px] leading-relaxed shadow-[0_2px_8px_-2px_rgba(11,36,71,0.08)]">
+      <div className="max-w-[92%] rounded-2xl rounded-tl-sm bg-white border border-mhsp-line text-mhsp-text px-4 py-3 text-[14px] leading-relaxed shadow-[0_2px_8px_-2px_rgba(11,36,71,0.08)]">
         <div className="agent-chat-prose">
-          <ReactMarkdown remarkPlugins={[remarkGfm]}>{cleanContent}</ReactMarkdown>
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm]}
+            components={{
+              table({ children }) {
+                return (
+                  <div className="overflow-x-auto my-2 rounded-lg border border-mhsp-line">
+                    <table>{children}</table>
+                  </div>
+                );
+              },
+            }}
+          >{cleanContent}</ReactMarkdown>
         </div>
         {streaming && (
           <span className="inline-block w-1 h-3.5 align-middle bg-mhsp-gold animate-pulse rounded-sm ml-0.5" />

@@ -26,16 +26,16 @@ interface PullLeadsDialogProps {
 const SOURCE_CONFIG = {
   apollo: {
     name: "Apollo.io",
-    color: "from-violet-500 to-purple-700",
-    accent: "bg-violet-50 text-violet-700 border-violet-200",
-    buttonColor: "bg-violet-600 hover:bg-violet-700",
+    color: "from-[#0F4C81] to-[#1B6EB7]",
+    accent: "bg-[#EAF2FA] text-[#0F4C81] border-[#C9DAEB]",
+    buttonColor: "bg-[#0F4C81] hover:bg-[#0A3760]",
     description: "Pull verified business contacts from Apollo's database of 275M+ professionals.",
   },
   vibe: {
     name: "Vibe Prospecting",
-    color: "from-cyan-500 to-blue-600",
-    accent: "bg-cyan-50 text-cyan-700 border-cyan-200",
-    buttonColor: "bg-cyan-600 hover:bg-cyan-700",
+    color: "from-[#1B6EB7] to-[#2F8FCC]",
+    accent: "bg-[#EAF2FA] text-[#1B6EB7] border-[#C7DFEE]",
+    buttonColor: "bg-[#1B6EB7] hover:bg-[#0F4C81]",
     description: "Search the Vibe intent-signal database for prospects actively looking for hotel services.",
   },
 };
@@ -144,7 +144,7 @@ export function PullLeadsDialog({
             className="fixed inset-x-4 top-[6vh] z-50 mx-auto max-w-2xl"
           >
             <div className="rounded-2xl bg-white border border-[#E5ECF4] shadow-[0_30px_80px_-20px_rgba(15,76,129,0.30)] overflow-hidden flex flex-col max-h-[88vh]">
-              <div className={`h-1.5 w-full bg-gradient-to-r ${config.color}`} />
+              <div className={`h-1 w-full bg-gradient-to-r ${config.color}`} />
 
               {/* Header */}
               <div className="flex items-center justify-between px-5 py-4 border-b border-[#E5ECF4]">
@@ -228,7 +228,7 @@ export function PullLeadsDialog({
                   type="button"
                   onClick={handleSearch}
                   disabled={searchState === "searching"}
-                  className={`mt-3 w-full inline-flex items-center justify-center gap-2 rounded-xl text-white px-4 py-2.5 text-sm font-bold uppercase tracking-[0.1em] shadow-sm disabled:opacity-60 transition-all ${config.buttonColor}`}
+                  className={`mt-3 w-full inline-flex items-center justify-center gap-2 rounded-xl text-white px-4 py-2.5 text-sm font-bold uppercase tracking-[0.1em] shadow-[0_8px_18px_-8px_rgba(15,76,129,0.45)] disabled:opacity-60 transition-all ${config.buttonColor}`}
                 >
                   {searchState === "searching" ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -310,8 +310,8 @@ export function PullLeadsDialog({
                             </p>
                             <span className={`inline-flex items-center gap-0.5 text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full border ${
                               lead.emailStatus === "verified"
-                                ? "bg-emerald-50 text-emerald-600 border-emerald-200"
-                                : "bg-amber-50 text-amber-600 border-amber-200"
+                                ? "bg-mhsp-success/10 text-mhsp-success border-mhsp-success/30"
+                                : "bg-[#FEF3C7] text-[#92400E] border-[#FCD34D]"
                             }`}>
                               <CheckCircle2 className="h-2.5 w-2.5" />
                               {lead.emailStatus}
@@ -334,7 +334,7 @@ export function PullLeadsDialog({
                     type="button"
                     onClick={handleImport}
                     disabled={selected.size === 0}
-                    className={`inline-flex items-center gap-2 rounded-xl text-white px-6 py-2.5 text-sm font-bold uppercase tracking-[0.1em] shadow-sm disabled:opacity-40 transition-all ${config.buttonColor}`}
+                    className={`inline-flex items-center gap-2 rounded-xl text-white px-6 py-2.5 text-sm font-bold uppercase tracking-[0.1em] shadow-[0_10px_24px_-10px_rgba(15,76,129,0.5)] hover:-translate-y-0.5 disabled:opacity-40 disabled:translate-y-0 transition-all ${config.buttonColor}`}
                   >
                     <Download className="h-4 w-4" />
                     Import {selected.size} leads

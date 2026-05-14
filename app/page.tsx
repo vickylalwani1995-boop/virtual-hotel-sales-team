@@ -251,17 +251,6 @@ export default function Home() {
 
   return (
     <>
-      {/* INBOUND PHONE BANNER */}
-      {inboundPhone?.available && (
-        <div className="bg-slate-900 text-white py-2 px-4 text-center text-sm">
-          Talk to your sales team live:{" "}
-          <a href={`tel:${inboundPhone.number}`} className="font-semibold underline">
-            {inboundPhone.number}
-          </a>
-          <span className="ml-2 opacity-80">(Donna answers + routes)</span>
-        </div>
-      )}
-
       {/* SECTION 1 - HERO */}
       <section className="relative overflow-hidden">
         <div

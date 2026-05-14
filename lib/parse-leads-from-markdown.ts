@@ -1,5 +1,14 @@
 import type { Lead, LeadEmailStatus } from "@/lib/leads";
 
+function stripMd(v: string): string {
+  return v
+    .replace(/\*{1,3}(.*?)\*{1,3}/g, "$1")
+    .replace(/_{1,2}(.*?)_{1,2}/g, "$1")
+    .replace(/`([^`]*)`/g, "$1")
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")
+    .trim();
+}
+
 /**
  * Parse the first markdown table in `text` into Partial<Lead>[].
  * Best-effort: tolerant header matching, empty cells fine, no throws.
@@ -20,7 +29,7 @@ export function parseLeadsFromMarkdown(text: string): Partial<Lead>[] {
     const lead: Partial<Lead> = {};
     for (let i = 0; i < headers.length; i++) {
       const handler = mappers[i];
-      const cell = (row[i] ?? "").trim();
+      const cell = stripMd((row[i] ?? "").trim());
       if (!cell || !handler) continue;
       handler(lead, cell);
     }
@@ -174,7 +183,7 @@ function matchHeader(headerRaw: string): Handler | null {
   }
 
   // Name variants
-  if (/\bfull\s*name\b/.test(h) || (h === "name")) {
+  if (/\bfull\s*name\b/.test(h) || h === "name" || /\bdecision\s*maker\b/.test(h) || /\bcontact\s*name\b/.test(h)) {
     return (l, v) => {
       l.prospectFullName = v;
       if (!l.prospectFirstName || !l.prospectLastName) {
@@ -185,7 +194,7 @@ function matchHeader(headerRaw: string): Handler | null {
       }
     };
   }
-  if (/\bfirst\b/.test(h)) {
+  if (/^first(\s+name)?$/.test(h)) {
     return (l, v) => {
       l.prospectFirstName = v;
     };

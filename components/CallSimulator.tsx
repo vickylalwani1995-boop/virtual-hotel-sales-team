@@ -107,6 +107,26 @@ function newId(): string {
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
+/* Strip markdown and special characters so TTS speaks naturally. */
+function cleanForTTS(text: string): string {
+  return text
+    .replace(/^#{1,6}\s*/gm, "")
+    .replace(/\*{1,3}([^*]*)\*{1,3}/g, "$1")
+    .replace(/_{1,3}([^_]*)_{1,3}/g, "$1")
+    .replace(/`+([^`]*)`+/g, "$1")
+    .replace(/^>\s*/gm, "")
+    .replace(/^\s*[-*+]\s+/gm, "")
+    .replace(/^\s*\d+\.\s+/gm, "")
+    .replace(/^[-*_]{3,}\s*$/gm, "")
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, "")
+    .replace(/\s*[—–]\s*/g, ", ")
+    .replace(/[#|~^\\]/g, "")
+    .replace(/\n+/g, " ")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+}
+
 /* Split a streaming buffer into "sentences ready to speak now" + "tail". */
 function splitForSpeech(buf: string): { sentences: string[]; tail: string } {
   const sentences: string[] = [];
@@ -154,6 +174,8 @@ export function CallSimulator({
   const accumulatedSpeechRef = useRef("");
   const ttsVoiceRef = useRef<SpeechSynthesisVoice | null>(null);
   const conversationRef = useRef<Turn[]>([]);
+  const bargeInRef = useRef(false);    // true when user interrupted agent TTS
+  const isListeningRef = useRef(false); // true while any recognition instance is active
 
   /* ----- TTS voice picker ----- */
   useEffect(() => {
@@ -210,7 +232,7 @@ export function CallSimulator({
   const queueSpeech = useCallback(
     (sentences: string[]) => {
       if (sentences.length === 0) return;
-      utteranceQueueRef.current.push(...sentences);
+      utteranceQueueRef.current.push(...sentences.map(cleanForTTS).filter(Boolean));
       void speakQueueDrain();
     },
     [speakQueueDrain],
@@ -239,7 +261,10 @@ export function CallSimulator({
   }, []);
 
   /* ----- STT helpers ----- */
-  const startListening = useCallback(() => {
+  // bargeinMode=true: called while agent is speaking; watches silently and
+  // cancels TTS immediately if the user starts talking (barge-in).
+  // bargeinMode=false (default): normal post-TTS listening, updates UI at once.
+  const startListening = useCallback((bargeinMode = false) => {
     if (typeof window === "undefined") return;
     const Ctor =
       window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -250,8 +275,9 @@ export function CallSimulator({
       return;
     }
     if (muted || !isCallingRef.current) return;
+    if (isListeningRef.current) return; // already active — don't spawn a second instance
 
-    // Abort any existing recognition instance before creating a new one
+    // Abort any stale recognition instance
     if (recognitionRef.current) {
       try {
         recognitionRef.current.abort();
@@ -263,8 +289,13 @@ export function CallSimulator({
 
     accumulatedSpeechRef.current = "";
     setInterim("");
-    setState("listening");
-    setStatusText("Listening to you...");
+
+    // In normal mode, switch UI immediately.
+    // In barge-in mode, keep showing "Speaking…" until voice is actually detected.
+    if (!bargeinMode) {
+      setState("listening");
+      setStatusText("Listening to you...");
+    }
 
     const r = new Ctor();
     r.lang = "en-US";
@@ -277,7 +308,6 @@ export function CallSimulator({
         window.clearTimeout(silenceTimerRef.current);
       }
       silenceTimerRef.current = window.setTimeout(() => {
-        // No new speech for SILENCE_TIMEOUT_MS — commit what we have
         r.stop();
       }, SILENCE_TIMEOUT_MS);
     }
@@ -291,6 +321,23 @@ export function CallSimulator({
         if (result.isFinal) final += text;
         else live += text;
       }
+
+      // Barge-in: user spoke while agent TTS is still playing — stop it immediately.
+      if (
+        bargeinMode &&
+        (ttsActiveRef.current ||
+          (typeof window !== "undefined" && window.speechSynthesis?.speaking))
+      ) {
+        bargeInRef.current = true;
+        utteranceQueueRef.current = [];
+        if (typeof window !== "undefined" && window.speechSynthesis?.speaking) {
+          window.speechSynthesis.cancel();
+        }
+        ttsActiveRef.current = false;
+        setState("listening");
+        setStatusText("Listening to you...");
+      }
+
       if (final) {
         accumulatedSpeechRef.current = (
           accumulatedSpeechRef.current +
@@ -310,11 +357,23 @@ export function CallSimulator({
         return;
       }
       if (e.error === "no-speech") {
-        // start over
-        if (isCallingRef.current) startListening();
+        if (!isCallingRef.current) return;
+        isListeningRef.current = false;
+        if (
+          bargeinMode &&
+          (ttsActiveRef.current ||
+            (typeof window !== "undefined" && window.speechSynthesis?.speaking))
+        ) {
+          // TTS still running; restart the barge-in watch
+          startListening(true);
+        } else if (!bargeinMode) {
+          startListening();
+        }
+        // If bargeinMode but TTS already finished, streamAndSpeak will call
+        // startListening() after it notices isListeningRef is false.
         return;
       }
-      // generic error — let onend re-evaluate
+      // other errors — let onend re-evaluate
     };
 
     r.onend = () => {
@@ -323,25 +382,40 @@ export function CallSimulator({
         silenceTimerRef.current = null;
       }
       setInterim("");
+      isListeningRef.current = false;
+
       const said = accumulatedSpeechRef.current.trim();
       accumulatedSpeechRef.current = "";
+
       if (!isCallingRef.current) return;
+
       if (!said) {
-        // no speech captured -> start over
-        startListening();
+        if (
+          bargeinMode &&
+          (ttsActiveRef.current ||
+            (typeof window !== "undefined" && window.speechSynthesis?.speaking))
+        ) {
+          // TTS still going; keep watching
+          startListening(true);
+        } else if (!bargeinMode) {
+          startListening();
+        }
+        // bargeinMode + TTS already done → streamAndSpeak handles next startListening
         return;
       }
+
       void sendUserTurn(said);
     };
 
     recognitionRef.current = r;
+    isListeningRef.current = true;
     try {
       r.start();
       resetSilenceTimer();
     } catch {
-      // Already running or blocked
+      isListeningRef.current = false;
     }
-  }, [muted]);
+  }, [muted, stopTTS]);
 
   const stopListening = useCallback(() => {
     if (silenceTimerRef.current) {
@@ -356,6 +430,7 @@ export function CallSimulator({
       }
       recognitionRef.current = null;
     }
+    isListeningRef.current = false;
   }, []);
 
   /* ----- Send a user turn to /api/agent-chat, stream, speak ----- */
@@ -430,6 +505,12 @@ export function CallSimulator({
       setState("speaking");
       setStatusText("Speaking...");
 
+      // Start barge-in listener immediately so the user can interrupt at any time.
+      // This runs silently in the background; the UI stays on "Speaking…" until
+      // speech is actually detected, at which point it switches to "Listening…".
+      bargeInRef.current = false;
+      startListening(true);
+
       while (true) {
         if (!isCallingRef.current) {
           try {
@@ -438,6 +519,15 @@ export function CallSimulator({
             // ignore
           }
           return;
+        }
+        // User barged in — discard the rest of the agent response stream
+        if (bargeInRef.current) {
+          try {
+            await reader.cancel();
+          } catch {
+            // ignore
+          }
+          break;
         }
         const { value, done } = await reader.read();
         if (done) break;
@@ -464,16 +554,28 @@ export function CallSimulator({
           }
         }
       }
-      // Flush any tail
-      if (speakBuf.trim()) {
+
+      // Flush any buffered tail — but only if no barge-in happened
+      if (!bargeInRef.current && speakBuf.trim()) {
         queueSpeech([speakBuf.trim()]);
         agentTurn.text = (agentTurn.text + "").trim();
       }
-      // Wait until TTS finishes everything queued
+
+      // Wait until TTS finishes (or was already cancelled by barge-in)
       await waitForTTSDrain();
+
+      const didBargeIn = bargeInRef.current;
+      bargeInRef.current = false;
+
       if (!isCallingRef.current) return;
-      // After speaking, loop back to listening
-      startListening();
+
+      // If barge-in happened, the recognition instance is already collecting the
+      // user's speech — don't start a second listener on top of it.
+      // If no barge-in, start normal listening (unless the barge-in watch already
+      // handed off to a new instance via its own onend → sendUserTurn path).
+      if (!didBargeIn && !isListeningRef.current) {
+        startListening();
+      }
     },
     [queueSpeech, startListening, waitForTTSDrain],
   );
