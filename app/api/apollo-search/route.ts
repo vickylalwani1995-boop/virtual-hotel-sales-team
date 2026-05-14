@@ -1,10 +1,43 @@
 import { NextRequest } from "next/server";
+import { promises as fs } from "fs";
+import path from "path";
 
 export const runtime = "nodejs";
 
 // ============================================================
-// Sample fallback (used when Apollo API fails / no key / errors)
-// Keeps demo bulletproof even if credits run out
+// REAL APOLLO FALLBACK POOL
+// Pre-pulled real Apollo leads (30 across 6 industries) — used
+// when live API fails or credits exhausted. Same shape as a live
+// response. Loaded once at first request, cached in memory.
+// ============================================================
+
+type FallbackPool = {
+  generatedAt: string;
+  source: string;
+  totalLeads: number;
+  byIndustry: Record<string, Record<string, unknown>[]>;
+};
+
+let _realFallbackCache: FallbackPool | null = null;
+
+async function loadRealFallback(): Promise<FallbackPool | null> {
+  if (_realFallbackCache) return _realFallbackCache;
+  try {
+    const filePath = path.join(
+      process.cwd(),
+      "sample-data",
+      "apollo-real-fallback.json",
+    );
+    const raw = await fs.readFile(filePath, "utf-8");
+    _realFallbackCache = JSON.parse(raw) as FallbackPool;
+    return _realFallbackCache;
+  } catch {
+    return null;
+  }
+}
+
+// ============================================================
+// Hardcoded fallback (ultimate safety net if even the JSON fails)
 // ============================================================
 
 const SAMPLE_LEADS: Record<string, object[]> = {
@@ -342,7 +375,24 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // FALLBACK PATH
+    // FALLBACK PATH 1: real pre-pulled Apollo data (preferred)
+    const realPool = await loadRealFallback();
+    if (realPool?.byIndustry?.[industry]?.length) {
+      const all = realPool.byIndustry[industry] as Record<string, unknown>[];
+      // Apply seniority filter using prettified field
+      const filtered = filterBySeniority(all, seniority).slice(0, perPage);
+      await new Promise((r) => setTimeout(r, 600)); // small theatre delay
+      return Response.json({
+        leads: filtered,
+        total: filtered.length,
+        source: "apollo",
+        live: false,
+        usingRealFallback: true,
+        fallbackGeneratedAt: realPool.generatedAt,
+      });
+    }
+
+    // FALLBACK PATH 2: hardcoded sample (ultimate safety net)
     await new Promise((r) => setTimeout(r, 800));
     const leads = sampleFallback(industry, seniority, perPage);
     return Response.json({

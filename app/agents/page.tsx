@@ -1,7 +1,6 @@
 "use client";
 
-import { Suspense } from "react";
-import { useEffect } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { AgentGrid } from "@/components/AgentGrid";
@@ -171,14 +170,27 @@ function GuidedFlowStrip({ profile }: { profile: string }) {
 
 function AgentsContent() {
   const searchParams = useSearchParams();
-  const profile = searchParams.get("profile") ?? "";
-  const hotelName = extractHotelName(profile);
-  const chips = profileChips(profile);
+  const profileFromUrl = searchParams.get("profile") ?? "";
+
+  // Fall back to localStorage if URL doesn't have the profile
+  // (e.g., user navigates here directly via nav link, not from homepage flow)
+  const [profile, setProfile] = useState(profileFromUrl);
 
   useEffect(() => {
-    if (!profile || typeof window === "undefined") return;
-    window.localStorage.setItem("vhst-hotel-profile", profile);
-  }, [profile]);
+    if (profileFromUrl) {
+      setProfile(profileFromUrl);
+      if (typeof window !== "undefined") {
+        window.localStorage.setItem("vhst-hotel-profile", profileFromUrl);
+      }
+      return;
+    }
+    if (typeof window === "undefined") return;
+    const stored = window.localStorage.getItem("vhst-hotel-profile");
+    if (stored) setProfile(stored);
+  }, [profileFromUrl]);
+
+  const hotelName = extractHotelName(profile);
+  const chips = profileChips(profile);
 
   const calculatedCount = AGENTS.filter((a) => a.funnel === "calculated").length;
   const hustleCount = AGENTS.filter((a) => a.funnel === "hustle").length;
