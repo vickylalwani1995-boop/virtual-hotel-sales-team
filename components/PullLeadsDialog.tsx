@@ -13,7 +13,8 @@ import {
   Building2,
   Download,
 } from "lucide-react";
-import { addLeads, type WorkspaceLead } from "@/lib/workspace";
+import { addLeads as addWorkspaceLeads, type WorkspaceLead } from "@/lib/workspace";
+import { addLeads as addLeadsToTable } from "@/lib/leads";
 
 interface PullLeadsDialogProps {
   open: boolean;
@@ -119,7 +120,56 @@ export function PullLeadsDialog({
       ...l,
       source: source as "apollo" | "vibe",
     }));
-    addLeads(stamped, `${config.name} Import`);
+    // Write to workspace (legacy)
+    addWorkspaceLeads(stamped, `${config.name} Import`);
+    // ALSO write to the /leads table storage (the one users actually see)
+    // The Apollo route returns both schemas in the same object, so passing
+    // through works — Nirav's normalize picks the prospect*/contact* fields.
+    addLeadsToTable(
+      stamped.map((l) => {
+        const x = l as Record<string, unknown>;
+        return {
+          prospectFullName:
+            (x.prospectFullName as string) || (x.fullName as string) || "",
+          prospectFirstName:
+            (x.prospectFirstName as string) || (x.firstName as string) || "",
+          prospectLastName:
+            (x.prospectLastName as string) || (x.lastName as string) || "",
+          prospectJobTitle:
+            (x.prospectJobTitle as string) || (x.jobTitle as string) || "",
+          prospectJobSeniorityLevel:
+            (x.prospectJobSeniorityLevel as string) ||
+            (x.jobSeniority as string) ||
+            "",
+          prospectJobDepartment:
+            (x.prospectJobDepartment as string) || "",
+          prospectLinkedin:
+            (x.prospectLinkedin as string) || (x.linkedin as string) || "",
+          prospectCity: (x.prospectCity as string) || (x.city as string) || "",
+          prospectRegionName:
+            (x.prospectRegionName as string) || (x.region as string) || "",
+          prospectCountryName:
+            (x.prospectCountryName as string) || (x.country as string) || "",
+          prospectCompanyName:
+            (x.prospectCompanyName as string) || (x.companyName as string) || "",
+          prospectCompanyWebsite:
+            (x.prospectCompanyWebsite as string) || "",
+          prospectCompanyLinkedin:
+            (x.prospectCompanyLinkedin as string) || "",
+          contactProfessionalEmail:
+            (x.contactProfessionalEmail as string) || (x.email as string) || "",
+          contactProfessionalEmailStatus:
+            ((x.contactProfessionalEmailStatus as string) ||
+              (x.emailStatus as string) ||
+              "unverified") as "verified" | "guessed" | "unverified",
+          contactMobilePhone:
+            (x.contactMobilePhone as string) || (x.mobilePhone as string) || "",
+          source: source === "apollo" ? "apollo" : "vibe",
+          funnel: "hustle" as const,
+          status: "new" as const,
+        };
+      }),
+    );
     toast.success(`Imported ${toImport.length} leads from ${config.name}.`);
     onLeadsAdded?.(toImport.length);
     onClose();
