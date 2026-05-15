@@ -328,11 +328,12 @@ export default function DashboardPage() {
                 <ResponsiveContainer
                   width="100%"
                   height={Math.max(220, activityByAgent.length * 38)}
+                  minWidth={0}
                 >
                   <BarChart
                     data={activityByAgent}
                     layout="vertical"
-                    margin={{ left: 8, right: 24, top: 8, bottom: 8 }}
+                    margin={{ left: 0, right: 16, top: 8, bottom: 8 }}
                   >
                     <XAxis
                       type="number"
@@ -342,10 +343,10 @@ export default function DashboardPage() {
                     <YAxis
                       type="category"
                       dataKey="name"
-                      width={150}
+                      width={120}
                       tick={{
                         fill: "#0F4C81",
-                        fontSize: 13,
+                        fontSize: 12,
                         fontWeight: 600,
                       }}
                       axisLine={false}
@@ -524,8 +525,8 @@ function DonutChart({
   const total = data.reduce((s, d) => s + d.value, 0);
   return (
     <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-4 md:gap-6 items-center">
-      <div className="relative h-[200px]">
-        <ResponsiveContainer width="100%" height="100%">
+      <div className="relative h-[200px] min-w-0 w-full">
+        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
           <PieChart>
             <Pie
               data={data}
