@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import nodemailer from "nodemailer";
+import { buildMarketingEmail } from "@/lib/email-template";
 
 export const runtime = "nodejs";
 
@@ -42,11 +43,19 @@ export async function POST(req: NextRequest) {
         auth: { user: smtpUser, pass: smtpPass },
       });
 
+      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://salesteam.myhospitalitysalespro.com"
+      const html = buildMarketingEmail({
+        subject,
+        body: emailBody || "",
+        agentId,
+        senderEmail: smtpUser,
+        baseUrl,
+      })
       const info = await transporter.sendMail({
-        from: `"MHSP Sales Team" <${smtpUser}>`,
+        from: `"mySales TEAM" <${smtpUser}>`,
         to,
         subject,
-        html: (emailBody || "").replace(/\n/g, "<br>"),
+        html,
       });
 
       provider = "gmail-smtp";
