@@ -28,10 +28,14 @@ import {
   Zap,
   Sparkles,
   ArrowRight,
+  MessageSquare,
+  ClipboardList,
 } from "lucide-react";
 import { AGENTS, getAgent } from "@/lib/agents";
 import { getActivity, type ActivityEntry } from "@/lib/activity-log";
 import { getAllLeads, type Lead } from "@/lib/leads";
+import { loadMessages, formatTime } from "@/lib/team-chat";
+import { loadTasks, AGENT_NAMES } from "@/lib/tasks";
 
 type Range = "today" | "week" | "month" | "all";
 
@@ -98,6 +102,9 @@ export default function DashboardPage() {
   const [activity, setActivity] = useState<ActivityEntry[]>([]);
   const [leads, setLeads] = useState<Lead[]>([]);
   const [range, setRange] = useState<Range>("week");
+  const [chatMsgCount, setChatMsgCount] = useState(0);
+  const [lastChatAgent, setLastChatAgent] = useState<{ name: string; time: string } | null>(null);
+  const [taskStats, setTaskStats] = useState({ inProgress: 0, overdue: 0, done: 0, topAgent: "" });
 
   useEffect(() => {
     const sync = () => {
@@ -108,6 +115,27 @@ export default function DashboardPage() {
     setHydrated(true);
     const evts = ["vhst-leads-changed", "vhst-notifications-changed", "storage"];
     for (const e of evts) window.addEventListener(e, sync);
+
+    // Chat + task stats
+    try {
+      const msgs = loadMessages("sales-team");
+      const agentMsgs = msgs.filter((m) => m.authorType === "agent")
+      setChatMsgCount(msgs.length);
+      if (agentMsgs.length > 0) {
+        const last = agentMsgs[agentMsgs.length - 1]
+        setLastChatAgent({ name: last.authorName, time: formatTime(last.timestamp) })
+      }
+      const tasks = loadTasks();
+      const now = Date.now()
+      const inProgress = tasks.filter((t) => t.status === "in_progress").length
+      const overdue = tasks.filter((t) => t.dueDate && new Date(t.dueDate).getTime() < now && t.status !== "done").length
+      const done = tasks.filter((t) => t.status === "done").length
+      const inProgTasks = tasks.filter((t) => t.status === "in_progress")
+      const topAgent = inProgTasks.length > 0 ? AGENT_NAMES[inProgTasks[0].assigneeId] ?? "" : ""
+      const topTask = inProgTasks.length > 0 ? inProgTasks[0].title : ""
+      setTaskStats({ inProgress, overdue, done, topAgent: topTask ? `${topAgent} working on ${topTask}` : "" })
+    } catch { /* ignore */ }
+
     return () => {
       for (const e of evts) window.removeEventListener(e, sync);
     };
@@ -432,6 +460,47 @@ export default function DashboardPage() {
                 </ul>
               )}
             </Card>
+
+            {/* ── Team Chat + Tasks dashboard cards ── */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Link href="/team-chat" className="group block rounded-2xl border border-[#E5ECF4] bg-white shadow-[0_4px_16px_-8px_rgba(15,76,129,0.10)] hover:shadow-[0_8px_24px_-8px_rgba(15,76,129,0.18)] transition-all p-5">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#2F8FCC] to-[#0F4C81] flex items-center justify-center text-white shadow-[0_6px_16px_-8px_rgba(15,76,129,0.5)]">
+                    <MessageSquare className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-mhsp-navy">Team Chat Activity</p>
+                    <p className="text-xs text-mhsp-muted">{chatMsgCount} messages today</p>
+                  </div>
+                </div>
+                {lastChatAgent && (
+                  <p className="text-sm text-mhsp-muted mb-3">Last: {lastChatAgent.name} at {lastChatAgent.time}</p>
+                )}
+                <span className="inline-flex items-center gap-1 text-xs font-bold text-[#1B6EB7] group-hover:text-[#0F4C81] transition-colors">
+                  Open Team Chat <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />
+                </span>
+              </Link>
+
+              <Link href="/tasks" className="group block rounded-2xl border border-[#E5ECF4] bg-white shadow-[0_4px_16px_-8px_rgba(15,76,129,0.10)] hover:shadow-[0_8px_24px_-8px_rgba(15,76,129,0.18)] transition-all p-5">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#D4A537] to-[#B8922E] flex items-center justify-center text-white shadow-[0_6px_16px_-8px_rgba(212,165,55,0.4)]">
+                    <ClipboardList className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-mhsp-navy">Active Tasks</p>
+                    <p className="text-xs text-mhsp-muted">
+                      {taskStats.inProgress} in progress · {taskStats.overdue} overdue · {taskStats.done} done
+                    </p>
+                  </div>
+                </div>
+                {taskStats.topAgent && (
+                  <p className="text-sm text-mhsp-muted line-clamp-1 mb-3">{taskStats.topAgent}</p>
+                )}
+                <span className="inline-flex items-center gap-1 text-xs font-bold text-[#1B6EB7] group-hover:text-[#0F4C81] transition-colors">
+                  Open Task Board <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />
+                </span>
+              </Link>
+            </div>
           </>
         )}
       </section>

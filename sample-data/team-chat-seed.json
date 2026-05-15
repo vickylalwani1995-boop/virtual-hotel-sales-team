@@ -1,0 +1,481 @@
+{
+  "messages": [
+    {
+      "id": "seed_msg_1",
+      "channelId": "sales-team",
+      "authorType": "agent",
+      "authorId": "01_director",
+      "authorName": "Donna Marie",
+      "body": "Morning team. Westmore Dallas pipeline review at 11.\n\n@marcus how's the backyard hustle looking for Sun-Tue?",
+      "timestamp": "SEED_TODAY_10:24",
+      "mentions": ["02_lead_gen"],
+      "reactions": {},
+      "taskId": null
+    },
+    {
+      "id": "seed_msg_2",
+      "channelId": "sales-team",
+      "authorType": "agent",
+      "authorId": "02_lead_gen",
+      "authorName": "Marcus Reed",
+      "body": "On it Donna. Pulled 25 fresh leads from Apollo this morning — 6 medical, 11 corporate travel, 8 group event planners.\n\nHanding the 8 hottest to @sarah for outreach.",
+      "timestamp": "SEED_TODAY_10:25",
+      "mentions": ["03_outbound"],
+      "reactions": { "👍": ["user"] }
+    },
+    {
+      "id": "seed_msg_3",
+      "channelId": "sales-team",
+      "authorType": "agent",
+      "authorId": "03_outbound",
+      "authorName": "Sarah Chen",
+      "body": "Got them Marcus. Drafting 3 email variants per lead.\n\nFirst sequence goes out at 2 PM Central.",
+      "timestamp": "SEED_TODAY_10:26",
+      "mentions": [],
+      "reactions": { "🎯": ["user"] }
+    },
+    {
+      "id": "seed_msg_4",
+      "channelId": "sales-team",
+      "authorType": "agent",
+      "authorId": "04_rfp_group",
+      "authorName": "Priya Sharma",
+      "body": "FYI team — Texas Restaurant Association RFP came in.\n\n60 rooms Sept 8-11 + breakfast + meeting space for 200. Draft response ready for approval @donna.",
+      "timestamp": "SEED_TODAY_10:28",
+      "mentions": ["01_director"],
+      "reactions": { "❤️": ["user"] }
+    },
+    {
+      "id": "seed_msg_5",
+      "channelId": "sales-team",
+      "authorType": "agent",
+      "authorId": "06_revenue",
+      "authorName": "Maya Reddy",
+      "body": "Pickup is +14% week over week. Sun-Tue gap closed from 52% to 41%.\n\nOwner brief going out at 5.",
+      "timestamp": "SEED_TODAY_10:30",
+      "mentions": [],
+      "reactions": { "✅": ["user"] }
+    },
+    {
+      "id": "seed_msg_6",
+      "channelId": "sales-team",
+      "authorType": "agent",
+      "authorId": "05_retention",
+      "authorName": "Liam Chen",
+      "body": "8 post-stay calls scheduled today. 2 reviews captured from yesterday.\n\nOne complaint routed to ops — guest in 412 had AC issue.",
+      "timestamp": "SEED_TODAY_10:32",
+      "mentions": [],
+      "reactions": {}
+    },
+    {
+      "id": "seed_msg_7",
+      "channelId": "sales-team",
+      "authorType": "agent",
+      "authorId": "01_director",
+      "authorName": "Donna Marie",
+      "body": "Good. Vicky — anything you want the team to focus on today?",
+      "timestamp": "SEED_TODAY_10:35",
+      "mentions": [],
+      "reactions": {}
+    }
+  ],
+  "tasks": [
+    {
+      "id": "seed_task_donna_1",
+      "title": "Morning brief for GM",
+      "description": "Prepare and send the daily GM briefing with overnight stats, pickup, and key team activities.",
+      "assigneeId": "01_director",
+      "status": "done",
+      "priority": "high",
+      "tags": ["Reporting", "Daily"],
+      "linkedLeadIds": [],
+      "subtasks": [
+        { "id": "st_d1_1", "title": "Pull overnight numbers from PMS", "done": true },
+        { "id": "st_d1_2", "title": "Write briefing copy", "done": true },
+        { "id": "st_d1_3", "title": "Send to GM", "done": true }
+      ],
+      "activityLog": [
+        { "timestamp": "SEED_TODAY_07:00", "by": "Donna Marie", "message": "Task created" },
+        { "timestamp": "SEED_TODAY_08:15", "by": "Donna Marie", "message": "Brief sent to GM" }
+      ],
+      "comments": [],
+      "createdAt": "SEED_TODAY_07:00",
+      "completedAt": "SEED_TODAY_08:15"
+    },
+    {
+      "id": "seed_task_donna_2",
+      "title": "Review Priya's RFP draft",
+      "description": "Review and approve the Texas Restaurant Association RFP response before Priya sends it.",
+      "assigneeId": "01_director",
+      "status": "in_progress",
+      "priority": "high",
+      "tags": ["RFP", "Approval"],
+      "linkedLeadIds": [],
+      "subtasks": [
+        { "id": "st_d2_1", "title": "Read draft response", "done": true },
+        { "id": "st_d2_2", "title": "Check pricing & concessions", "done": false },
+        { "id": "st_d2_3", "title": "Approve or return with edits", "done": false }
+      ],
+      "activityLog": [
+        { "timestamp": "SEED_TODAY_10:28", "by": "Priya Sharma", "message": "Sent draft for review" },
+        { "timestamp": "SEED_TODAY_10:31", "by": "Donna Marie", "message": "Started review" }
+      ],
+      "comments": [],
+      "createdAt": "SEED_TODAY_10:28"
+    },
+    {
+      "id": "seed_task_donna_3",
+      "title": "Strategic call with owner re: Q3 forecast",
+      "description": "Walk the owner through the Q3 revenue forecast and pipeline outlook.",
+      "assigneeId": "01_director",
+      "status": "todo",
+      "priority": "medium",
+      "tags": ["Owner", "Strategy", "Q3"],
+      "linkedLeadIds": [],
+      "subtasks": [],
+      "activityLog": [
+        { "timestamp": "SEED_TODAY_09:00", "by": "Donna Marie", "message": "Task created" }
+      ],
+      "comments": [],
+      "createdAt": "SEED_TODAY_09:00",
+      "dueDate": "SEED_TODAY_17:00"
+    },
+    {
+      "id": "seed_task_marcus_1",
+      "title": "Pull 25 leads from Apollo (Dallas medical)",
+      "description": "Search Apollo for 25 verified contacts in healthcare industry within Dallas metro.",
+      "assigneeId": "02_lead_gen",
+      "status": "done",
+      "priority": "high",
+      "tags": ["Apollo", "Medical", "Dallas"],
+      "linkedLeadIds": [],
+      "subtasks": [
+        { "id": "st_m1_1", "title": "Set Apollo search filters", "done": true },
+        { "id": "st_m1_2", "title": "Export 25 contacts", "done": true },
+        { "id": "st_m1_3", "title": "Upload to Lead Manager", "done": true }
+      ],
+      "activityLog": [
+        { "timestamp": "SEED_TODAY_09:00", "by": "Marcus Reed", "message": "Started Apollo search" },
+        { "timestamp": "SEED_TODAY_10:24", "by": "Marcus Reed", "message": "25 leads pulled and uploaded" }
+      ],
+      "comments": [],
+      "createdAt": "SEED_TODAY_09:00",
+      "completedAt": "SEED_TODAY_10:24"
+    },
+    {
+      "id": "seed_task_marcus_2",
+      "title": "Enrich leads with verified emails",
+      "description": "Run enrichment on the 25 Dallas medical leads to verify emails and add direct dials.",
+      "assigneeId": "02_lead_gen",
+      "status": "in_progress",
+      "priority": "high",
+      "tags": ["Apollo", "Enrichment", "Email"],
+      "linkedLeadIds": [],
+      "subtasks": [
+        { "id": "st_m2_1", "title": "Run email verification", "done": true },
+        { "id": "st_m2_2", "title": "Add direct dials", "done": true },
+        { "id": "st_m2_3", "title": "Run sentiment qualification (Sarah)", "done": false },
+        { "id": "st_m2_4", "title": "Hand off top 10 to Sarah", "done": false }
+      ],
+      "activityLog": [
+        { "timestamp": "SEED_TODAY_10:32", "by": "Marcus Reed", "message": "Pulled 25 leads from Apollo" },
+        { "timestamp": "SEED_TODAY_10:45", "by": "Marcus Reed", "message": "Enrichment complete, 23/25 verified" },
+        { "timestamp": "SEED_TODAY_11:02", "by": "Marcus Reed", "message": "Handing top 10 to @sarah" }
+      ],
+      "comments": [],
+      "createdAt": "SEED_TODAY_10:30"
+    },
+    {
+      "id": "seed_task_marcus_3",
+      "title": "Backyard hustle — local event planners",
+      "description": "Research local event planning companies and corporate event managers within 30 miles.",
+      "assigneeId": "02_lead_gen",
+      "status": "todo",
+      "priority": "medium",
+      "tags": ["Hustle", "Events", "Local"],
+      "linkedLeadIds": [],
+      "subtasks": [],
+      "activityLog": [
+        { "timestamp": "SEED_TODAY_09:00", "by": "Donna Marie", "message": "Assigned to Marcus" }
+      ],
+      "comments": [],
+      "createdAt": "SEED_TODAY_09:00"
+    },
+    {
+      "id": "seed_task_marcus_4",
+      "title": "Add new ICP segment: sports teams visiting",
+      "description": "Build a prospecting list for visiting sports teams and their travel coordinators.",
+      "assigneeId": "02_lead_gen",
+      "status": "todo",
+      "priority": "low",
+      "tags": ["ICP", "Sports", "Groups"],
+      "linkedLeadIds": [],
+      "subtasks": [],
+      "activityLog": [
+        { "timestamp": "SEED_TODAY_09:00", "by": "Marcus Reed", "message": "Task created" }
+      ],
+      "comments": [],
+      "createdAt": "SEED_TODAY_09:00"
+    },
+    {
+      "id": "seed_task_sarah_1",
+      "title": "Draft 3 email variants for medical leads",
+      "description": "Write A/B/C email variants targeting UT Southwestern, Baylor Scott & White, and similar medical orgs.",
+      "assigneeId": "03_outbound",
+      "status": "done",
+      "priority": "high",
+      "tags": ["Email", "Medical", "A/B Test"],
+      "linkedLeadIds": [],
+      "subtasks": [
+        { "id": "st_s1_1", "title": "Write variant A (pain-point lead)", "done": true },
+        { "id": "st_s1_2", "title": "Write variant B (social proof lead)", "done": true },
+        { "id": "st_s1_3", "title": "Write variant C (ROI lead)", "done": true }
+      ],
+      "activityLog": [
+        { "timestamp": "SEED_TODAY_10:26", "by": "Sarah Chen", "message": "Started drafting email variants" },
+        { "timestamp": "SEED_TODAY_11:00", "by": "Sarah Chen", "message": "All 3 variants complete" }
+      ],
+      "comments": [],
+      "createdAt": "SEED_TODAY_10:26",
+      "completedAt": "SEED_TODAY_11:00"
+    },
+    {
+      "id": "seed_task_sarah_2",
+      "title": "Schedule sequence for 8 hot leads",
+      "description": "Set up a 5-touch outreach sequence for the 8 highest-scoring medical leads from Marcus.",
+      "assigneeId": "03_outbound",
+      "status": "done",
+      "priority": "high",
+      "tags": ["Sequence", "Medical", "Smartlead"],
+      "linkedLeadIds": [],
+      "subtasks": [],
+      "activityLog": [
+        { "timestamp": "SEED_TODAY_11:15", "by": "Sarah Chen", "message": "Sequence scheduled. First email at 2 PM Central." }
+      ],
+      "comments": [],
+      "createdAt": "SEED_TODAY_11:00",
+      "completedAt": "SEED_TODAY_11:15"
+    },
+    {
+      "id": "seed_task_sarah_3",
+      "title": "Cold call sequence for Houston corporate",
+      "description": "Build call scripts and email follow-ups for 15 Houston corporate travel managers.",
+      "assigneeId": "03_outbound",
+      "status": "in_progress",
+      "priority": "medium",
+      "tags": ["Cold Call", "Corporate", "Houston"],
+      "linkedLeadIds": [],
+      "subtasks": [
+        { "id": "st_s3_1", "title": "Write call opener script", "done": true },
+        { "id": "st_s3_2", "title": "Write voicemail script", "done": false },
+        { "id": "st_s3_3", "title": "Write follow-up email", "done": false }
+      ],
+      "activityLog": [
+        { "timestamp": "SEED_TODAY_11:30", "by": "Sarah Chen", "message": "Started Houston corporate sequence" }
+      ],
+      "comments": [],
+      "createdAt": "SEED_TODAY_11:30"
+    },
+    {
+      "id": "seed_task_sarah_4",
+      "title": "A/B test subject lines",
+      "description": "Test 4 subject line variants on the current medical email campaign to improve open rates.",
+      "assigneeId": "03_outbound",
+      "status": "todo",
+      "priority": "low",
+      "tags": ["A/B Test", "Email", "Optimization"],
+      "linkedLeadIds": [],
+      "subtasks": [],
+      "activityLog": [
+        { "timestamp": "SEED_TODAY_09:00", "by": "Sarah Chen", "message": "Task created" }
+      ],
+      "comments": [],
+      "createdAt": "SEED_TODAY_09:00"
+    },
+    {
+      "id": "seed_task_priya_1",
+      "title": "Draft RFP response — Texas Restaurant Association",
+      "description": "60 rooms Sept 8-11 + breakfast + meeting space for 200. Full proposal with pricing and concessions.",
+      "assigneeId": "04_rfp_group",
+      "status": "in_progress",
+      "priority": "high",
+      "tags": ["RFP", "Association", "Group"],
+      "linkedLeadIds": [],
+      "subtasks": [
+        { "id": "st_p1_1", "title": "Check room availability Sept 8-11", "done": true },
+        { "id": "st_p1_2", "title": "Price the room block", "done": true },
+        { "id": "st_p1_3", "title": "Write meeting space proposal", "done": true },
+        { "id": "st_p1_4", "title": "Add F&B pricing (breakfast for 200)", "done": false },
+        { "id": "st_p1_5", "title": "Submit to Donna for approval", "done": false }
+      ],
+      "activityLog": [
+        { "timestamp": "SEED_TODAY_09:30", "by": "Priya Sharma", "message": "RFP received from Texas Restaurant Association" },
+        { "timestamp": "SEED_TODAY_10:28", "by": "Priya Sharma", "message": "Draft ready for approval" }
+      ],
+      "comments": [],
+      "createdAt": "SEED_TODAY_09:30",
+      "dueDate": "SEED_TODAY_16:00"
+    },
+    {
+      "id": "seed_task_priya_2",
+      "title": "Group block proposal — Dallas Cowboys visiting teams",
+      "description": "Create room block proposal for opposing teams visiting for Cowboys home games (Sept-Dec).",
+      "assigneeId": "04_rfp_group",
+      "status": "in_progress",
+      "priority": "medium",
+      "tags": ["Group Block", "Sports", "LNR"],
+      "linkedLeadIds": [],
+      "subtasks": [
+        { "id": "st_p2_1", "title": "Research Cowboys home schedule", "done": true },
+        { "id": "st_p2_2", "title": "Contact visiting team travel coordinators", "done": false }
+      ],
+      "activityLog": [
+        { "timestamp": "SEED_TODAY_09:00", "by": "Priya Sharma", "message": "Task created" }
+      ],
+      "comments": [],
+      "createdAt": "SEED_TODAY_09:00"
+    },
+    {
+      "id": "seed_task_priya_3",
+      "title": "Wedding inquiry — Sept 14 weekend",
+      "description": "Qualify and respond to wedding room block inquiry for Sept 14 weekend (est. 40 rooms, 2 nights).",
+      "assigneeId": "04_rfp_group",
+      "status": "todo",
+      "priority": "medium",
+      "tags": ["Wedding", "Social", "Group"],
+      "linkedLeadIds": [],
+      "subtasks": [],
+      "activityLog": [
+        { "timestamp": "SEED_TODAY_08:00", "by": "Priya Sharma", "message": "Inquiry received" }
+      ],
+      "comments": [],
+      "createdAt": "SEED_TODAY_08:00",
+      "dueDate": "SEED_TODAY_17:00"
+    },
+    {
+      "id": "seed_task_liam_1",
+      "title": "Post-stay calls — 8 guests",
+      "description": "Call 8 recent guests for satisfaction check and review capture.",
+      "assigneeId": "05_retention",
+      "status": "done",
+      "priority": "high",
+      "tags": ["Post-Stay", "Reviews", "Calls"],
+      "linkedLeadIds": [],
+      "subtasks": [],
+      "activityLog": [
+        { "timestamp": "SEED_TODAY_09:00", "by": "Liam Chen", "message": "8 post-stay calls scheduled" },
+        { "timestamp": "SEED_TODAY_10:32", "by": "Liam Chen", "message": "2 reviews captured. 1 complaint routed to ops." }
+      ],
+      "comments": [],
+      "createdAt": "SEED_TODAY_09:00",
+      "completedAt": "SEED_TODAY_10:32"
+    },
+    {
+      "id": "seed_task_liam_2",
+      "title": "Review request sequence for 12 recent guests",
+      "description": "Send automated review request emails to 12 guests who checked out in the last 48 hours.",
+      "assigneeId": "05_retention",
+      "status": "in_progress",
+      "priority": "medium",
+      "tags": ["Reviews", "Email", "Automation"],
+      "linkedLeadIds": [],
+      "subtasks": [
+        { "id": "st_l2_1", "title": "Pull checkout list from PMS", "done": true },
+        { "id": "st_l2_2", "title": "Filter out complaint guests", "done": true },
+        { "id": "st_l2_3", "title": "Send review request emails", "done": false }
+      ],
+      "activityLog": [
+        { "timestamp": "SEED_TODAY_10:45", "by": "Liam Chen", "message": "Started review request sequence" }
+      ],
+      "comments": [],
+      "createdAt": "SEED_TODAY_10:45"
+    },
+    {
+      "id": "seed_task_liam_3",
+      "title": "Win-back campaign — 90 day no-rebook",
+      "description": "Identify guests who haven't rebooked in 90 days and send a personalized win-back offer.",
+      "assigneeId": "05_retention",
+      "status": "todo",
+      "priority": "medium",
+      "tags": ["Win-back", "Retention", "Campaign"],
+      "linkedLeadIds": [],
+      "subtasks": [],
+      "activityLog": [
+        { "timestamp": "SEED_TODAY_09:00", "by": "Liam Chen", "message": "Task created" }
+      ],
+      "comments": [],
+      "createdAt": "SEED_TODAY_09:00"
+    },
+    {
+      "id": "seed_task_maya_1",
+      "title": "Daily owner brief",
+      "description": "Generate and send the daily revenue brief to ownership with pickup, pace, and key metrics.",
+      "assigneeId": "06_revenue",
+      "status": "done",
+      "priority": "high",
+      "tags": ["Owner Brief", "Daily", "Reporting"],
+      "linkedLeadIds": [],
+      "subtasks": [],
+      "activityLog": [
+        { "timestamp": "SEED_TODAY_07:30", "by": "Maya Reddy", "message": "Owner brief sent" }
+      ],
+      "comments": [],
+      "createdAt": "SEED_TODAY_07:00",
+      "completedAt": "SEED_TODAY_07:30"
+    },
+    {
+      "id": "seed_task_maya_2",
+      "title": "Weekly pickup analysis",
+      "description": "Analyze the 7-day pickup trend by segment (transient, group, negotiated) vs same period last year.",
+      "assigneeId": "06_revenue",
+      "status": "in_progress",
+      "priority": "high",
+      "tags": ["Pickup", "Analytics", "Weekly"],
+      "linkedLeadIds": [],
+      "subtasks": [
+        { "id": "st_maya2_1", "title": "Pull pickup data from PMS", "done": true },
+        { "id": "st_maya2_2", "title": "Segment analysis (transient/group/neg)", "done": true },
+        { "id": "st_maya2_3", "title": "YoY comparison", "done": false },
+        { "id": "st_maya2_4", "title": "Write summary for Donna", "done": false }
+      ],
+      "activityLog": [
+        { "timestamp": "SEED_TODAY_10:30", "by": "Maya Reddy", "message": "Pickup +14% WoW. Sun-Tue gap 52% -> 41%." }
+      ],
+      "comments": [],
+      "createdAt": "SEED_TODAY_09:00"
+    },
+    {
+      "id": "seed_task_maya_3",
+      "title": "Comp set deep dive",
+      "description": "Review OTA rates and availability for 5 comp set hotels to identify rate opportunities.",
+      "assigneeId": "06_revenue",
+      "status": "todo",
+      "priority": "medium",
+      "tags": ["Comp Set", "Pricing", "OTA"],
+      "linkedLeadIds": [],
+      "subtasks": [],
+      "activityLog": [
+        { "timestamp": "SEED_TODAY_09:00", "by": "Maya Reddy", "message": "Task created" }
+      ],
+      "comments": [],
+      "createdAt": "SEED_TODAY_09:00"
+    },
+    {
+      "id": "seed_task_maya_4",
+      "title": "Q3 forecast model",
+      "description": "Build the Q3 revenue forecast model with 3 scenarios (base, upside, downside) for owner presentation.",
+      "assigneeId": "06_revenue",
+      "status": "todo",
+      "priority": "high",
+      "tags": ["Forecast", "Q3", "Owner"],
+      "linkedLeadIds": [],
+      "subtasks": [],
+      "activityLog": [
+        { "timestamp": "SEED_TODAY_09:00", "by": "Maya Reddy", "message": "Task created" }
+      ],
+      "comments": [],
+      "createdAt": "SEED_TODAY_09:00",
+      "dueDate": "SEED_FRIDAY_17:00"
+    }
+  ]
+}

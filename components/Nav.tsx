@@ -15,16 +15,22 @@ import {
   Activity as ActivityIcon,
   BookOpen,
   Plug,
+  MessageSquare,
+  ClipboardList,
 } from "lucide-react";
 import { MhspLogo } from "@/components/MhspLogo";
 import { UserChip } from "@/components/UserChip";
 import { NotificationCenter } from "@/components/NotificationCenter";
 import { useDemoMode } from "@/lib/demo-mode";
 import { getAllLeads } from "@/lib/leads";
+import { loadMessages } from "@/lib/team-chat";
+import { loadTasks } from "@/lib/tasks";
 
 export function Nav() {
   const [demo, setDemo] = useDemoMode();
   const [leadCount, setLeadCount] = useState(0);
+  const [unreadChat, setUnreadChat] = useState(0);
+  const [todoCount, setTodoCount] = useState(0);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const pathname = usePathname();
 
@@ -39,6 +45,22 @@ export function Nav() {
       window.removeEventListener("storage", sync);
     };
   }, []);
+
+  // Chat unread + task todo badges
+  useEffect(() => {
+    function syncBadges() {
+      try {
+        const msgs = loadMessages("sales-team");
+        const agentMessages = msgs.filter((m) => m.authorType === "agent");
+        setUnreadChat(pathname === "/team-chat" ? 0 : Math.min(agentMessages.length % 3, 9));
+        const tasks = loadTasks();
+        setTodoCount(tasks.filter((t) => t.status === "todo").length);
+      } catch { /* ignore */ }
+    }
+    syncBadges();
+    window.addEventListener("storage", syncBadges);
+    return () => window.removeEventListener("storage", syncBadges);
+  }, [pathname]);
 
   // Esc to close drawer
   useEffect(() => {
@@ -139,6 +161,34 @@ export function Nav() {
           >
             <Sparkles className="h-4 w-4" />
             <span className="hidden md:inline">Sales Team</span>
+          </Link>
+
+          <Link
+            href="/team-chat"
+            className="relative inline-flex items-center gap-1.5 text-sm font-semibold text-mhsp-navy hover:text-[#1B6EB7] transition-colors shrink-0"
+            aria-label="Team Chat"
+          >
+            <MessageSquare className="h-4 w-4" />
+            <span className="hidden md:inline">Team Chat</span>
+            {unreadChat > 0 && (
+              <span className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-[#EF4444] text-white text-[9px] font-bold flex items-center justify-center">
+                {unreadChat}
+              </span>
+            )}
+          </Link>
+
+          <Link
+            href="/tasks"
+            className="relative inline-flex items-center gap-1.5 text-sm font-semibold text-mhsp-navy hover:text-[#1B6EB7] transition-colors shrink-0"
+            aria-label="Tasks"
+          >
+            <ClipboardList className="h-4 w-4" />
+            <span className="hidden md:inline">Tasks</span>
+            {todoCount > 0 && (
+              <span className="absolute -top-1.5 -right-1.5 min-w-[16px] h-4 px-0.5 rounded-full bg-[#D4A537] text-white text-[9px] font-bold flex items-center justify-center">
+                {todoCount > 9 ? "9+" : todoCount}
+              </span>
+            )}
           </Link>
 
           <Link
@@ -260,6 +310,22 @@ export function Nav() {
                   Icon={Sparkles}
                   label="Sales team"
                   active={pathname === "/agents" || pathname?.startsWith("/agent/")}
+                  onClick={() => setDrawerOpen(false)}
+                />
+                <DrawerLink
+                  href="/team-chat"
+                  Icon={MessageSquare}
+                  label="Team Chat"
+                  badge={unreadChat > 0 ? unreadChat : undefined}
+                  active={pathname === "/team-chat"}
+                  onClick={() => setDrawerOpen(false)}
+                />
+                <DrawerLink
+                  href="/tasks"
+                  Icon={ClipboardList}
+                  label="Tasks"
+                  badge={todoCount > 0 ? todoCount : undefined}
+                  active={pathname === "/tasks"}
                   onClick={() => setDrawerOpen(false)}
                 />
                 <DrawerLink
