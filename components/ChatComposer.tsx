@@ -41,15 +41,20 @@ export function ChatComposer({ onSend, disabled }: ChatComposerProps) {
 
   function handleMentionSelect(slug: string) {
     if (mentionStart === -1) return
+    const cursorPos = ref.current?.selectionStart ?? body.length
     const before = body.slice(0, mentionStart)
-    const after = body.slice(ref.current?.selectionStart ?? body.length)
-    setBody(`${before}@${slug} ${after}`)
+    const after = body.slice(cursorPos)
+    const newBody = `${before}@${slug} ${after}`
+    const newPos = before.length + slug.length + 2
+    setBody(newBody)
     setMentionQuery(null)
+    setMentionStart(-1)
     setTimeout(() => {
       if (ref.current) {
-        const pos = before.length + slug.length + 2
-        ref.current.setSelectionRange(pos, pos)
+        ref.current.setSelectionRange(newPos, newPos)
         ref.current.focus()
+        ref.current.style.height = "auto"
+        ref.current.style.height = Math.min(ref.current.scrollHeight, 104) + "px"
       }
     }, 0)
   }

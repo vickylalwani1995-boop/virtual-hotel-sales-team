@@ -1,0 +1,12 @@
+backend/
+*.py
+requirements.txt
+Pipfile
+Pipfile.lock
+pyproject.toml
+.python-version
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/

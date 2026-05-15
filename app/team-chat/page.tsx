@@ -336,8 +336,7 @@ export default function TeamChatPage() {
               const prevMsg = messages[i - 1]
               const showDivider = i === 0 || (
                 prevMsg &&
-                new Date(msg.timestamp.startsWith("SEED_") ? new Date() : msg.timestamp).toDateString() !==
-                new Date(prevMsg.timestamp.startsWith("SEED_") ? new Date() : prevMsg.timestamp).toDateString()
+                new Date(msg.timestamp).toDateString() !== new Date(prevMsg.timestamp).toDateString()
               )
               return (
                 <div key={msg.id}>

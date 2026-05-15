@@ -1,10 +1,11 @@
 "use client"
 
 import { useEffect, useState, useMemo } from "react"
-import { Plus, LayoutGrid, List, ClipboardList, Crosshair, TrendingUp, AlertTriangle, CheckCircle2, Sparkles } from "lucide-react"
+import { Plus, LayoutGrid, List, ClipboardList, TrendingUp, AlertTriangle, CheckCircle2, Sparkles } from "lucide-react"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { toast } from "sonner"
+import { nanoid } from "nanoid"
 import { TaskCard } from "@/components/TaskCard"
 import { TaskDrawer } from "@/components/TaskDrawer"
 import { NewTaskModal } from "@/components/NewTaskModal"
@@ -90,7 +91,7 @@ export default function TasksPage() {
 
   function handleAddComment(taskId: string, body: string) {
     const now = new Date().toISOString()
-    const updated = tasks.map(t => t.id !== taskId ? t : { ...t, comments: [...t.comments, { id: Math.random().toString(36).slice(2), by: "You", body, timestamp: now }] })
+    const updated = tasks.map(t => t.id !== taskId ? t : { ...t, comments: [...t.comments, { id: nanoid(), by: "You", body, timestamp: now }] })
     persist(updated)
     if (selected?.id === taskId) setSelected(updated.find(t => t.id === taskId) ?? null)
   }
