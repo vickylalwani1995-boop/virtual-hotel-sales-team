@@ -17,6 +17,7 @@ import {
   Plug,
   MessageSquare,
   ClipboardList,
+  MapPin,
 } from "lucide-react";
 import { MhspLogo } from "@/components/MhspLogo";
 import { UserChip } from "@/components/UserChip";
@@ -99,7 +100,7 @@ export function Nav() {
 
   return (
     <>
-    <header className="sticky top-0 z-40 backdrop-blur-md bg-mhsp-cream/85 border-b border-mhsp-line">
+    <header className="sticky top-0 z-[900] backdrop-blur-md bg-mhsp-cream/85 border-b border-mhsp-line">
       <div className="max-w-7xl mx-auto px-3 sm:px-5 lg:px-6 h-16 sm:h-20 flex items-center gap-2 sm:gap-4 lg:gap-6">
         {/* Logo block */}
         <Link
@@ -192,6 +193,15 @@ export function Nav() {
           </Link>
 
           <Link
+            href="/backyard-hunter"
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-mhsp-navy hover:text-[#1B6EB7] transition-colors shrink-0"
+            aria-label="Backyard Hunter"
+          >
+            <MapPin className="h-4 w-4" />
+            <span className="hidden md:inline">Backyard</span>
+          </Link>
+
+          <Link
             href="/connectors"
             className="inline-flex items-center gap-1.5 text-sm font-semibold text-mhsp-navy hover:text-[#1B6EB7] transition-colors shrink-0"
             aria-label="Connectors"
@@ -259,7 +269,7 @@ export function Nav() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
               onClick={() => setDrawerOpen(false)}
-              className="fixed inset-0 z-50 bg-[#0F1B2D]/45 backdrop-blur-sm md:hidden"
+              className="fixed inset-0 z-[950] bg-[#0F1B2D]/45 backdrop-blur-sm md:hidden"
               aria-hidden="true"
             />
             <motion.aside
@@ -270,7 +280,7 @@ export function Nav() {
               role="dialog"
               aria-modal="true"
               aria-label="Menu"
-              className="fixed inset-y-0 right-0 z-50 w-[300px] max-w-[88vw] bg-white shadow-[-20px_0_60px_-20px_rgba(15,76,129,0.30)] flex flex-col md:hidden"
+              className="fixed inset-y-0 right-0 z-[960] w-[300px] max-w-[88vw] bg-white shadow-[-20px_0_60px_-20px_rgba(15,76,129,0.30)] flex flex-col md:hidden"
             >
               {/* Drawer header */}
               <div className="px-5 pt-5 pb-4 flex items-center justify-between border-b border-[#E5ECF4]">
@@ -333,6 +343,13 @@ export function Nav() {
                   Icon={BookOpen}
                   label="Playbooks"
                   active={pathname === "/playbooks" || pathname?.startsWith("/playbooks/")}
+                  onClick={() => setDrawerOpen(false)}
+                />
+                <DrawerLink
+                  href="/backyard-hunter"
+                  Icon={MapPin}
+                  label="Backyard Hunter"
+                  active={pathname === "/backyard-hunter"}
                   onClick={() => setDrawerOpen(false)}
                 />
                 <DrawerLink

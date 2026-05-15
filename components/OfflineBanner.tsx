@@ -2,19 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { WifiOff, Sparkles } from "lucide-react";
-import { toast } from "sonner";
+import { WifiOff } from "lucide-react";
 import { useDemoMode } from "@/lib/demo-mode";
 
-/**
- * Top-of-screen banner shown while the browser reports the device
- * is offline. Auto-enables Demo Mode so cached responses keep
- * working until connection is back. Once we go back online, Demo
- * Mode stays on (user can toggle it off in the nav) but a toast
- * acknowledges the recovery.
- *
- * Mount once globally inside AppChrome.
- */
 export function OfflineBanner() {
   const [offline, setOffline] = useState(false);
   const [hydrated, setHydrated] = useState(false);
@@ -32,7 +22,6 @@ export function OfflineBanner() {
     function goOnline() {
       setOffline(false);
       if (autoEnabledRef.current) {
-        toast.success("Back online — Demo Mode is still on (toggle in nav).");
         autoEnabledRef.current = false;
       }
     }
@@ -44,15 +33,10 @@ export function OfflineBanner() {
     };
   }, []);
 
-  // Auto-enable Demo Mode the first time we go offline. Don't keep
-  // flipping it back on if the user manually toggles it off later.
   useEffect(() => {
     if (offline && !demo && !autoEnabledRef.current) {
       autoEnabledRef.current = true;
       setDemo(true);
-      toast.info(
-        "You're offline. Demo Mode is on — cached responses will play.",
-      );
     }
   }, [offline, demo, setDemo]);
 
@@ -76,12 +60,7 @@ export function OfflineBanner() {
               You&apos;re offline.
             </span>
             <span className="text-sm text-white/90">
-              Demo Mode is active — cached responses will keep working until
-              you&apos;re back.
-            </span>
-            <span className="ml-auto inline-flex items-center gap-1.5 rounded-full bg-white/15 border border-white/25 px-2.5 py-1 text-sm font-bold uppercase tracking-[0.12em]">
-              <Sparkles className="h-3 w-3" />
-              Demo Mode on
+              The app will continue working until you&apos;re back.
             </span>
           </div>
         </motion.div>

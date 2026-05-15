@@ -195,9 +195,6 @@ export function ConnectorModal({ connector, effectiveStatus, onClose, onActivate
             {isAlreadyConnected ? "Save Changes" : "Save & Activate"}
           </button>
 
-          <p className="text-center text-[11px] text-[#9CA3AF]">
-            Demo mode — connection simulated. Production deployment uses real OAuth + API keys.
-          </p>
         </div>
       </div>
     </div>

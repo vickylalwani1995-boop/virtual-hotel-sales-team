@@ -100,7 +100,6 @@ export function AgentChat({
   const abortRef = useRef<AbortController | null>(null);
   const hasInitRef = useRef(false);
 
-  // Seed demo workspace when demo mode is on
   useEffect(() => {
     if (demoMode) seedDemoWorkspace();
   }, [demoMode]);
@@ -330,7 +329,7 @@ export function AgentChat({
               if (data.mode === "real") {
                 toast.success(`Calling ${leadName} at ${phoneNumber}…`);
               } else if (data.mode === "simulator") {
-                toast.info(`Demo mode — no real call placed.`);
+                toast.info(`Call placed via simulator.`);
               } else {
                 toast.error(`Call failed: ${data.error || data.message || "Voice backend error"}`);
               }

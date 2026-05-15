@@ -1,7 +1,7 @@
 "use client"
 
 import { useRef, useState } from "react"
-import { Send, Hash } from "lucide-react"
+import { Send } from "lucide-react"
 import { MentionDropdown } from "@/components/MentionDropdown"
 
 interface ChatComposerProps {
@@ -75,7 +75,6 @@ export function ChatComposer({ onSend, disabled }: ChatComposerProps) {
           <MentionDropdown query={mentionQuery} onSelect={handleMentionSelect} />
         )}
         <div className="flex gap-3 items-end bg-[#F8FAFC] border border-[#DCE5EF] rounded-2xl px-4 py-3 focus-within:border-[#1B6EB7] focus-within:ring-2 focus-within:ring-[#1B6EB7]/15 focus-within:bg-white transition-all shadow-sm">
-          <Hash className="h-4 w-4 text-[#94A3B8] shrink-0 mb-0.5" />
           <textarea
             ref={ref}
             value={body}

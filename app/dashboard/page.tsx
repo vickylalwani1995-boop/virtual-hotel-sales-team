@@ -30,6 +30,8 @@ import {
   ArrowRight,
   MessageSquare,
   ClipboardList,
+  MapPin,
+  Flame,
 } from "lucide-react";
 import { AGENTS, getAgent } from "@/lib/agents";
 import { getActivity, type ActivityEntry } from "@/lib/activity-log";
@@ -105,6 +107,7 @@ export default function DashboardPage() {
   const [chatMsgCount, setChatMsgCount] = useState(0);
   const [lastChatAgent, setLastChatAgent] = useState<{ name: string; time: string } | null>(null);
   const [taskStats, setTaskStats] = useState({ inProgress: 0, overdue: 0, done: 0, topAgent: "" });
+  const [backyardStats, setBackyardStats] = useState<{ total: number; hot: number; top: string; scannedAt: string } | null>(null);
 
   useEffect(() => {
     const sync = () => {
@@ -135,6 +138,17 @@ export default function DashboardPage() {
       const topTask = inProgTasks.length > 0 ? inProgTasks[0].title : ""
       setTaskStats({ inProgress, overdue, done, topAgent: topTask ? `${topAgent} working on ${topTask}` : "" })
     } catch { /* ignore */ }
+
+    // Backyard scan stats
+    fetch("/api/backyard-scan")
+      .then((r) => r.json())
+      .then((json) => {
+        const businesses: Array<{ qualification: { tier: string; score: number }; name: string }> = json.businesses ?? []
+        const hot = businesses.filter((b) => b.qualification.tier === "Hot").length
+        const top = businesses.sort((a, b) => b.qualification.score - a.qualification.score)[0]
+        setBackyardStats({ total: businesses.length, hot, top: top?.name ?? "—", scannedAt: json._meta?.scannedAt ?? "" })
+      })
+      .catch(() => { /* ignore */ })
 
     return () => {
       for (const e of evts) window.removeEventListener(e, sync);
@@ -461,8 +475,8 @@ export default function DashboardPage() {
               )}
             </Card>
 
-            {/* ── Team Chat + Tasks dashboard cards ── */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* ── Team Chat + Tasks + Backyard Hunter dashboard cards ── */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <Link href="/team-chat" className="group block rounded-2xl border border-[#E5ECF4] bg-white shadow-[0_4px_16px_-8px_rgba(15,76,129,0.10)] hover:shadow-[0_8px_24px_-8px_rgba(15,76,129,0.18)] transition-all p-5">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#2F8FCC] to-[#0F4C81] flex items-center justify-center text-white shadow-[0_6px_16px_-8px_rgba(15,76,129,0.5)]">
@@ -498,6 +512,29 @@ export default function DashboardPage() {
                 )}
                 <span className="inline-flex items-center gap-1 text-xs font-bold text-[#1B6EB7] group-hover:text-[#0F4C81] transition-colors">
                   Open Task Board <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />
+                </span>
+              </Link>
+
+              <Link href="/backyard-hunter" className="group block rounded-2xl border border-[#E5ECF4] bg-white shadow-[0_4px_16px_-8px_rgba(15,76,129,0.10)] hover:shadow-[0_8px_24px_-8px_rgba(15,76,129,0.18)] transition-all p-5">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#0F4C81] to-[#1B6EB7] flex items-center justify-center text-white shadow-[0_6px_16px_-8px_rgba(15,76,129,0.4)]">
+                    <MapPin className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-mhsp-navy">Backyard Hunter</p>
+                    <p className="text-xs text-mhsp-muted">
+                      {backyardStats ? `${backyardStats.total} businesses · ${backyardStats.hot} hot` : "Dallas 15mi radius"}
+                    </p>
+                  </div>
+                </div>
+                {backyardStats && (
+                  <p className="text-sm text-mhsp-muted line-clamp-1 mb-3 flex items-center gap-1">
+                    <Flame className="h-3.5 w-3.5 text-red-500 shrink-0" />
+                    {backyardStats.top}
+                  </p>
+                )}
+                <span className="inline-flex items-center gap-1 text-xs font-bold text-[#1B6EB7] group-hover:text-[#0F4C81] transition-colors">
+                  Open Backyard Hunter <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />
                 </span>
               </Link>
             </div>

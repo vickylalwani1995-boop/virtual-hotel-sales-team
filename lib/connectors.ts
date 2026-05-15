@@ -4,6 +4,7 @@ export type ConnectorCategory =
   | "CRM & Outreach"
   | "Calling & Telephony"
   | "Intelligence"
+  | "Maps & Location"
 
 export interface Connector {
   id: string
@@ -166,6 +167,74 @@ export const CONNECTORS: Connector[] = [
     capabilities: ["Click-to-call", "Call recording", "Power dialer", "CRM sync"],
     pricing: "Essentials: $30/user/mo",
   },
+  // MAPS & LOCATION (6)
+  {
+    id: "google-maps",
+    name: "Google Maps Places API",
+    category: "Maps & Location",
+    description: "200M+ places worldwide. Names, addresses, hours, ratings, photos.",
+    color: "#4285F4",
+    icon: "MapPin",
+    status: "connected",
+    capabilities: ["Place search by radius", "Business categories (50+ types)", "Phone + website + hours", "Reviews & ratings", "Photos", "Business status (open/closed permanently)"],
+    pricing: "Pay-per-call: $17 per 1K requests after free tier",
+    featured: true,
+  },
+  {
+    id: "bing-maps",
+    name: "Bing Maps API",
+    category: "Maps & Location",
+    description: "Microsoft's maps. Strong for B2B and corporate office data.",
+    color: "#008373",
+    icon: "Globe",
+    status: "available",
+    capabilities: ["Local business search", "Geocoding & reverse geocoding", "Isochrone (drive-time polygons)", "Routing & distance matrix"],
+    pricing: "Basic: free up to 125K transactions/yr",
+  },
+  {
+    id: "apple-maps-connect",
+    name: "Apple Maps Connect (MapKit JS)",
+    category: "Maps & Location",
+    description: "Apple's business directory. Strong for premium US business listings.",
+    color: "#1D1D1F",
+    icon: "MapPin",
+    status: "available",
+    capabilities: ["Place lookup", "Business categories", "iOS-native display", "Privacy-first (no user tracking)"],
+    pricing: "Free for low volume",
+  },
+  {
+    id: "openstreetmap",
+    name: "OpenStreetMap Overpass",
+    category: "Maps & Location",
+    description: "Open-source maps. Free unlimited. Great for tagged amenities.",
+    color: "#7EBC6F",
+    icon: "Globe",
+    status: "available",
+    capabilities: ["Free unlimited queries", "Tagged amenities (hospitals, schools, hotels, offices)", "Polygon-based area queries", "Community-maintained data"],
+    pricing: "Free (rate-limited fair use)",
+  },
+  {
+    id: "yelp",
+    name: "Yelp Fusion API",
+    category: "Maps & Location",
+    description: "Local business reviews & sentiment. Great for event venues + dining.",
+    color: "#D32323",
+    icon: "Star",
+    status: "available",
+    capabilities: ["Business search by radius + category", "Reviews + sentiment text", "Photos + hours", "Price tier ($-$$$$)", "Featured event venues"],
+    pricing: "Free up to 5K/day",
+  },
+  {
+    id: "foursquare",
+    name: "Foursquare Places",
+    category: "Maps & Location",
+    description: "100M+ POIs. Best for footfall data and visit patterns.",
+    color: "#F94877",
+    icon: "MapPin",
+    status: "available",
+    capabilities: ["Places search", "Foot traffic data", "Category taxonomy (1000+ types)", "Visit patterns by time-of-day"],
+    pricing: "Starter: $200/mo for 100K calls",
+  },
   // INTELLIGENCE & ENRICHMENT (2)
   {
     id: "google-my-business",
@@ -191,7 +260,7 @@ export const CONNECTORS: Connector[] = [
   },
 ]
 
-const ALWAYS_CONNECTED = new Set(["apollo", "vibe-prospecting", "inntelligent", "livekit"])
+const ALWAYS_CONNECTED = new Set(["apollo", "vibe-prospecting", "inntelligent", "livekit", "google-maps"])
 const STORAGE_KEY = "connectors_state"
 
 export function loadConnectorState(): Record<string, ConnectorStatus> {

@@ -19,14 +19,15 @@ import { useDemoMode } from "@/lib/demo-mode"
 
 type FilterTab = "All" | ConnectorCategory
 
-const TABS: FilterTab[] = ["All", "Data Provider", "CRM & Outreach", "Calling & Telephony", "Intelligence"]
+const TABS: FilterTab[] = ["All", "Data Provider", "CRM & Outreach", "Calling & Telephony", "Intelligence", "Maps & Location"]
 
 const TAB_COUNTS: Record<FilterTab, number> = {
-  All: 15,
+  All: 21,
   "Data Provider": 6,
   "CRM & Outreach": 4,
   "Calling & Telephony": 3,
   Intelligence: 2,
+  "Maps & Location": 6,
 }
 
 export default function ConnectorsPage() {

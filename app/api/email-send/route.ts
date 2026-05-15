@@ -4,11 +4,6 @@ import { buildMarketingEmail } from "@/lib/email-template";
 
 export const runtime = "nodejs";
 
-/**
- * Email-send API.
- * Sends real emails via Gmail SMTP when SMTP_USER & SMTP_PASS are set,
- * otherwise falls back to theatre mode (simulated).
- */
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();

@@ -299,7 +299,7 @@ When suggesting adding leads, format them as a markdown table with columns: Name
 
     // ── Sentiment qualification extension for Sarah Chen ────────────────────
     let sentimentSkill = "";
-    if (agentId === "03_sarah_chen") {
+    if (agentId === "03_outbound" || agentId === "03_sarah_chen") {
       try {
         const sqPath = path.join(process.cwd(), "skills", "sentiment-qualification.md");
         sentimentSkill = "\n\n---\n\n" + await fs.readFile(sqPath, "utf-8");
@@ -307,7 +307,42 @@ When suggesting adding leads, format them as a markdown table with columns: Name
     }
     // ─────────────────────────────────────────────────────────────────────────
 
-    const system = `${skill}${sentimentSkill}${workspaceSection}${apolloContext}
+    // ── Backyard scan context for Sarah + Marcus ─────────────────────────────
+    let backyardContext = "";
+    const lastUserMsg = messages.filter((m) => m.role === "user").slice(-1)[0]?.content ?? "";
+    const wantsBackyard = /backyard|scan|map|radius|nearby|local\s*(business|lead|prospect)/i.test(lastUserMsg);
+    if (wantsBackyard && (agentId === "03_outbound" || agentId === "03_sarah_chen" || agentId === "02_lead_gen")) {
+      try {
+        const scanPath = path.join(process.cwd(), "sample-data", "backyard-scan-results.json");
+        const raw = await fs.readFile(scanPath, "utf-8");
+        const json = JSON.parse(raw);
+        const businesses: Array<{ name: string; category: string; distanceMiles: number; qualification: { score: number; tier: string; annualRoomNights: number; estimatedRevenue: string; decisionMakerTitle: string; nextAction: string } }> = json.businesses ?? [];
+        const hot = businesses.filter((b) => b.qualification.tier === "Hot");
+        const warm = businesses.filter((b) => b.qualification.tier === "Warm");
+        const cold = businesses.filter((b) => b.qualification.tier === "Cold");
+        const disq = businesses.filter((b) => b.qualification.tier === "Disqualified");
+
+        const fmt = (list: typeof businesses) =>
+          list.slice(0, 8).map((b) =>
+            `- **${b.name}** (${b.distanceMiles}mi, ${b.category}) — Score ${b.qualification.score}/10 | ${b.qualification.estimatedRevenue}/yr | DM: ${b.qualification.decisionMakerTitle} | Next: ${b.qualification.nextAction}`
+          ).join("\n");
+
+        backyardContext = `\n\n---\n\n## BACKYARD SCAN DATA — Dallas 15mi radius
+Scanned ${businesses.length} businesses near The Westmore Dallas.
+Hot: ${hot.length} | Warm: ${warm.length} | Cold: ${cold.length} | Disqualified: ${disq.length}
+
+**Hot Tier (score 8+):**
+${fmt(hot)}
+
+**Warm Tier (6-7.9):**
+${fmt(warm)}
+
+When asked about the backyard scan, present this data in a clear breakdown. Lead with the hot tier targets, highlight top revenue opportunities, and suggest outreach sequence.`;
+      } catch { /* skip if file missing */ }
+    }
+    // ─────────────────────────────────────────────────────────────────────────
+
+    const system = `${skill}${sentimentSkill}${workspaceSection}${apolloContext}${backyardContext}
 ---
 
 You are talking with a hotel sales captain in conversation.
