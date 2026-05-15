@@ -101,7 +101,7 @@ export function Nav() {
   return (
     <>
     <header className="sticky top-0 z-[900] backdrop-blur-md bg-mhsp-cream/85 border-b border-mhsp-line">
-      <div className="max-w-7xl mx-auto px-3 sm:px-5 lg:px-6 h-16 sm:h-20 flex items-center gap-2 sm:gap-4 lg:gap-6">
+      <div className="w-[90%] mx-auto h-16 sm:h-20 flex items-center gap-2 sm:gap-4 lg:gap-6">
         {/* Logo block */}
         <Link
           href="/"
