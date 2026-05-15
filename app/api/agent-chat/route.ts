@@ -297,7 +297,17 @@ When suggesting adding leads, format them as a markdown table with columns: Name
       ? `\n---\n\n${teamBriefing}\n\n**Your teammates (reference by name when relevant):**\nDonna Marie (Director of Sales) · Marcus Reed (Lead Generation) · Sarah Chen (Outbound Sales) · Priya Sharma (Group & RFP Sales) · Liam Chen (Customer Success & Retention) · Maya Reddy (Revenue Analytics)\n\nNEVER say "I can't access other agents' data" — use the workspace above. Reference leads by name. Reference teammates' work by name.\n\nWhen the user asks you to send emails, draft them in the structured format above. When the user asks to call a lead, output the CALL_ACTION signal. When the user uploads leads data, acknowledge it and reference the extracted leads by name.\n`
       : "";
 
-    const system = `${skill}${workspaceSection}${apolloContext}
+    // ── Sentiment qualification extension for Sarah Chen ────────────────────
+    let sentimentSkill = "";
+    if (agentId === "03_sarah_chen") {
+      try {
+        const sqPath = path.join(process.cwd(), "skills", "sentiment-qualification.md");
+        sentimentSkill = "\n\n---\n\n" + await fs.readFile(sqPath, "utf-8");
+      } catch { /* skip if file missing */ }
+    }
+    // ─────────────────────────────────────────────────────────────────────────
+
+    const system = `${skill}${sentimentSkill}${workspaceSection}${apolloContext}
 ---
 
 You are talking with a hotel sales captain in conversation.

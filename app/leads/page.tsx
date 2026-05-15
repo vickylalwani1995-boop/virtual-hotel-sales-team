@@ -468,6 +468,21 @@ export default function LeadsPage() {
                 exportable, ready to work.
               </p>
 
+              {/* Sources Active indicator */}
+              <div className="mt-4 flex flex-wrap items-center gap-2 text-sm">
+                <span className="inline-flex items-center gap-1.5 font-semibold text-[#0F4C81]">
+                  <span className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+                  Sources Active:
+                </span>
+                {["Apollo.io", "Vibe Prospecting", "Inntelligent CRM", "LiveKit Voice"].map((s) => (
+                  <span key={s} className="bg-[#EAF2FA] text-[#1B6EB7] border border-[#C9DAEB] text-xs font-medium px-2 py-0.5 rounded-full">
+                    {s}
+                  </span>
+                ))}
+                <Link href="/connectors" className="text-xs text-[#1B6EB7] hover:underline font-medium ml-1">
+                  Manage Connectors →
+                </Link>
+              </div>
             </div>
           </div>
 

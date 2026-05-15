@@ -14,6 +14,7 @@ import {
   X,
   Activity as ActivityIcon,
   BookOpen,
+  Plug,
 } from "lucide-react";
 import { MhspLogo } from "@/components/MhspLogo";
 import { UserChip } from "@/components/UserChip";
@@ -140,6 +141,15 @@ export function Nav() {
             <span className="hidden md:inline">Sales Team</span>
           </Link>
 
+          <Link
+            href="/connectors"
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-mhsp-navy hover:text-[#1B6EB7] transition-colors shrink-0"
+            aria-label="Connectors"
+          >
+            <Plug className="h-4 w-4" />
+            <span className="hidden md:inline">Connectors</span>
+          </Link>
+
           <a
             href="tel:8889091678"
             className="hidden sm:inline-flex items-center gap-1.5 text-sm font-medium text-mhsp-navy hover:text-mhsp-gold transition-colors shrink-0"
@@ -257,6 +267,13 @@ export function Nav() {
                   Icon={BookOpen}
                   label="Playbooks"
                   active={pathname === "/playbooks" || pathname?.startsWith("/playbooks/")}
+                  onClick={() => setDrawerOpen(false)}
+                />
+                <DrawerLink
+                  href="/connectors"
+                  Icon={Plug}
+                  label="Connectors"
+                  active={pathname === "/connectors"}
                   onClick={() => setDrawerOpen(false)}
                 />
                 <DrawerLink
