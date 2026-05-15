@@ -1,11 +1,12 @@
 import { NextRequest } from "next/server";
+import nodemailer from "nodemailer";
 
 export const runtime = "nodejs";
 
 /**
- * Theatre email-send API.
- * Simulates sending an email with a realistic delay.
- * In production, this would integrate with SendGrid, Mailchimp, or SES.
+ * Email-send API.
+ * Sends real emails via Gmail SMTP when SMTP_USER & SMTP_PASS are set,
+ * otherwise falls back to theatre mode (simulated).
  */
 export async function POST(req: NextRequest) {
   try {
@@ -28,21 +29,42 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Simulate processing delay (theatre)
-    await new Promise((r) => setTimeout(r, 1500));
+    const smtpUser = process.env.SMTP_USER;
+    const smtpPass = process.env.SMTP_PASS;
 
-    // In production: call email service here
-    // e.g., await sendgrid.send({ to, from, subject, text: emailBody });
+    let provider = "theatre-mode";
+    let messageId = `msg_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+
+    if (smtpUser && smtpPass) {
+      // Send real email via Gmail SMTP
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: { user: smtpUser, pass: smtpPass },
+      });
+
+      const info = await transporter.sendMail({
+        from: `"MHSP Sales Team" <${smtpUser}>`,
+        to,
+        subject,
+        html: (emailBody || "").replace(/\n/g, "<br>"),
+      });
+
+      provider = "gmail-smtp";
+      messageId = info.messageId || messageId;
+    } else {
+      // Fallback: theatre mode
+      await new Promise((r) => setTimeout(r, 1500));
+    }
 
     const result = {
       success: true,
-      messageId: `msg_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+      messageId,
       to,
       subject,
       sentAt: new Date().toISOString(),
       scheduled: !!scheduledFor,
       scheduledFor: scheduledFor || null,
-      provider: "theatre-mode",
+      provider,
       leadId: leadId || null,
       agentId: agentId || null,
     };

@@ -131,6 +131,9 @@ export function SequenceBuilder({
     });
   }, []);
 
+  // Demo override: all campaign emails go to this address
+  const DEMO_RECIPIENT = "vicky.lalwani@softqubes.com";
+
   const handleSave = useCallback(async () => {
     if (!name.trim()) {
       toast.error("Sequence name is required.");
@@ -140,19 +143,56 @@ export function SequenceBuilder({
       toast.error("Add at least one step.");
       return;
     }
-    if (selectedLeadIds.size === 0) {
-      toast.error("Select at least one recipient.");
-      return;
-    }
 
     setSaving(true);
-    // Simulate save delay
-    await new Promise((r) => setTimeout(r, 800));
+
+    // Get selected leads (or use demo fallback)
+    const recipientIds = Array.from(selectedLeadIds);
+    const recipientLeads = allLeads.filter((l) => recipientIds.includes(l.id));
+
+    // Send all email-type steps via the email-send API
+    const emailSteps = steps.filter((s) => s.type === "email");
+    let sentCount = 0;
+    let failCount = 0;
+
+    for (const step of emailSteps) {
+      try {
+        // Replace template variables with first lead info or defaults
+        const lead = recipientLeads[0];
+        const subject = step.subject
+          .replace(/\{\{firstName\}\}/g, lead?.firstName || "there")
+          .replace(/\{\{company\}\}/g, lead?.companyName || "your company")
+          .replace(/\{\{hotel\}\}/g, "The Westmore Hotel Dallas");
+        const body = step.body
+          .replace(/\{\{firstName\}\}/g, lead?.firstName || "there")
+          .replace(/\{\{company\}\}/g, lead?.companyName || "your company")
+          .replace(/\{\{hotel\}\}/g, "The Westmore Hotel Dallas");
+
+        const res = await fetch("/api/email-send", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            to: DEMO_RECIPIENT,
+            subject: `[Campaign: ${name.trim()}] ${subject}`,
+            body,
+            agentId: agentName,
+          }),
+        });
+        const result = await res.json();
+        if (result.success) {
+          sentCount++;
+        } else {
+          failCount++;
+        }
+      } catch {
+        failCount++;
+      }
+    }
 
     addSequence(
       {
         name: name.trim(),
-        recipientLeadIds: Array.from(selectedLeadIds),
+        recipientLeadIds: recipientIds.length > 0 ? recipientIds : ["demo"],
         steps,
         status: "scheduled",
         platform,
@@ -160,10 +200,18 @@ export function SequenceBuilder({
       agentName
     );
 
-    toast.success(`Sequence "${name.trim()}" created with ${selectedLeadIds.size} recipients and ${steps.length} steps.`);
+    if (sentCount > 0) {
+      toast.success(`Sequence "${name.trim()}" created! ${sentCount} email(s) sent to ${DEMO_RECIPIENT}.`);
+    }
+    if (failCount > 0) {
+      toast.error(`${failCount} email(s) failed to send.`);
+    }
+    if (emailSteps.length === 0) {
+      toast.success(`Sequence "${name.trim()}" created with ${steps.length} steps.`);
+    }
     setSaving(false);
     onClose();
-  }, [name, steps, selectedLeadIds, platform, agentName, onClose]);
+  }, [name, steps, selectedLeadIds, allLeads, platform, agentName, onClose]);
 
   return (
     <AnimatePresence>
