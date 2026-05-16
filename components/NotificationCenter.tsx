@@ -189,7 +189,7 @@ export function NotificationCenter() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.18 }}
               onClick={() => setOpen(false)}
-              className="sm:hidden fixed inset-0 z-40 bg-[#0F1B2D]/40 backdrop-blur-sm"
+              className="sm:hidden fixed inset-0 z-[998] bg-[#0F1B2D]/40 backdrop-blur-sm"
               aria-hidden="true"
             />
             {/* Panel — full-screen-ish on mobile, popover on sm+ */}
@@ -201,7 +201,7 @@ export function NotificationCenter() {
               transition={{ duration: 0.18, ease: [0.22, 0.61, 0.36, 1] }}
               role="dialog"
               aria-label="Notifications"
-              className="fixed sm:absolute inset-x-3 top-[68px] sm:top-auto sm:inset-auto sm:right-0 sm:mt-2 z-50 sm:w-[380px] rounded-2xl bg-white border border-[#E5ECF4] shadow-[0_30px_80px_-20px_rgba(15,76,129,0.30),0_8px_24px_-8px_rgba(15,76,129,0.12)] overflow-hidden"
+              className="fixed sm:absolute inset-x-3 top-[68px] sm:top-auto sm:inset-auto sm:right-0 sm:mt-2 z-[999] sm:w-[380px] rounded-2xl bg-white border border-[#E5ECF4] shadow-[0_30px_80px_-20px_rgba(15,76,129,0.30),0_8px_24px_-8px_rgba(15,76,129,0.12)] overflow-hidden"
             >
               {/* Top accent strip */}
               <div className="h-1 w-full bg-gradient-to-r from-[#2F8FCC] via-[#1B6EB7] to-[#0F4C81]" />

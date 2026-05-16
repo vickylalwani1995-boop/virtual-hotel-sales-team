@@ -154,7 +154,7 @@ export function Concierge() {
               transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
               role="dialog"
               aria-label="myConcierge chat"
-              className="fixed inset-y-0 right-0 z-50 w-full md:w-[420px] bg-mhsp-cream border-l border-mhsp-line shadow-[0_0_60px_-10px_rgba(15,76,129,0.35)] flex flex-col"
+              className="fixed inset-y-0 right-0 z-[999] w-full md:w-[420px] bg-mhsp-cream border-l border-mhsp-line shadow-[0_0_60px_-10px_rgba(15,76,129,0.35)] flex flex-col"
             >
               {/* Header */}
               <header className="bg-mhsp-navy text-white px-5 py-4 flex items-center gap-3 shrink-0">
